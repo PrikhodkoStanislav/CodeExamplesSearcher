@@ -8,37 +8,56 @@ import java.util.List;
 public class Searcher {
 
     public String search(String functionName, String pathToFile) {
-        String result = "";
-        try {
-            BufferedReader in = new BufferedReader(new FileReader(pathToFile));
-            String str = "";
-            final String newLine = "\n";
+        StringBuilder sb = new StringBuilder();
+        final String newLine = "\n";
 
+        File file = new File(pathToFile);
+        if (!file.exists()) {
+            System.out.println("Wrong path to the file!");
+            return "";
+        }
+        if (file.isDirectory()) {
+            File[] filesInDirectory = file.listFiles();
+            for (File f : filesInDirectory) {
+                String res = search(functionName, f.getPath());
+                if (res.length() > 0) {
+                    sb.append(f.getName() + newLine);
+                    sb.append(search(functionName, f.getPath()));
+                }
+            }
+            return sb.toString();
+        }
+
+        try {
+            FileReader fileReader = new FileReader(pathToFile);
+            BufferedReader in = new BufferedReader(fileReader);
+            String str = "";
             final int lengthOfBuffer = 2;
-            int numberOfExample = 1;
+            int numberOfExample = 0;
+            int strNumber = 0;
             List<String> buffer = new LinkedList<>();
 
             while ((str = in.readLine()) != null) {
+                strNumber++;
                 if (str.contains(functionName)) {
-                    result += "Example " + numberOfExample + ":" + newLine + newLine;
+                    numberOfExample++;
+                    sb.append("Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine + newLine);
 
                     for(String s : buffer) {
-                        result += s + newLine;
+                        sb.append(s + newLine);
                     }
 
                     buffer.clear();
-                    result += str + newLine;
+                    sb.append(str + newLine);
 
                     for (int i = 0; i < lengthOfBuffer; i++) {
                         if (((str = in.readLine()) != null)) {
-                            result += str + newLine;
+                            sb.append(str + newLine);
                         }
                     }
 
-                    result += newLine;
-                    numberOfExample++;
-                }
-                else {
+                    sb.append(newLine);
+                } else {
                     buffer.add(str);
                     if (buffer.size() > lengthOfBuffer) {
                         buffer.remove(0);
@@ -49,6 +68,6 @@ public class Searcher {
         catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return sb.toString();
     }
 }
