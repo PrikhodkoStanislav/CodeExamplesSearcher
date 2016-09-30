@@ -20,8 +20,8 @@ public class Searcher {
             File[] filesInDirectory = file.listFiles();
             for (File f : filesInDirectory) {
                 String res = search(functionName, f.getPath());
-                if (res.length() > 0) {
-                    sb.append(f.getName() + newLine);
+                if ((res.length() > 0) && f.isFile()) {
+                    sb.append(f.getPath() + newLine);
                     sb.append(search(functionName, f.getPath()));
                 }
             }
@@ -41,7 +41,8 @@ public class Searcher {
                 strNumber++;
                 if (str.contains(functionName)) {
                     numberOfExample++;
-                    sb.append("Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine + newLine);
+                    sb.append("Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine);
+                    sb.append("----------" + newLine);
 
                     for(String s : buffer) {
                         sb.append(s + newLine);
@@ -55,7 +56,7 @@ public class Searcher {
                             sb.append(str + newLine);
                         }
                     }
-
+                    sb.append("----------" + newLine);
                     sb.append(newLine);
                 } else {
                     buffer.add(str);
