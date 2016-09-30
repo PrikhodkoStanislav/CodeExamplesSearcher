@@ -12,6 +12,13 @@ import java.net.URL;
  */
 public abstract class SiteProcessor {
     /**
+     * Generate Request URL
+     * @param query - user's query
+     * @return url
+     * */
+    public abstract String generateRequestURL(final String query);
+
+    /**
      * Find and process search results (remove extra tags and spans)
      * and then make code examples pretty
      * @param result - finding html page
@@ -84,9 +91,9 @@ public abstract class SiteProcessor {
     }
 
     private boolean isBeforeNewLine(String code, int i) {
-        return (i + 2) < code.length() && ((code.charAt(i + 1) != '{' && code.charAt(i + 1) != ';')
+        return (i + 2) < code.length() && ((code.charAt(i + 1) != '{' && code.charAt(i + 1) != ')' && code.charAt(i + 1) != ';')
             || ((code.charAt(i + 1) == ' ' && (code.charAt(i + 2) != '{'
-                && !Character.isLetter(code.charAt(i + 2))))));
+                && Character.isLetter(code.charAt(i + 2))))));
     }
 
     private boolean isNotEmptyAfterSemicolon(String code, int i) {
@@ -100,10 +107,13 @@ public abstract class SiteProcessor {
                 || code.charAt(i) == '<' || code.charAt(i) == '>';
     }
 
-    /**
-     * Generate Request URL
-     * @param query - user's query
-     * @return url
-     * */
-    public abstract String generateRequestURL(final String query);
+    protected boolean isMathFunction(String s) {
+        return s.matches("(a?(sin|cos|tan)h?|atan2|" +
+                "l?|l?(abs|mod|round|rint|max|min)|" +
+                "f?(abs|mod|dim|round|rint|max|min)|" +
+                "div|pow|sqrt|nan(f|l)?|cbrt|hypot|" +
+                "ceil|floor|trunc|modf|(fr|ld)exp|" +
+                "is(inf|finite|nan|normal|(greater|less)(equal)?)" +
+                "exp(2|ml)?|log(2|10|1p)?)");
+    }
 }

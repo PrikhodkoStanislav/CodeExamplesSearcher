@@ -47,10 +47,12 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         if (fullMethodName.length == 1) {
             fullMethodName = query.split(" ");
             if (fullMethodName.length == 1) {
-                return requestURL;
-            }
-            requestURL = buildURL(fullMethodName[1], fullMethodName[0]);
-
+                if (isMathFunction(fullMethodName[0]))
+                    requestURL += CPLUSPLUS_URL + "cmath/" + fullMethodName[0];
+                else
+                    return requestURL;
+            } else
+                requestURL = buildURL(fullMethodName[1], fullMethodName[0]);
         } else {
             String methodName = fullMethodName[fullMethodName.length - 1];
             String structureName = fullMethodName[fullMethodName.length - 2];
@@ -61,7 +63,9 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
 
     private String buildURL(String methodName, String structureName) {
         String requestURL;
-        if (isVectorContainer(structureName)) {
+        if (isMathFunction(methodName)) {
+            requestURL = CPLUSPLUS_URL + "cmath/" + methodName + "/";
+        } else if (isVectorContainer(structureName)) {
             requestURL = CPLUSPLUS_URL + "vector/" + structureName
                     + "/" + methodName + "/";
         } else if (isSetContainer(structureName)) {
