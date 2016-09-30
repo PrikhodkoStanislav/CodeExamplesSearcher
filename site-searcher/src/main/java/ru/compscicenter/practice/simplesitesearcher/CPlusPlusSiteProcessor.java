@@ -49,60 +49,42 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             if (fullMethodName.length == 1) {
                 return requestURL;
             }
-            if (isVectorContainer(fullMethodName[1])) {
-                requestURL = CPLUSPLUS_URL + "vector/" + fullMethodName[1]
-                        + "/" + fullMethodName[0] + "/";
-            } else if (isSetContainer(fullMethodName[1])) {
-                requestURL = CPLUSPLUS_URL + "set/" + fullMethodName[1]
-                        + "/" + fullMethodName[0] + "/";
-            } else if (isUnorderedSetContainer(fullMethodName[1])) {
-                requestURL = CPLUSPLUS_URL + "unordered_set/" + fullMethodName[1]
-                        + "/" + fullMethodName[0] + "/";
-            } else if (isMapContainer(fullMethodName[1])) {
-                requestURL = CPLUSPLUS_URL + "map/" + fullMethodName[1]
-                        + "/" + fullMethodName[0] + "/";
-            } else if (isUnorderedMapContainer(fullMethodName[1])) {
-                requestURL = CPLUSPLUS_URL + "unordered_map/" + fullMethodName[1]
-                        + "/" + fullMethodName[0] + "/";
-            } else if (isQueueContainer(fullMethodName[1])) {
-                requestURL = CPLUSPLUS_URL + "queue/" + fullMethodName[1]
-                        + "/" + fullMethodName[0] + "/";
-            } else if ("string".equals(fullMethodName[1])) {
-                requestURL = CPLUSPLUS_URL + "string/" + fullMethodName[1]
-                        + "/" + fullMethodName[0] + "/";
-            } else {
-                requestURL = CPLUSPLUS_URL + fullMethodName[1]
-                        + "/" + fullMethodName[0] + "/";
-            }
+            requestURL = buildURL(fullMethodName[1], fullMethodName[0]);
 
         } else {
             String methodName = fullMethodName[fullMethodName.length - 1];
             String structureName = fullMethodName[fullMethodName.length - 2];
-            if (isVectorContainer(structureName)) {
-                requestURL = CPLUSPLUS_URL + "vector/" + structureName
-                        + "/" + methodName + "/";
-            } else if (isSetContainer(structureName)) {
-                requestURL = CPLUSPLUS_URL + "set/" + structureName
-                        + "/" + methodName + "/";
-            } else if (isUnorderedSetContainer(structureName)) {
-                requestURL = CPLUSPLUS_URL + "unordered_set/" + structureName
-                        + "/" + methodName + "/";
-            } else if (isMapContainer(structureName)) {
-                requestURL = CPLUSPLUS_URL + "map/" + structureName
-                        + "/" + methodName + "/";
-            } else if (isUnorderedMapContainer(structureName)) {
-                requestURL = CPLUSPLUS_URL + "unordered_map/" + structureName
-                        + "/" + methodName + "/";
-            } else if (isQueueContainer(structureName)) {
-                requestURL = CPLUSPLUS_URL + "queue/" + structureName
-                        + "/" + methodName + "/";
-            } else if ("string".equals(structureName)) {
-                requestURL = CPLUSPLUS_URL + "string/" + structureName
-                        + "/" + methodName + "/";
-            } else {
-                requestURL = CPLUSPLUS_URL + structureName
-                        + "/" + methodName + "/";
-            }
+            requestURL = buildURL(methodName, structureName);
+        }
+        return requestURL;
+    }
+
+    private String buildURL(String methodName, String structureName) {
+        String requestURL;
+        if (isVectorContainer(structureName)) {
+            requestURL = CPLUSPLUS_URL + "vector/" + structureName
+                    + "/" + methodName + "/";
+        } else if (isSetContainer(structureName)) {
+            requestURL = CPLUSPLUS_URL + "set/" + structureName
+                    + "/" + methodName + "/";
+        } else if (isUnorderedSetContainer(structureName)) {
+            requestURL = CPLUSPLUS_URL + "unordered_set/" + structureName
+                    + "/" + methodName + "/";
+        } else if (isMapContainer(structureName)) {
+            requestURL = CPLUSPLUS_URL + "map/" + structureName
+                    + "/" + methodName + "/";
+        } else if (isUnorderedMapContainer(structureName)) {
+            requestURL = CPLUSPLUS_URL + "unordered_map/" + structureName
+                    + "/" + methodName + "/";
+        } else if (isQueueContainer(structureName)) {
+            requestURL = CPLUSPLUS_URL + "queue/" + structureName
+                    + "/" + methodName + "/";
+        } else if ("string".equals(structureName)) {
+            requestURL = CPLUSPLUS_URL + "string/" + structureName
+                    + "/" + methodName + "/";
+        } else {
+            requestURL = CPLUSPLUS_URL + structureName
+                    + "/" + methodName + "/";
         }
         return requestURL;
     }

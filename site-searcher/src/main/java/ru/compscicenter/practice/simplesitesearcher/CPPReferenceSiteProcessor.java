@@ -61,35 +61,29 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             if (fullMethodName.length == 1) {
                 return requestURL;
             }
-            if (isContainer(fullMethodName[1])) {
-                requestURL = CPPREFERENCE_URL + "cpp/container"
-                        + "/" + fullMethodName[1]
-                        + "/" + fullMethodName[0];
-            } else if (isAnyStringLibrary(fullMethodName[1])) {
-                requestURL = CPPREFERENCE_URL + "cpp/string"
-                        + "/" + fullMethodName[1]
-                        + "/" + fullMethodName[0];
-            } else {
-                requestURL = CPPREFERENCE_URL + "cpp/io"
-                        + "/" + fullMethodName[1]
-                        + "/" + fullMethodName[0];
-            }
+            requestURL = buildURL(fullMethodName[1], fullMethodName[0]);
         } else {
             String methodName = fullMethodName[fullMethodName.length - 1];
             String structureName = fullMethodName[fullMethodName.length - 2];
-            if (isContainer(structureName)) {
-                requestURL = CPPREFERENCE_URL + "cpp/container"
-                        + "/" + structureName
-                        + "/" + methodName;
-            } else if (isAnyStringLibrary(structureName)) {
-                requestURL = CPPREFERENCE_URL + "cpp/string"
-                        + "/" + structureName
-                        + "/" + methodName;
-            } else {
-                requestURL = CPPREFERENCE_URL + "cpp/io" +
-                        "/" + structureName
-                        + "/" + methodName;
-            }
+            requestURL = buildURL(methodName, structureName);
+        }
+        return requestURL;
+    }
+
+    private String buildURL(String methodName, String structureName) {
+        String requestURL;
+        if (isContainer(structureName)) {
+            requestURL = CPPREFERENCE_URL + "cpp/container"
+                    + "/" + structureName
+                    + "/" + methodName;
+        } else if (isAnyStringLibrary(structureName)) {
+            requestURL = CPPREFERENCE_URL + "cpp/string"
+                    + "/" + structureName
+                    + "/" + methodName;
+        } else {
+            requestURL = CPPREFERENCE_URL + "cpp/io" +
+                    "/" + structureName
+                    + "/" + methodName;
         }
         return requestURL;
     }
