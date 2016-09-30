@@ -21,20 +21,21 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         System.out.println("en.cppreference.com");
 
         Pattern p =
-                Pattern.compile("<div class=\"cpp source-cpp\"><pre class=\"de1\">(.*)</pre></div>.*Output:");
+            Pattern.compile("<div class=\"cpp source-cpp\"><pre class=\"de1\">(.*)</pre></div></div><p>");
         Matcher matcher = p.matcher(result);
         String codeExample;
         while (matcher.find()) {
             codeExample = matcher.group(1);
             codeExample = codeExample
                 .replaceAll(
-                        "<(/)?(span|a)(\\s((class=\"[a-z]{2}\\d+\")|(href=\"https?://[a-zA-Z\\.]([a-zA-Z\\./])*\")))?>"
-                        , ""
+                    "<(/)?(span|a)(\\s((class=\"[a-z]{2}\\d+\")|(href=\"https?://[a-zA-Z\\.]([_a-zA-Z\\./])*\")))?>"
+                    , ""
                 );
             codeExample = codeExample.replaceAll("&#40;", "(");
             codeExample = codeExample.replaceAll("&#41;", ")");
             codeExample = codeExample.replaceAll("&#123;", "{");
             codeExample = codeExample.replaceAll("&#125;", "}");
+            codeExample = codeExample.replaceAll("&#160;", " ");
             codeExample = codeExample.replaceAll("&gt;", ">");
             codeExample = codeExample.replaceAll("&lt;", "<");
             codeExample = codeExample.replaceAll("&quot;", "\"");
@@ -59,9 +60,12 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         if (fullMethodName.length == 1) {
             fullMethodName = query.split(" ");
             if (fullMethodName.length == 1) {
-                return requestURL;
-            }
-            requestURL = buildURL(fullMethodName[1], fullMethodName[0]);
+                if (isMathFunction(fullMethodName[0]))
+                    requestURL += CPPREFERENCE_URL + "cpp/numeric/math" + "/" + fullMethodName[0];
+                else
+                    return requestURL;
+            } else
+                requestURL = buildURL(fullMethodName[1], fullMethodName[0]);
         } else {
             String methodName = fullMethodName[fullMethodName.length - 1];
             String structureName = fullMethodName[fullMethodName.length - 2];
@@ -72,7 +76,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
 
     private String buildURL(String methodName, String structureName) {
         String requestURL;
-        if (isContainer(structureName)) {
+        if (isMathFunction(methodName)) {
+            requestURL = CPPREFERENCE_URL + "cpp/numeric/math/" + methodName;
+        } else if (isContainer(structureName)) {
             requestURL = CPPREFERENCE_URL + "cpp/container"
                     + "/" + structureName
                     + "/" + methodName;
