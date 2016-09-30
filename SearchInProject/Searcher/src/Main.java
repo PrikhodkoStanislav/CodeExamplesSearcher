@@ -14,6 +14,7 @@ public class Main {
         funName = "strcpy";
         pathToFile = "../Linux/linux-4.8-rc8/arch/alpha/boot/bootp.c";
         Searcher searcher = new Searcher();
-        searcher.search(funName, pathToFile);
+        String result = searcher.search(funName, pathToFile);
+        System.out.println(result);
     }
 }

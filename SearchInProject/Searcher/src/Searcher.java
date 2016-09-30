@@ -7,10 +7,12 @@ import java.util.List;
  */
 public class Searcher {
 
-    public void search(String functionName, String pathToFile) {
+    public String search(String functionName, String pathToFile) {
+        String result = "";
         try {
             BufferedReader in = new BufferedReader(new FileReader(pathToFile));
-            String str;
+            String str = "";
+            final String newLine = "\n";
 
             final int lengthOfBuffer = 2;
             int numberOfExample = 1;
@@ -18,23 +20,22 @@ public class Searcher {
 
             while ((str = in.readLine()) != null) {
                 if (str.contains(functionName)) {
-                    System.out.println("Example " + numberOfExample + ":");
-                    System.out.println();
+                    result += "Example " + numberOfExample + ":" + newLine + newLine;
 
                     for(String s : buffer) {
-                        System.out.println(s);
+                        result += s + newLine;
                     }
 
                     buffer.clear();
-                    System.out.println(str);
+                    result += str + newLine;
 
                     for (int i = 0; i < lengthOfBuffer; i++) {
                         if (((str = in.readLine()) != null)) {
-                            System.out.println(str);
+                            result += str + newLine;
                         }
                     }
 
-                    System.out.println();
+                    result += newLine;
                     numberOfExample++;
                 }
                 else {
@@ -48,5 +49,6 @@ public class Searcher {
         catch (IOException e) {
             e.printStackTrace();
         }
+        return result;
     }
 }
