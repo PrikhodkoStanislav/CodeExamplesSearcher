@@ -22,7 +22,7 @@ public class Main {
 
     public static void test3() {
         String funName = "printk";
-        String pathToFile = "../Linux/linux-4.8-rc8/";
+        String pathToFile = "../Linux/linux-4.8-rc8/kernel/power";
         Searcher searcher = new Searcher();
         String result = searcher.search(funName, pathToFile);
         System.out.println(result);
