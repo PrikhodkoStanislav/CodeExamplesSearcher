@@ -37,7 +37,11 @@ public class Main {
 
 //        test1();
 //        test2();
-        test3();
+//        test3();
+        System.out.println(args[0]);
+        System.out.println(args[1]);
+        Searcher searcher = new Searcher();
+        System.out.println(searcher.search(args[0], args[1]));
 
 
     }
