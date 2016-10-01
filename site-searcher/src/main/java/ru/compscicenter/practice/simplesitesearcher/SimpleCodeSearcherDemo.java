@@ -18,12 +18,14 @@ public class SimpleCodeSearcherDemo {
         for (SiteProcessor processor : processors) {
             processor.setQuery(queryMethod);
             processor.start();
+        }
+
+        for (SiteProcessor processor : processors) {
             try {
                 processor.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
 
         System.out.println("Examples of this method usage:");
