@@ -17,11 +17,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     @Override
     public List<String> findAndProcessCodeExamples(final String result) {
         List<String> answers = new ArrayList<String>();
-        System.out.println("Examples of this method usage..");
-        System.out.println("en.cppreference.com");
 
-        Pattern p =
-            Pattern.compile("<div class=\"cpp source-cpp\"><pre class=\"de1\">(.*)</pre></div></div><p>");
+        Pattern p = Pattern.compile("<div class=\"cpp source-cpp\"><pre class=\"de1\">(.*)</pre></div></div><p>");
         Matcher matcher = p.matcher(result);
         String codeExample;
         while (matcher.find()) {
@@ -51,6 +48,11 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             answers.add(code);
         }
         return answers;
+    }
+
+    @Override
+    public String getSiteName() {
+        return "en.cppreference.com";
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.compscicenter.practice.simplesitesearcher;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +11,31 @@ import java.net.URL;
 /**
  * Created by user on 28.09.2016!
  */
-public abstract class SiteProcessor {
+public abstract class SiteProcessor extends Thread {
+    private List<String> answers;
+    private String query;
+
+    @Override
+    public void run() {
+        String request = generateRequestURL(getQuery());
+        if (request == null || "".equals(request)) {
+            answers = new ArrayList<>();
+            answers.add("Please, exact yor function name");
+        } else {
+            try {
+                String webContent = sendGet(request);
+                if (webContent.contains("Page Not Found")) {
+                    answers = new ArrayList<>();
+                    answers.add("No such method found!");
+                } else {
+                    answers = findAndProcessCodeExamples(webContent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * Generate Request URL
      * @param query - user's query
@@ -25,6 +50,8 @@ public abstract class SiteProcessor {
      * @return list with code examples
      * */
     public abstract List<String> findAndProcessCodeExamples(final String result);
+
+    public abstract String getSiteName();
 
     public String sendGet(String url) throws IOException {
         URL obj = new URL(url);
@@ -52,6 +79,18 @@ public abstract class SiteProcessor {
         in.close();
         con.disconnect();
         return response.toString();
+    }
+
+    public List<String> getAnswers() {
+        return answers;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
     }
 
     protected String toPrettyCode(String code) {
