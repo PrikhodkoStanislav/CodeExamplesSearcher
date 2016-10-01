@@ -21,6 +21,7 @@ public class SearcherTest {
 
     @Test
     public void testFile() {
+        System.out.println(searcher.search("theFunction", "../file.txt"));
         assertEquals("Example 1 : str 1 :\n" +
                 "----------\n" +
                 "theFunction(someArguments)\n" +

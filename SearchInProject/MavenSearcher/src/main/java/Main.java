@@ -29,21 +29,9 @@ public class Main {
     }
 
     public static void main(String[] args) {
-//        Scanner in = new Scanner(System.in);
-//        System.out.println("Input function name: ");
-//        String funName = in.nextLine();
-//        System.out.println("Input path to the file: ");
-//        String pathToFile = in.nextLine();
-
-//        test1();
-//        test2();
-//        test3();
-        System.out.println(args[0]);
-        System.out.println(args[1]);
         Searcher searcher = new Searcher();
-        System.out.println(searcher.search(args[0], args[1]));
-
-
+        test3();
+//        System.out.println(searcher.search(args[0], args[1]));
     }
 }
 

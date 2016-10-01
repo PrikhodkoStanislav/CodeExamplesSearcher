@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Станислав on 28.09.2016.
@@ -10,6 +12,8 @@ public class Searcher {
     public String search(String functionName, String pathToFile) {
         StringBuilder sb = new StringBuilder();
         final String newLine = "\n";
+
+        Pattern p = Pattern.compile(".*(" + functionName + ")(\\().+");
 
         File file = new File(pathToFile);
         if (!file.exists()) {
@@ -39,7 +43,8 @@ public class Searcher {
 
             while ((str = in.readLine()) != null) {
                 strNumber++;
-                if (str.contains(functionName)) {
+                Matcher m = p.matcher(str);
+                if (m.matches()) {
                     numberOfExample++;
                     sb.append("Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine);
                     sb.append("----------" + newLine);
