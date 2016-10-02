@@ -16,26 +16,23 @@ public class SimpleCodeSearcherDemo {
         String queryMethod = in.nextLine();
 
         for (SiteProcessor processor : processors) {
-            String request = processor.generateRequestURL(queryMethod);
-            if (request == null || "".equals(request)) {
-                System.out.println("Please, exact yor function name");
-            } else {
-                try {
-                    String webContent = processor.sendGet(request);
-                    if (webContent.contains("Page Not Found")) {
-                        System.out.println("No such method found!");
-                        return;
-                    } else {
-                        List<String> answers = processor.findAndProcessCodeExamples(webContent);
-                        for (String answer : answers) {
-                            System.out.println(answer);
-                            System.out.println();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            processor.setQuery(queryMethod);
+            processor.start();
+        }
+
+        for (SiteProcessor processor : processors) {
+            try {
+                processor.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
+
+        System.out.println("Examples of this method usage:");
+        for (SiteProcessor processor : processors) {
+            System.out.println(processor.getSiteName());
+            List<String> answers = processor.getAnswers();
+            answers.forEach(System.out::println);
         }
     }
 }

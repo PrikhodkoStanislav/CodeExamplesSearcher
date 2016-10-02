@@ -17,9 +17,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
     @Override
     public List<String> findAndProcessCodeExamples(final String result) {
         List<String> answers = new ArrayList<String>();
-        System.out.println("Examples of this method usage..");
-        System.out.println("www.cplusplus.com");
-
+        
         Pattern p = Pattern.compile("<code>((<cite>.*)?(<dfn>.*)?<var>.*)</code>");
         Matcher matcher = p.matcher(result);
         String codeExample;
@@ -38,6 +36,11 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             answers.add(code);
         }
         return answers;
+    }
+
+    @Override
+    public String getSiteName() {
+        return "www.cplusplus.com";
     }
 
     //todo search page only by suffix
