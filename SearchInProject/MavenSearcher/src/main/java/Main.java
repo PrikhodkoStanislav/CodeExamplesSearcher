@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 /**
  * Created by Станислав on 28.09.2016.
  */
@@ -30,8 +28,7 @@ public class Main {
 
     public static void main(String[] args) {
         Searcher searcher = new Searcher();
-        test3();
-//        System.out.println(searcher.search(args[0], args[1]));
+        System.out.println(searcher.search(args[0], args[1]));
     }
 }
 
