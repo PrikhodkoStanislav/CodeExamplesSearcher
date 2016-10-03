@@ -40,7 +40,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
 
     @Override
     public String getSiteName() {
-        return "www.cplusplus.com";
+        return CPLUSPLUS_URL.substring(0, CPLUSPLUS_URL.length() - 10);
     }
 
     //todo search page only by suffix

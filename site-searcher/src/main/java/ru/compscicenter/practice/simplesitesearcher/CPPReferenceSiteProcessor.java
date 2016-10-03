@@ -25,8 +25,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             codeExample = matcher.group(1);
             codeExample = codeExample
                 .replaceAll(
-                    "<(/)?(span|a)(\\s((class=\"[a-z]{2}\\d+\")|(href=\"https?://[a-zA-Z\\.]([_a-zA-Z\\./])*\")))?>"
-                    , ""
+                        "<(/)?(span|a)(\\s((class=\"[a-z]{2}\\d+\")|(href=\"https?://[a-zA-Z\\.]([_a-zA-Z\\./])*\")))?>"
+                        , ""
                 );
             codeExample = codeExample.replaceAll("&#40;", "(");
             codeExample = codeExample.replaceAll("&#41;", ")");
@@ -54,7 +54,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
 
     @Override
     public String getSiteName() {
-        return "en.cppreference.com";
+        return CPPREFERENCE_URL.substring(0, CPPREFERENCE_URL.length() - 2);
     }
 
     @Override
