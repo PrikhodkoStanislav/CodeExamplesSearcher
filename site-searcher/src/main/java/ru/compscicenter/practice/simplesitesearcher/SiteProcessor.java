@@ -155,4 +155,9 @@ public abstract class SiteProcessor extends Thread {
                 "is(inf|finite|nan|normal|(greater|less)(equal)?)" +
                 "exp(2|ml)?|log(2|10|1p)?)");
     }
+
+    protected boolean isCStringFunction(String s) {
+        return s.matches("(mem(chr|cmp|cpy|move|set)|" +
+                "str(r?chr|n?cat|n?cmp|coll|n?cpy|c?spn|error|len|pbrk|str|tok))");
+    }
 }

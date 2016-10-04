@@ -16,7 +16,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
 
     @Override
     public List<String> findAndProcessCodeExamples(final String result) {
-        List<String> answers = new ArrayList<String>();
+        List<String> answers = new ArrayList<>();
         
         Pattern p = Pattern.compile("<code>((<cite>.*)?(<dfn>.*)?<var>.*)</code>");
         Matcher matcher = p.matcher(result);
@@ -40,7 +40,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
 
     @Override
     public String getSiteName() {
-        return "www.cplusplus.com";
+        return CPLUSPLUS_URL.substring(0, CPLUSPLUS_URL.length() - 10);
     }
 
     //todo search page only by suffix
@@ -52,6 +52,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             if (fullMethodName.length == 1) {
                 if (isMathFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cmath/" + fullMethodName[0];
+                if (isCStringFunction(fullMethodName[0]))
+                    requestURL += CPLUSPLUS_URL + "cstring/" + fullMethodName[0];
                 else
                     return requestURL;
             } else
@@ -68,6 +70,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         String requestURL;
         if (isMathFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "cmath/" + methodName + "/";
+        } else if (isCStringFunction(methodName)) {
+            requestURL = CPLUSPLUS_URL + "cstring/" + methodName + "/";
         } else if (isVectorContainer(structureName)) {
             requestURL = CPLUSPLUS_URL + "vector/" + structureName
                     + "/" + methodName + "/";
