@@ -13,7 +13,11 @@ public class Searcher {
         StringBuilder sb = new StringBuilder();
         final String newLine = "\n";
 
-        Pattern p = Pattern.compile(".*(" + functionName + ")(\\().+");
+        Pattern patternForFunctionName = Pattern.compile(".*(" + functionName + ")(\\().+");
+        Pattern patternForOpenBracket = Pattern.compile(".*\\{.*");
+        Pattern patternForCloseBracket = Pattern.compile(".*\\}.*");
+        Pattern patternForOpenCloseBracket = Pattern.compile(".*\\{.*\\}.*");
+        Pattern patternForCloseOpenBracket = Pattern.compile(".*\\}.*\\{.*");
 
         File file = new File(pathToFile);
         if (!file.exists()) {
@@ -36,15 +40,15 @@ public class Searcher {
             FileReader fileReader = new FileReader(pathToFile);
             BufferedReader in = new BufferedReader(fileReader);
             String str = "";
-            final int lengthOfBuffer = 2;
             int numberOfExample = 0;
             int strNumber = 0;
             List<String> buffer = new LinkedList<String>();
 
             while ((str = in.readLine()) != null) {
                 strNumber++;
-                Matcher m = p.matcher(str);
-                if (m.matches()) {
+                Matcher matcherForFunctionName = patternForFunctionName.matcher(str);
+
+                if (matcherForFunctionName.matches()) {
                     numberOfExample++;
                     sb.append("Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine);
                     sb.append("----------" + newLine);
@@ -54,21 +58,59 @@ public class Searcher {
                     }
 
                     buffer.clear();
-                    sb.append(str + newLine);
 
-                    for (int i = 0; i < lengthOfBuffer; i++) {
-                        if (((str = in.readLine()) != null)) {
+                    while ((str != null)) {
+                        Matcher matcherForOpenCloseBracket = patternForOpenCloseBracket.matcher(str);
+                        if (matcherForOpenCloseBracket.matches()) {
                             sb.append(str + newLine);
+                            str = in.readLine();
+                            continue;
                         }
+                        Matcher matcherForCloseBracket = patternForCloseBracket.matcher(str);
+                        if (matcherForCloseBracket.matches()) {
+                            sb.append(str + newLine);
+                            break;
+                        }
+                        sb.append(str + newLine);
+                        str = in.readLine();
                     }
+
                     sb.append("----------" + newLine);
                     sb.append(newLine);
-                } else {
-                    buffer.add(str);
-                    if (buffer.size() > lengthOfBuffer) {
-                        buffer.remove(0);
-                    }
+                    continue;
                 }
+
+                Matcher matcherForOpenCloseBracket = patternForOpenCloseBracket.matcher(str);
+
+                if (matcherForOpenCloseBracket.matches()) {
+                    buffer.add(str);
+                    continue;
+                }
+
+                Matcher matcherForCloseOpenBracket = patternForCloseOpenBracket.matcher(str);
+
+                if (matcherForCloseOpenBracket.matches()) {
+                    buffer.clear();
+                    buffer.add(str);
+                    continue;
+                }
+
+                Matcher matcherForOpenBracket = patternForOpenBracket.matcher(str);
+
+                if (matcherForOpenBracket.matches()) {
+                    buffer.clear();
+                    buffer.add(str);
+                    continue;
+                }
+
+                Matcher matcherForCloseBracket = patternForCloseBracket.matcher(str);
+
+                if (matcherForCloseBracket.matches()) {
+                    buffer.clear();
+                    continue;
+                }
+
+                buffer.add(str);
             }
         }
         catch (IOException e) {
