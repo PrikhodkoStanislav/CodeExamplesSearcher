@@ -66,7 +66,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             if (fullMethodName.length == 1) {
                 if (isMathFunction(fullMethodName[0]))
                     requestURL += CPPREFERENCE_URL + "cpp/numeric/math/" + fullMethodName[0];
-                else if (isCStringFunction(fullMethodName[0]))
+                else if (isCStringFunction(fullMethodName[0]) || isCStdLibFunction(fullMethodName[0]))
                     requestURL += CPPREFERENCE_URL + "cpp/string/byte/" + fullMethodName[0];
                 else if (isAlgorithmFunction(fullMethodName[0]))
                     requestURL += CPPREFERENCE_URL + "cpp/algorithm/" + fullMethodName[0];
@@ -86,7 +86,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         String requestURL;
         if (isMathFunction(methodName)) {
             requestURL = CPPREFERENCE_URL + "cpp/numeric/math/" + methodName;
-        } else if (isCStringFunction(methodName)) {
+        } else if (isCStringFunction(methodName) || isCStdLibFunction(methodName)) {
                 requestURL = CPPREFERENCE_URL + "cpp/string/byte/" + methodName;
         } else if (isAlgorithmFunction(methodName)) {
             requestURL = CPPREFERENCE_URL + "cpp/algorithm/" + methodName;

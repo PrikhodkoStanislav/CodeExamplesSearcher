@@ -54,6 +54,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     requestURL += CPLUSPLUS_URL + "cmath/" + fullMethodName[0];
                 else if (isCStringFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cstring/" + fullMethodName[0];
+                else if (isCStdLibFunction(fullMethodName[0]))
+                    requestURL += CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0];
                 else if (isAlgorithmFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "algorithm/" + fullMethodName[0];
                 else
@@ -74,6 +76,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             requestURL = CPLUSPLUS_URL + "cmath/" + methodName + "/";
         } else if (isCStringFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "cstring/" + methodName + "/";
+        } else if (isCStdLibFunction(methodName)) {
+            requestURL = CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
         } else if (isAlgorithmFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "algorithm/" + methodName + "/";
         } else if (isVectorContainer(structureName)) {
