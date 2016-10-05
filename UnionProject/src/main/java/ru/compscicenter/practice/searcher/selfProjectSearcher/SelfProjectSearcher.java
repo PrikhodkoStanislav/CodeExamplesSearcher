@@ -1,5 +1,7 @@
 package ru.compscicenter.practice.searcher.selfProjectSearcher;
 
+import ru.compscicenter.practice.searcher.Searcher;
+
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,8 +11,9 @@ import java.util.regex.Pattern;
 /**
  * Created by Станислав on 05.10.2016.
  */
-public class SearchInProject {
+public class SelfProjectSearcher extends Searcher {
 
+    @Override
     public String search(String functionName, String pathToFile) {
         StringBuilder sb = new StringBuilder();
         final String newLine = "\n";
