@@ -13,7 +13,7 @@ public class Searcher {
         StringBuilder sb = new StringBuilder();
         final String newLine = "\n";
 
-        Pattern patternForFunctionName = Pattern.compile(".*(" + functionName + ")(\\().+");
+        Pattern patternForFunctionName = Pattern.compile(".*(\\s)(" + functionName + ")(\\().+");
         Pattern patternForOpenBracket = Pattern.compile(".*\\{.*");
         Pattern patternForCloseBracket = Pattern.compile(".*\\}.*");
         Pattern patternForOpenCloseBracket = Pattern.compile(".*\\{.*\\}.*");
@@ -58,6 +58,11 @@ public class Searcher {
                     }
 
                     buffer.clear();
+
+                    sb.append("^^^^^^^^^^" + newLine);
+                    sb.append(str + newLine);
+                    sb.append("^^^^^^^^^^" + newLine);
+                    str = in.readLine();
 
                     while ((str != null)) {
                         Matcher matcherForOpenCloseBracket = patternForOpenCloseBracket.matcher(str);
