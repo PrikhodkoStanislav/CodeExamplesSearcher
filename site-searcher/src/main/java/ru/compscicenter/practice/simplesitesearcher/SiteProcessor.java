@@ -164,6 +164,10 @@ public abstract class SiteProcessor extends Thread {
 
     protected boolean isCStringFunction(String s) {
         return s.matches("(mem(chr|cmp|cpy|move|set)|" +
-                "str(r?chr|n?cat|n?cmp|coll|n?cpy|c?spn|error|len|pbrk|str|tok))");
+                "str(r?chr|n?cat(_s)?|n?cmp|coll|n?cpy(_s)?|c?spn|error|len(_s)?|pbrk|str|tok))");
+    }
+
+    protected boolean isCStdLibFunction(String s) {
+        return s.matches("(ato(ll?|f|i)?|strto(u?ll?|f|l?d))");
     }
 }

@@ -61,6 +61,30 @@ public class SiteSearcherTest {
                 testCorrectURL(cppProcessor, "std::nth_element"));
     }
 
+    @Test
+    public void testCppRefAtoI() {
+        assertEquals("http://en.cppreference.com/w/cpp/string/byte/atoi",
+                testCorrectURL(cppReferenceProcessor, "std::atoi"));
+    }
+
+    @Test
+    public void testCppAtoI() {
+        assertEquals("http://www.cplusplus.com/reference/cstdlib/atoi/",
+                testCorrectURL(cppProcessor, "std::atoi"));
+    }
+
+    @Test
+    public void testCppRefAtoLL() {
+        assertEquals("http://en.cppreference.com/w/cpp/string/byte/atoi",
+                testCorrectURL(cppReferenceProcessor, "std::atoll"));
+    }
+
+    @Test
+    public void testCppAtoLL() {
+        assertEquals("http://www.cplusplus.com/reference/cstdlib/atoll/",
+                testCorrectURL(cppProcessor, "std::atoll"));
+    }
+
     public String testCorrectURL(SiteProcessor processor, String query) {
         return processor.generateRequestURL(query);
     }
