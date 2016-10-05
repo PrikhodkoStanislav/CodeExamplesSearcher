@@ -39,7 +39,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppStrlen() {
-        assertEquals("http://www.cplusplus.com/reference/cstring/strlen/",
+        assertEquals("http://www.cplusplus.com/reference/cstring/strlen",
                 testCorrectURL(cppProcessor, "strlen"));
     }
 
@@ -47,6 +47,18 @@ public class SiteSearcherTest {
     public void testCppRefStrlen() {
         assertEquals("http://en.cppreference.com/w/cpp/string/byte/strlen",
                 testCorrectURL(cppReferenceProcessor, "strlen"));
+    }
+
+    @Test
+    public void testCppRefNthElement() {
+        assertEquals("http://en.cppreference.com/w/cpp/algorithm/nth_element",
+                testCorrectURL(cppReferenceProcessor, "std::nth_element"));
+    }
+
+    @Test
+    public void testCppNthElement() {
+        assertEquals("http://www.cplusplus.com/reference/algorithm/nth_element/",
+                testCorrectURL(cppProcessor, "std::nth_element"));
     }
 
     public String testCorrectURL(SiteProcessor processor, String query) {

@@ -65,9 +65,11 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             fullMethodName = query.split(" ");
             if (fullMethodName.length == 1) {
                 if (isMathFunction(fullMethodName[0]))
-                    requestURL += CPPREFERENCE_URL + "cpp/numeric/math" + "/" + fullMethodName[0];
+                    requestURL += CPPREFERENCE_URL + "cpp/numeric/math/" + fullMethodName[0];
                 else if (isCStringFunction(fullMethodName[0]))
-                    requestURL += CPPREFERENCE_URL + "cpp/string/byte" + "/" + fullMethodName[0];
+                    requestURL += CPPREFERENCE_URL + "cpp/string/byte/" + fullMethodName[0];
+                else if (isAlgorithmFunction(fullMethodName[0]))
+                    requestURL += CPPREFERENCE_URL + "cpp/algorithm/" + fullMethodName[0];
                 else
                     return requestURL;
             } else
@@ -86,6 +88,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             requestURL = CPPREFERENCE_URL + "cpp/numeric/math/" + methodName;
         } else if (isCStringFunction(methodName)) {
                 requestURL = CPPREFERENCE_URL + "cpp/string/byte/" + methodName;
+        } else if (isAlgorithmFunction(methodName)) {
+            requestURL = CPPREFERENCE_URL + "cpp/algorithm/" + methodName;
         } else if (isContainer(structureName)) {
             requestURL = CPPREFERENCE_URL + "cpp/container"
                     + "/" + structureName

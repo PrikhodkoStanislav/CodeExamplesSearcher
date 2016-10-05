@@ -156,6 +156,12 @@ public abstract class SiteProcessor extends Thread {
                 "exp(2|ml)?|log(2|10|1p)?)");
     }
 
+    protected boolean isAlgorithmFunction(String s) {
+        return s.matches("(qsort|bsearch|binary_search|equal_range|(lower|upper)_bound|" +
+                "(min|max|minmax)(_element)?|nth_element|" +
+                "((partial|stable|is)_)?sort(_copy|ed(_untill)?)?)");
+    }
+
     protected boolean isCStringFunction(String s) {
         return s.matches("(mem(chr|cmp|cpy|move|set)|" +
                 "str(r?chr|n?cat|n?cmp|coll|n?cpy|c?spn|error|len|pbrk|str|tok))");
