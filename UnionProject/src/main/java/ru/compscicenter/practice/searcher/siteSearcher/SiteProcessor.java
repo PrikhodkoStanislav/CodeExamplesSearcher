@@ -14,6 +14,7 @@ import java.net.URL;
 public abstract class SiteProcessor extends Thread {
     private List<String> answers;
     private String query;
+    private CodeFormatter codeFormatter = CodeFormatter.getInstance();
 
     @Override
     public void run() {
@@ -81,6 +82,10 @@ public abstract class SiteProcessor extends Thread {
         return response.toString();
     }
 
+    public String toPrettyCode(String code) {
+        return codeFormatter.toPrettyCode(code);
+    }
+
     public List<String> getAnswers() {
         return answers;
     }
@@ -93,59 +98,6 @@ public abstract class SiteProcessor extends Thread {
         this.query = query;
     }
 
-    protected String toPrettyCode(String code) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < code.length(); i++) {
-            char symbol = code.charAt(i);
-            if (symbol == '#') {
-                sb.append("\n").append(symbol);
-            } else if (symbol == ';') {
-                if (isNotEmptyAfterSemicolon(code, i)) {
-                    sb.append(symbol);
-                } else {
-                    sb.append(symbol).append("\n");
-                }
-            } else if (symbol == ')') {
-                if (isBeforeNewLine(code, i)) {
-                    sb.append(symbol).append("\n");
-                } else {
-                    sb.append(symbol);
-                }
-            /*} else if (symbol == ' ') {
-                if ((i + 2) < code.length() && isNoSpaceChar(code, i + 2)) {
-                    sb.append("\n").append(symbol);
-                } else {
-                    sb.append(symbol);
-                }*/
-            } else if (symbol == '{' || symbol == '}') {
-                if ((i + 2) < code.length() && (isNoSpaceChar(code, i + 1) || isNoSpaceChar(code, i + 2)))
-                    sb.append(symbol);
-                else
-                    sb.append(symbol).append("\n");
-            } else {
-                sb.append(symbol);
-            }
-        }
-        return sb.toString();
-    }
-
-    private boolean isBeforeNewLine(String code, int i) {
-        return (i + 2) < code.length() && ((code.charAt(i + 1) != '{' && code.charAt(i + 1) != ')' && code.charAt(i + 1) != ';')
-            || ((code.charAt(i + 1) == ' ' && (code.charAt(i + 2) != '{'
-                && Character.isLetter(code.charAt(i + 2))))));
-    }
-
-    private boolean isNotEmptyAfterSemicolon(String code, int i) {
-        return (i + 2) < code.length() && isNoSpaceChar(code, i + 2) && isNoSpaceChar(code, i + 1);
-    }
-
-    private boolean isNoSpaceChar(String code, int i) {
-        return Character.isLetterOrDigit(code.charAt(i)) || code.charAt(i) == '-'
-                || code.charAt(i) == '*' || code.charAt(i) == '/'
-                || code.charAt(i) == '+' || code.charAt(i) == ';'
-                || code.charAt(i) == '<' || code.charAt(i) == '>';
-    }
-
     protected boolean isMathFunction(String s) {
         return s.matches("(a?(sin|cos|tan)h?|atan2|" +
                 "l?|l?(abs|mod|round|rint|max|min)|" +
@@ -154,6 +106,14 @@ public abstract class SiteProcessor extends Thread {
                 "ceil|floor|trunc|modf|(fr|ld)exp|" +
                 "is(inf|finite|nan|normal|(greater|less)(equal)?)" +
                 "exp(2|ml)?|log(2|10|1p)?)");
+    }
+
+    protected boolean isCStdIOFunction(String s) {
+        return s.matches("(f((re)?open|close|flush|wide|read|write)|setv?buf|" +
+                "(f|un)?(get|put)(w?(c|char|s))|" +
+                "v?(f|sn?)?w?(scan|print)f|" +
+                "f((get|set)pos|seek|tell)|re(wind|move|name)|" +
+                "clearerr|(f|p)e(rror|of)|tmp(file|nam))");
     }
 
     protected boolean isAlgorithmFunction(String s) {

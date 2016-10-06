@@ -18,7 +18,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     public List<String> findAndProcessCodeExamples(final String result) {
         List<String> answers = new ArrayList<>();
 
-        Pattern p = Pattern.compile("<div class=\"cpp source-cpp\"><pre class=\"de1\">(.*)</pre></div></div><p>");
+        Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"cpp source-cpp\"><pre class=\"de1\">(.*)</pre></div></div><p>");
         Matcher matcher = p.matcher(result);
         String codeExample;
         while (matcher.find()) {
@@ -40,7 +40,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             codeExample = codeExample.replaceAll("&quot;", "\"");
             codeExample = codeExample.replaceAll("&amp;", "&");
 
-            String prettyCode = super.toPrettyCode(codeExample);
+            String prettyCode = toPrettyCode(codeExample);
             int intMain = prettyCode.indexOf("int main ()");
             if (intMain < 0)
                 intMain = prettyCode.indexOf("int main()");
@@ -67,18 +67,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                 if (isMathFunction(fullMethodName[0]))
                     requestURL += CPPREFERENCE_URL + "cpp/numeric/math/" + fullMethodName[0];
                 else if (isCStringFunction(fullMethodName[0]) || isCStdLibFunction(fullMethodName[0]))
-                    if (fullMethodName[0].matches("ato(ll?|i)?"))
-                        requestURL += CPPREFERENCE_URL + "cpp/string/byte/atoi";
-                    else if (fullMethodName[0].matches("atof"))
-                        requestURL += CPPREFERENCE_URL + "cpp/string/byte/atof";
-                    else if (fullMethodName[0].matches("strto(ll?)"))
-                        requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtol";
-                    else if (fullMethodName[0].matches("strtoll?"))
-                        requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtoul";
-                    else if (fullMethodName[0].matches("strto(f|l?d)"))
-                        requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtod";
-                    else
-                        requestURL += CPPREFERENCE_URL + "cpp/string/byte/" + fullMethodName[0];
+                    requestURL = getStdLibUrl(fullMethodName[0], requestURL);
+                else if (isCStdIOFunction(fullMethodName[0]))
+                    requestURL = getStdIOUrl(fullMethodName[0], requestURL);
                 else if (isAlgorithmFunction(fullMethodName[0]))
                     requestURL += CPPREFERENCE_URL + "cpp/algorithm/" + fullMethodName[0];
                 else
@@ -98,18 +89,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         if (isMathFunction(methodName)) {
             requestURL = CPPREFERENCE_URL + "cpp/numeric/math/" + methodName;
         } else if (isCStringFunction(methodName) || isCStdLibFunction(methodName)) {
-            if (methodName.matches("ato(ll?|i)?"))
-                requestURL += CPPREFERENCE_URL + "cpp/string/byte/atoi";
-            else if (methodName.matches("atof"))
-                requestURL += CPPREFERENCE_URL + "cpp/string/byte/atof";
-            else if (methodName.matches("strto(ll?)"))
-                requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtol";
-            else if (methodName.matches("strtoll?"))
-                requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtoul";
-            else if (methodName.matches("strto(f|l?d)"))
-                requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtod";
-            else
-                requestURL += CPPREFERENCE_URL + "cpp/string/byte/" + methodName;
+            requestURL = getStdLibUrl(methodName, requestURL);
+        } else if (isCStdIOFunction(methodName)) {
+            requestURL = getStdIOUrl(methodName, requestURL);
         } else if (isAlgorithmFunction(methodName)) {
             requestURL = CPPREFERENCE_URL + "cpp/algorithm/" + methodName;
         } else if (isContainer(structureName)) {
@@ -125,6 +107,54 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     "/" + structureName
                     + "/" + methodName;
         }
+        return requestURL;
+    }
+
+    private String getStdLibUrl(String methodName, String requestURL) {
+        if (methodName.matches("ato(ll?|i)?"))
+            requestURL += CPPREFERENCE_URL + "cpp/string/byte/atoi";
+        else if (methodName.matches("atof"))
+            requestURL += CPPREFERENCE_URL + "cpp/string/byte/atof";
+        else if (methodName.matches("strto(ll?)"))
+            requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtol";
+        else if (methodName.matches("strtoll?"))
+            requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtoul";
+        else if (methodName.matches("strto(f|l?d)"))
+            requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtod";
+        else
+            requestURL += CPPREFERENCE_URL + "cpp/string/byte/" + methodName;
+        return requestURL;
+    }
+
+    private String getStdIOUrl(String methodName, String requestURL) {
+        if (methodName.matches("(f|s)?scanf"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/fscanf";
+        else if (methodName.matches("v(f|s)?scanf"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfscanf";
+        else if (methodName.matches("v(f|s)?scanf"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfscanf";
+        else if (methodName.matches("(f|sn?)?printf"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/fprintf";
+        else if (methodName.matches("v(f|sn?)?printf"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfprintf";
+        else if (methodName.matches("(f|s)?wscanf"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/fwscanf";
+        else if (methodName.matches("v(f|s)?wscanf"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfwscanf";
+        else if (methodName.matches("(f|s)?wprintf"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/fwprintf";
+        else if (methodName.matches("v(f|s)?wprintf"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfwprintf";
+        else if (methodName.matches("f?putc"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/fputc";
+        else if (methodName.matches("f?getc"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/fgetc";
+        else if (methodName.matches("f?putwc"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/fputwc";
+        else if (methodName.matches("f?getwc"))
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/fgetwc";
+        else
+            requestURL += CPPREFERENCE_URL + "cpp/io/c/" + methodName;
         return requestURL;
     }
 

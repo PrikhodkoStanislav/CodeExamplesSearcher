@@ -28,7 +28,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             codeExample = codeExample.replaceAll("&gt;", ">");
             codeExample = codeExample.replaceAll("&lt;", "<");
 
-            String prettyCode = super.toPrettyCode(codeExample);
+            String prettyCode = toPrettyCode(codeExample);
             int intMain = prettyCode.indexOf("int main ()");
             String code = prettyCode.substring(0, intMain)
                 + '\n' + prettyCode.substring(intMain);
@@ -43,7 +43,6 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         return CPLUSPLUS_URL.substring(0, CPLUSPLUS_URL.length() - 10);
     }
 
-    //todo search page only by suffix
     public String generateRequestURL(final String query) {
         String[] fullMethodName = query.split("::");
         String requestURL = "";
@@ -56,6 +55,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     requestURL += CPLUSPLUS_URL + "cstring/" + fullMethodName[0];
                 else if (isCStdLibFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0];
+                else if (isCStdIOFunction(fullMethodName[0]))
+                    requestURL += CPLUSPLUS_URL + "cstdio/" + fullMethodName[0];
                 else if (isAlgorithmFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "algorithm/" + fullMethodName[0];
                 else
@@ -78,6 +79,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             requestURL = CPLUSPLUS_URL + "cstring/" + methodName + "/";
         } else if (isCStdLibFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
+        } else if (isCStdIOFunction(methodName)) {
+            requestURL = CPLUSPLUS_URL + "cstdio/" + methodName + "/";
         } else if (isAlgorithmFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "algorithm/" + methodName + "/";
         } else if (isVectorContainer(structureName)) {

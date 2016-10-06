@@ -33,9 +33,12 @@ public class SiteSearcher extends Searcher {
         for (SiteProcessor processor : processors) {
             sb.append(processor.getSiteName()).append("\n");
             List<String> answers = processor.getAnswers();
-            for (String answer : answers) {
-                sb.append(answer).append("\n");
-            }
+            if (answers != null)
+                for (String answer : answers) {
+                    sb.append(answer).append("\n");
+                }
+            else
+                sb.append("Sorry! Connection was interrupted!").append("\n");
         }
 
         return sb.toString();

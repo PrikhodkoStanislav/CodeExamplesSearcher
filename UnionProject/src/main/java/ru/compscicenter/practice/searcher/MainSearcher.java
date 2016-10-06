@@ -11,6 +11,7 @@ public class MainSearcher {
         Searcher searcher1 = new SiteSearcher();
         Searcher searcher2 = new SelfProjectSearcher();
         System.out.println(searcher1.search(args[0]));
-        System.out.println(searcher2.search(args[0], args[1]));
+        if (args.length > 1)
+            System.out.println(searcher2.search(args[0], args[1]));
     }
 }
