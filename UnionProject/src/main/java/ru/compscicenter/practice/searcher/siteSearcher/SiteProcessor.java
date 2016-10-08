@@ -12,7 +12,7 @@ import java.net.URL;
  * Created by user on 28.09.2016!
  */
 public abstract class SiteProcessor extends Thread {
-    private List<String> answers;
+    private List<String> answers = new ArrayList<>();
     private String query;
     private CodeFormatter codeFormatter = CodeFormatter.getInstance();
 
@@ -20,13 +20,11 @@ public abstract class SiteProcessor extends Thread {
     public void run() {
         String request = generateRequestURL(getQuery());
         if (request == null || "".equals(request)) {
-            answers = new ArrayList<>();
             answers.add("Please, exact your function name");
         } else {
             try {
                 String webContent = sendGet(request);
                 if (webContent.contains("Page Not Found")) {
-                    answers = new ArrayList<>();
                     answers.add("No such method found!");
                 } else {
                     answers = findAndProcessCodeExamples(webContent);

@@ -13,8 +13,6 @@ public class SiteSearcher extends Searcher {
     public String search(String methodNameQuery) {
         SiteProcessor[] processors = {new CPlusPlusSiteProcessor(), new CPPReferenceSiteProcessor()};
 
-        System.out.print("Enter a function name: ");
-
         for (SiteProcessor processor : processors) {
             processor.setQuery(methodNameQuery);
             processor.start();
