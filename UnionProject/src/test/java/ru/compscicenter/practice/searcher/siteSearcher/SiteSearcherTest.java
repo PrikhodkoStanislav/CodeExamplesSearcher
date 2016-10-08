@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.siteSearcher;
+package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.junit.Before;
 import org.junit.Test;
