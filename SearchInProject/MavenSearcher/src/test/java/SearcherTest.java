@@ -21,9 +21,13 @@ public class SearcherTest {
 
     @Test
     public void testFile() {
-        assertEquals("Example 1 : str 1 :\n" +
+        assertEquals("Example 1 : str 2 :\n" +
                 "----------\n" +
-                "theFunction(someArguments)\n" +
+                "for (int i = 0; i < n; i++) {\n" +
+                "^^^^^^^^^^\n" +
+                "\ttheFunction(someArguments[i]);\n" +
+                "^^^^^^^^^^\n" +
+                "}\n" +
                 "----------\n\n", searcher.search("theFunction", "../file.txt"));
     }
 }

@@ -70,6 +70,14 @@ public class SelfProjectSearcher extends Searcher {
                     str = in.readLine();
 
                     while ((str != null)) {
+                        matcherForFunctionName = patternForFunctionName.matcher(str);
+                        if (matcherForFunctionName.matches()) {
+                            sb.append("^^^^^^^^^^" + newLine);
+                            sb.append(str + newLine);
+                            sb.append("^^^^^^^^^^" + newLine);
+                            str = in.readLine();
+                            continue;
+                        }
                         Matcher matcherForOpenCloseBracket = patternForOpenCloseBracket.matcher(str);
                         if (matcherForOpenCloseBracket.matches()) {
                             sb.append(str + newLine);

@@ -1,1 +1,3 @@
-theFunction(someArguments)
+for (int i = 0; i < n; i++) {
+	theFunction(someArguments[i]);
+}

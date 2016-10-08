@@ -21,7 +21,7 @@ public abstract class SiteProcessor extends Thread {
         String request = generateRequestURL(getQuery());
         if (request == null || "".equals(request)) {
             answers = new ArrayList<>();
-            answers.add("Please, exact yor function name");
+            answers.add("Please, exact your function name");
         } else {
             try {
                 String webContent = sendGet(request);
