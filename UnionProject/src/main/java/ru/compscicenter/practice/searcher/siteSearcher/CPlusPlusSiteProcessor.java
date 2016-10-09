@@ -53,9 +53,11 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     requestURL += CPLUSPLUS_URL + "cmath/" + fullMethodName[0];
                 else if (isCAssert(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cassert/" + fullMethodName[0];
-                else if (isCStringFunction(fullMethodName[0]))
+                else if (isCStringFunction(fullMethodName[0])) {
+                    fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
+                    fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
                     requestURL += CPLUSPLUS_URL + "cstring/" + fullMethodName[0];
-                else if (isCStdLibFunction(fullMethodName[0]))
+                } else if (isCStdLibFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0];
                 else if (isCStdIOFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cstdio/" + fullMethodName[0];
@@ -82,6 +84,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         } else if (isCAssert(methodName)) {
             requestURL = CPLUSPLUS_URL + "cassert" + methodName + "/";
         } else if (isCStringFunction(methodName)) {
+            methodName = methodName.replaceAll("_s$", "");
+            methodName = methodName.replaceAll("errorlen$", "error");
             requestURL = CPLUSPLUS_URL + "cstring/" + methodName + "/";
         } else if (isCStdLibFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
