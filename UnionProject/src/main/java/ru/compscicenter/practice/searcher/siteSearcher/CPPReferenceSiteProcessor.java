@@ -129,8 +129,6 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             requestURL += CPPREFERENCE_URL + "c/string/byte/strtoul";
         else if (methodName.matches("strto(f|l?d)"))
             requestURL += CPPREFERENCE_URL + "c/string/byte/strtod";
-        else if (isCTypeFunction(methodName))
-            requestURL += CPPREFERENCE_URL + "c/string/byte/" + methodName;
         else
             requestURL += CPPREFERENCE_URL + "c/string/byte/" + methodName;
         return requestURL;
@@ -139,8 +137,6 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     private String getStdIOUrl(String methodName, String requestURL) {
         if (methodName.matches("(f|s)?scanf"))
             requestURL += CPPREFERENCE_URL + "cpp/io/c/fscanf";
-        else if (methodName.matches("v(f|s)?scanf"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfscanf";
         else if (methodName.matches("v(f|s)?scanf"))
             requestURL += CPPREFERENCE_URL + "cpp/io/c/vfscanf";
         else if (methodName.matches("(f|sn?)?printf"))
