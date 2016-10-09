@@ -127,12 +127,21 @@ public abstract class SiteProcessor extends Thread {
                 "str(r?chr|((n?c(at|py)|error(len)?|len|tok)(_s)?)|n?cmp|coll|c?spn|pbrk|str))");
     }
 
+    protected boolean isCWideStringFunction(String s) {
+        return s.matches("(wmem(chr|cmp|(cpy|move|set)(_s)?)|" +
+                "wcs(r?chr|((n?c(at|py)|error(len)?|len|tok)(_s)?)|n?cmp|coll|c?spn|pbrk|str))");
+    }
+
     protected boolean isCStdLibFunction(String s) {
         return s.matches("(ato(ll?|f|i)?|strto(u?ll?|f|l?d))");
     }
 
     protected boolean isCTypeFunction(String s) {
-        return s.matches("is(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space)|p(rint|unct)|to(low|upp)er");
+        return s.matches("is(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|to(low|upp)er");
+    }
+
+    protected boolean isCWideTypeFunction(String s) {
+        return s.matches("isw(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|tow(low|upp)er|wc(type|trans)");
     }
 
     protected boolean isCAssert(String s) {

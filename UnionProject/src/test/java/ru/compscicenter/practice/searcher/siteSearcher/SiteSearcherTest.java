@@ -163,6 +163,30 @@ public class SiteSearcherTest {
                 testCorrectURL(cppProcessor, "std::isalpha"));
     }
 
+    @Test
+    public void testCppRefIsWAlpha() {
+        assertEquals("http://en.cppreference.com/w/c/string/wide/iswalpha",
+                testCorrectURL(cppReferenceProcessor, "std::iswalpha"));
+    }
+
+    @Test
+    public void testCppIsWAlpha() {
+        assertEquals("http://www.cplusplus.com/reference/cwtype/iswalpha/",
+                testCorrectURL(cppProcessor, "std::iswalpha"));
+    }
+
+    @Test
+    public void testCppRefWscLenS() {
+        assertEquals("http://en.cppreference.com/w/c/string/wide/wcslen",
+                testCorrectURL(cppReferenceProcessor, "std::wcslen_s"));
+    }
+
+    @Test
+    public void testCppIsWscLenS() {
+        assertEquals("http://www.cplusplus.com/reference/cwchar/wcslen/",
+                testCorrectURL(cppProcessor, "std::wcslen_s"));
+    }
+
     public String testCorrectURL(SiteProcessor processor, String query) {
         return processor.generateRequestURL(query);
     }

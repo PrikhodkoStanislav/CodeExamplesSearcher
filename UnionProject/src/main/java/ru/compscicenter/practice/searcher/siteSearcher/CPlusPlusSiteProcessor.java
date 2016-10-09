@@ -58,10 +58,17 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     return CPLUSPLUS_URL + "cstring/" + fullMethodName[0];
                 } else if (isCStdLibFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0];
-                else if (isCStdIOFunction(fullMethodName[0]))
+                else if (isCStdIOFunction(fullMethodName[0])) {
+                    //TODO move w(scan|print)f from cstdio to cwchar
                     return CPLUSPLUS_URL + "cstdio/" + fullMethodName[0];
-                else if (isCTypeFunction(fullMethodName[0]))
+                } else if (isCTypeFunction(fullMethodName[0])) {
                     return CPLUSPLUS_URL + "cctype/" + fullMethodName[0];
+                } else if (isCWideStringFunction(fullMethodName[0])) {
+                    fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
+                    fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
+                    return CPLUSPLUS_URL + "cwchar/" + fullMethodName[0];
+                } else if (isCWideTypeFunction(fullMethodName[0]))
+                    return CPLUSPLUS_URL + "cwtype/" + fullMethodName[0];
                 else if (isAlgorithmFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "algorithm/" + fullMethodName[0];
                 else
@@ -87,9 +94,16 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         } else if (isCStdLibFunction(methodName)) {
             return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
         } else if (isCStdIOFunction(methodName)) {
+            //TODO move w(scan|print)f from cstdio to cwchar
             return CPLUSPLUS_URL + "cstdio/" + methodName + "/";
         } else if (isCTypeFunction(methodName)) {
             return CPLUSPLUS_URL + "cctype/" + methodName + "/";
+        } else if (isCWideStringFunction(methodName)) {
+            methodName = methodName.replaceAll("_s$", "");
+            methodName = methodName.replaceAll("errorlen$", "error");
+            return CPLUSPLUS_URL + "cwchar/" + methodName + "/";
+        } else if (isCWideTypeFunction(methodName)) {
+                return CPLUSPLUS_URL + "cwtype/" + methodName + "/";
         } else if (isAlgorithmFunction(methodName)) {
             return CPLUSPLUS_URL + "algorithm/" + methodName + "/";
         } else if (isVectorContainer(structureName)) {
