@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher.siteSearcher;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppRefSin() {
-        assertEquals("http://en.cppreference.com/w/cpp/numeric/math/sin",
+        assertEquals("http://en.cppreference.com/w/c/numeric/math/sin",
                 testCorrectURL(cppReferenceProcessor, "sin"));
     }
 
@@ -45,7 +45,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppRefStrlen() {
-        assertEquals("http://en.cppreference.com/w/cpp/string/byte/strlen",
+        assertEquals("http://en.cppreference.com/w/c/string/byte/strlen",
                 testCorrectURL(cppReferenceProcessor, "strlen"));
     }
 
@@ -63,7 +63,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppRefAtoI() {
-        assertEquals("http://en.cppreference.com/w/cpp/string/byte/atoi",
+        assertEquals("http://en.cppreference.com/w/c/string/byte/atoi",
                 testCorrectURL(cppReferenceProcessor, "std::atoi"));
     }
 
@@ -75,7 +75,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppRefAtoLL() {
-        assertEquals("http://en.cppreference.com/w/cpp/string/byte/atoi",
+        assertEquals("http://en.cppreference.com/w/c/string/byte/atoi",
                 testCorrectURL(cppReferenceProcessor, "std::atoll"));
     }
 
@@ -113,6 +113,30 @@ public class SiteSearcherTest {
     public void testCppFgetC() {
         assertEquals("http://www.cplusplus.com/reference/cstdio/fgetc/",
                 testCorrectURL(cppProcessor, "std::fgetc"));
+    }
+
+    @Test
+    public void testCppRefWScanf() {
+        assertEquals("http://en.cppreference.com/w/cpp/io/c/fwscanf",
+                testCorrectURL(cppReferenceProcessor, "std::wscanf"));
+    }
+
+    @Test
+    public void testCppWScanf() {
+        assertEquals("http://www.cplusplus.com/reference/cstdio/wscanf/",
+                testCorrectURL(cppProcessor, "std::wscanf"));
+    }
+
+    @Test
+    public void testCppRefIsAlpha() {
+        assertEquals("http://en.cppreference.com/w/c/string/byte/isalpha",
+                testCorrectURL(cppReferenceProcessor, "std::isalpha"));
+    }
+
+    @Test
+    public void testCppIsAlpha() {
+        assertEquals("http://www.cplusplus.com/reference/cctype/isalpha/",
+                testCorrectURL(cppProcessor, "std::isalpha"));
     }
 
     public String testCorrectURL(SiteProcessor processor, String query) {

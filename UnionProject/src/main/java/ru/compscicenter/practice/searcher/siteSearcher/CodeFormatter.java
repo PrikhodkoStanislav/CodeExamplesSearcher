@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher.siteSearcher;
 
 /**
  * Created by user on 06.10.2016!

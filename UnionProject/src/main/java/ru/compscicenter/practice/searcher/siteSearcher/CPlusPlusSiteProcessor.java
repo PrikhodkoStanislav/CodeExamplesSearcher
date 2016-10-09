@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher.siteSearcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +51,16 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             if (fullMethodName.length == 1) {
                 if (isMathFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cmath/" + fullMethodName[0];
+                else if (isCAssert(fullMethodName[0]))
+                    requestURL += CPLUSPLUS_URL + "cassert/" + fullMethodName[0];
                 else if (isCStringFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cstring/" + fullMethodName[0];
                 else if (isCStdLibFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0];
                 else if (isCStdIOFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "cstdio/" + fullMethodName[0];
+                else if (isCTypeFunction(fullMethodName[0]))
+                    requestURL += CPLUSPLUS_URL + "cctype/" + fullMethodName[0];
                 else if (isAlgorithmFunction(fullMethodName[0]))
                     requestURL += CPLUSPLUS_URL + "algorithm/" + fullMethodName[0];
                 else
@@ -75,12 +79,16 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         String requestURL;
         if (isMathFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "cmath/" + methodName + "/";
+        } else if (isCAssert(methodName)) {
+            requestURL = CPLUSPLUS_URL + "cassert" + methodName + "/";
         } else if (isCStringFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "cstring/" + methodName + "/";
         } else if (isCStdLibFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
         } else if (isCStdIOFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "cstdio/" + methodName + "/";
+        } else if (isCTypeFunction(methodName)) {
+            requestURL = CPLUSPLUS_URL + "cctype/" + methodName + "/";
         } else if (isAlgorithmFunction(methodName)) {
             requestURL = CPLUSPLUS_URL + "algorithm/" + methodName + "/";
         } else if (isVectorContainer(structureName)) {

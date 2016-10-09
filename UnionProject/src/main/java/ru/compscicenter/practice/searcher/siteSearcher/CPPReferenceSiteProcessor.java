@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher.siteSearcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +18,11 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     public List<String> findAndProcessCodeExamples(final String result) {
         List<String> answers = new ArrayList<>();
 
-        Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"cpp source-cpp\"><pre class=\"de1\">(.*)</pre></div></div><p>");
+        Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
         Matcher matcher = p.matcher(result);
         String codeExample;
         while (matcher.find()) {
-            codeExample = matcher.group(1);
+            codeExample = matcher.group(3);
             codeExample = codeExample
                 .replaceAll(
                         "<(/)?(span|a)(\\s((class=\"[a-z]{2}\\d+\")|(href=\"https?://[a-zA-Z\\.]([_a-zA-Z\\./])*\")))?>"
@@ -65,8 +65,10 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             fullMethodName = query.split(" ");
             if (fullMethodName.length == 1) {
                 if (isMathFunction(fullMethodName[0]))
-                    requestURL += CPPREFERENCE_URL + "cpp/numeric/math/" + fullMethodName[0];
-                else if (isCStringFunction(fullMethodName[0]) || isCStdLibFunction(fullMethodName[0]))
+                    requestURL += CPPREFERENCE_URL + "c/numeric/math/" + fullMethodName[0];
+                else if (isCAssert(fullMethodName[0]))
+                    requestURL += CPPREFERENCE_URL + "c/error/" + fullMethodName[0];
+                else if (isCStringFunction(fullMethodName[0]) || isCStdLibFunction(fullMethodName[0]) || isCTypeFunction(fullMethodName[0]))
                     requestURL = getStdLibUrl(fullMethodName[0], requestURL);
                 else if (isCStdIOFunction(fullMethodName[0]))
                     requestURL = getStdIOUrl(fullMethodName[0], requestURL);
@@ -87,8 +89,10 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     private String buildURL(String methodName, String structureName) {
         String requestURL = "";
         if (isMathFunction(methodName)) {
-            requestURL = CPPREFERENCE_URL + "cpp/numeric/math/" + methodName;
-        } else if (isCStringFunction(methodName) || isCStdLibFunction(methodName)) {
+            requestURL = CPPREFERENCE_URL + "c/numeric/math/" + methodName;
+        } else if (isCAssert(methodName)) {
+            requestURL = CPPREFERENCE_URL + "c/error/" + methodName;
+        } else if (isCStringFunction(methodName) || isCStdLibFunction(methodName) || isCTypeFunction(methodName)) {
             requestURL = getStdLibUrl(methodName, requestURL);
         } else if (isCStdIOFunction(methodName)) {
             requestURL = getStdIOUrl(methodName, requestURL);
@@ -112,17 +116,31 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
 
     private String getStdLibUrl(String methodName, String requestURL) {
         if (methodName.matches("ato(ll?|i)?"))
-            requestURL += CPPREFERENCE_URL + "cpp/string/byte/atoi";
+            requestURL += CPPREFERENCE_URL + "c/string/byte/atoi";
         else if (methodName.matches("atof"))
-            requestURL += CPPREFERENCE_URL + "cpp/string/byte/atof";
+            requestURL += CPPREFERENCE_URL + "c/string/byte/atof";
         else if (methodName.matches("strto(ll?)"))
-            requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtol";
+            requestURL += CPPREFERENCE_URL + "c/string/byte/strtol";
+        else if (methodName.matches("strtok(_s)?"))
+            requestURL += CPPREFERENCE_URL + "c/string/byte/strtok";
+        else if (methodName.matches("strcpy(_s)?"))
+            requestURL += CPPREFERENCE_URL + "c/string/byte/strcpy";
+        else if (methodName.matches("strncpy(_s)?"))
+            requestURL += CPPREFERENCE_URL + "c/string/byte/strncpy";
+        else if (methodName.matches("strcat(_s)?"))
+            requestURL += CPPREFERENCE_URL + "c/string/byte/strcat";
+        else if (methodName.matches("strncat(_s)?"))
+            requestURL += CPPREFERENCE_URL + "c/string/byte/strncat";
+        else if (methodName.matches("strlen(_s)?"))
+            requestURL += CPPREFERENCE_URL + "c/string/byte/strlen";
         else if (methodName.matches("strtoll?"))
-            requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtoul";
+            requestURL += CPPREFERENCE_URL + "c/string/byte/strtoul";
         else if (methodName.matches("strto(f|l?d)"))
-            requestURL += CPPREFERENCE_URL + "cpp/string/byte/strtod";
+            requestURL += CPPREFERENCE_URL + "c/string/byte/strtod";
+        else if (isCTypeFunction(methodName))
+            requestURL += CPPREFERENCE_URL + "c/string/byte/" + methodName;
         else
-            requestURL += CPPREFERENCE_URL + "cpp/string/byte/" + methodName;
+            requestURL += CPPREFERENCE_URL + "c/string/byte/" + methodName;
         return requestURL;
     }
 
