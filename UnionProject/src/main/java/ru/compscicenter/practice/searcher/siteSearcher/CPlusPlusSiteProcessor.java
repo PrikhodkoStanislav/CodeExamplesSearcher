@@ -45,82 +45,78 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
 
     public String generateRequestURL(final String query) {
         String[] fullMethodName = query.split("::");
-        String requestURL = "";
         if (fullMethodName.length == 1) {
             fullMethodName = query.split(" ");
             if (fullMethodName.length == 1) {
                 if (isMathFunction(fullMethodName[0]))
-                    requestURL += CPLUSPLUS_URL + "cmath/" + fullMethodName[0];
+                    return CPLUSPLUS_URL + "cmath/" + fullMethodName[0];
                 else if (isCAssert(fullMethodName[0]))
-                    requestURL += CPLUSPLUS_URL + "cassert/" + fullMethodName[0];
+                    return CPLUSPLUS_URL + "cassert/" + fullMethodName[0];
                 else if (isCStringFunction(fullMethodName[0])) {
                     fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
-                    requestURL += CPLUSPLUS_URL + "cstring/" + fullMethodName[0];
+                    return CPLUSPLUS_URL + "cstring/" + fullMethodName[0];
                 } else if (isCStdLibFunction(fullMethodName[0]))
-                    requestURL += CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0];
+                    return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0];
                 else if (isCStdIOFunction(fullMethodName[0]))
-                    requestURL += CPLUSPLUS_URL + "cstdio/" + fullMethodName[0];
+                    return CPLUSPLUS_URL + "cstdio/" + fullMethodName[0];
                 else if (isCTypeFunction(fullMethodName[0]))
-                    requestURL += CPLUSPLUS_URL + "cctype/" + fullMethodName[0];
+                    return CPLUSPLUS_URL + "cctype/" + fullMethodName[0];
                 else if (isAlgorithmFunction(fullMethodName[0]))
-                    requestURL += CPLUSPLUS_URL + "algorithm/" + fullMethodName[0];
+                    return CPLUSPLUS_URL + "algorithm/" + fullMethodName[0];
                 else
-                    return requestURL;
+                    return "";
             } else
-                requestURL = buildURL(fullMethodName[1], fullMethodName[0]);
+                return buildURL(fullMethodName[1], fullMethodName[0]);
         } else {
             String methodName = fullMethodName[fullMethodName.length - 1];
             String structureName = fullMethodName[fullMethodName.length - 2];
-            requestURL = buildURL(methodName, structureName);
+            return buildURL(methodName, structureName);
         }
-        return requestURL;
     }
 
     private String buildURL(String methodName, String structureName) {
-        String requestURL;
         if (isMathFunction(methodName)) {
-            requestURL = CPLUSPLUS_URL + "cmath/" + methodName + "/";
+            return CPLUSPLUS_URL + "cmath/" + methodName + "/";
         } else if (isCAssert(methodName)) {
-            requestURL = CPLUSPLUS_URL + "cassert" + methodName + "/";
+            return CPLUSPLUS_URL + "cassert" + methodName + "/";
         } else if (isCStringFunction(methodName)) {
             methodName = methodName.replaceAll("_s$", "");
             methodName = methodName.replaceAll("errorlen$", "error");
-            requestURL = CPLUSPLUS_URL + "cstring/" + methodName + "/";
+            return CPLUSPLUS_URL + "cstring/" + methodName + "/";
         } else if (isCStdLibFunction(methodName)) {
-            requestURL = CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
+            return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
         } else if (isCStdIOFunction(methodName)) {
-            requestURL = CPLUSPLUS_URL + "cstdio/" + methodName + "/";
+            return CPLUSPLUS_URL + "cstdio/" + methodName + "/";
         } else if (isCTypeFunction(methodName)) {
-            requestURL = CPLUSPLUS_URL + "cctype/" + methodName + "/";
+            return CPLUSPLUS_URL + "cctype/" + methodName + "/";
         } else if (isAlgorithmFunction(methodName)) {
-            requestURL = CPLUSPLUS_URL + "algorithm/" + methodName + "/";
+            return CPLUSPLUS_URL + "algorithm/" + methodName + "/";
         } else if (isVectorContainer(structureName)) {
-            requestURL = CPLUSPLUS_URL + "vector/" + structureName
+            return CPLUSPLUS_URL + "vector/" + structureName
                     + "/" + methodName + "/";
         } else if (isSetContainer(structureName)) {
-            requestURL = CPLUSPLUS_URL + "set/" + structureName
+            return CPLUSPLUS_URL + "set/" + structureName
                     + "/" + methodName + "/";
         } else if (isUnorderedSetContainer(structureName)) {
-            requestURL = CPLUSPLUS_URL + "unordered_set/" + structureName
+            return CPLUSPLUS_URL + "unordered_set/" + structureName
                     + "/" + methodName + "/";
         } else if (isMapContainer(structureName)) {
-            requestURL = CPLUSPLUS_URL + "map/" + structureName
+            return CPLUSPLUS_URL + "map/" + structureName
                     + "/" + methodName + "/";
         } else if (isUnorderedMapContainer(structureName)) {
-            requestURL = CPLUSPLUS_URL + "unordered_map/" + structureName
+            return CPLUSPLUS_URL + "unordered_map/" + structureName
                     + "/" + methodName + "/";
         } else if (isQueueContainer(structureName)) {
-            requestURL = CPLUSPLUS_URL + "queue/" + structureName
+            return CPLUSPLUS_URL + "queue/" + structureName
                     + "/" + methodName + "/";
         } else if ("string".equals(structureName)) {
-            requestURL = CPLUSPLUS_URL + "string/" + structureName
+            return CPLUSPLUS_URL + "string/" + structureName
                     + "/" + methodName + "/";
         } else {
-            requestURL = CPLUSPLUS_URL + structureName
+            return CPLUSPLUS_URL + structureName
                     + "/" + methodName + "/";
         }
-        return requestURL;
     }
 
     private boolean isQueueContainer(String s) {

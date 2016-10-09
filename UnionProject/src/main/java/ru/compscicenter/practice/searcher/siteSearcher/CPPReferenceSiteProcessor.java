@@ -60,108 +60,102 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     @Override
     public String generateRequestURL(final String query) {
         String[] fullMethodName = query.split("::");
-        String requestURL = "";
         if (fullMethodName.length == 1) {
             fullMethodName = query.split(" ");
             if (fullMethodName.length == 1) {
                 if (isMathFunction(fullMethodName[0]))
-                    requestURL += CPPREFERENCE_URL + "c/numeric/math/" + fullMethodName[0];
+                    return CPPREFERENCE_URL + "c/numeric/math/" + fullMethodName[0];
                 else if (isCAssert(fullMethodName[0]))
-                    requestURL += CPPREFERENCE_URL + "c/error/" + fullMethodName[0];
+                    return CPPREFERENCE_URL + "c/error/" + fullMethodName[0];
                 else if (isCStringFunction(fullMethodName[0]) || isCStdLibFunction(fullMethodName[0]) || isCTypeFunction(fullMethodName[0])) {
                     fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
-                    requestURL = getStdLibUrl(fullMethodName[0], requestURL);
+                    return getStdLibUrl(fullMethodName[0]);
                 } else if (isCStdIOFunction(fullMethodName[0]))
-                    requestURL = getStdIOUrl(fullMethodName[0], requestURL);
+                    return getStdIOUrl(fullMethodName[0]);
                 else if (isAlgorithmFunction(fullMethodName[0]))
-                    requestURL += CPPREFERENCE_URL + "cpp/algorithm/" + fullMethodName[0];
+                    return CPPREFERENCE_URL + "cpp/algorithm/" + fullMethodName[0];
                 else
-                    return requestURL;
+                    return "";
             } else
-                requestURL = buildURL(fullMethodName[1], fullMethodName[0]);
+                return buildURL(fullMethodName[1], fullMethodName[0]);
         } else {
             String methodName = fullMethodName[fullMethodName.length - 1];
             String structureName = fullMethodName[fullMethodName.length - 2];
-            requestURL = buildURL(methodName, structureName);
+            return buildURL(methodName, structureName);
         }
-        return requestURL;
     }
 
     private String buildURL(String methodName, String structureName) {
-        String requestURL = "";
         if (isMathFunction(methodName)) {
-            requestURL = CPPREFERENCE_URL + "c/numeric/math/" + methodName;
+            return CPPREFERENCE_URL + "c/numeric/math/" + methodName;
         } else if (isCAssert(methodName)) {
-            requestURL = CPPREFERENCE_URL + "c/error/" + methodName;
+            return CPPREFERENCE_URL + "c/error/" + methodName;
         } else if (isCStringFunction(methodName) || isCStdLibFunction(methodName) || isCTypeFunction(methodName)) {
             methodName = methodName.replaceAll("_s$", "");
             methodName = methodName.replaceAll("errorlen$", "error");
-            requestURL = getStdLibUrl(methodName, requestURL);
+            return getStdLibUrl(methodName);
         } else if (isCStdIOFunction(methodName)) {
-            requestURL = getStdIOUrl(methodName, requestURL);
+            return getStdIOUrl(methodName);
         } else if (isAlgorithmFunction(methodName)) {
-            requestURL = CPPREFERENCE_URL + "cpp/algorithm/" + methodName;
+            return CPPREFERENCE_URL + "cpp/algorithm/" + methodName;
         } else if (isContainer(structureName)) {
-            requestURL = CPPREFERENCE_URL + "cpp/container"
+            return CPPREFERENCE_URL + "cpp/container"
                     + "/" + structureName
                     + "/" + methodName;
         } else if (isAnyStringLibrary(structureName)) {
-            requestURL = CPPREFERENCE_URL + "cpp/string"
+            return CPPREFERENCE_URL + "cpp/string"
                     + "/" + structureName
                     + "/" + methodName;
         } else {
-            requestURL = CPPREFERENCE_URL + "cpp/io" +
+            return CPPREFERENCE_URL + "cpp/io" +
                     "/" + structureName
                     + "/" + methodName;
         }
-        return requestURL;
     }
 
-    private String getStdLibUrl(String methodName, String requestURL) {
+    private String getStdLibUrl(String methodName) {
         if (methodName.matches("ato(ll?|i)?"))
-            requestURL += CPPREFERENCE_URL + "c/string/byte/atoi";
+            return CPPREFERENCE_URL + "c/string/byte/atoi";
         else if (methodName.matches("atof"))
-            requestURL += CPPREFERENCE_URL + "c/string/byte/atof";
+            return CPPREFERENCE_URL + "c/string/byte/atof";
         else if (methodName.matches("strto(ll?)"))
-            requestURL += CPPREFERENCE_URL + "c/string/byte/strtol";
+            return CPPREFERENCE_URL + "c/string/byte/strtol";
         else if (methodName.matches("strtoll?"))
-            requestURL += CPPREFERENCE_URL + "c/string/byte/strtoul";
+            return CPPREFERENCE_URL + "c/string/byte/strtoul";
         else if (methodName.matches("strto(f|l?d)"))
-            requestURL += CPPREFERENCE_URL + "c/string/byte/strtod";
+            return CPPREFERENCE_URL + "c/string/byte/strtod";
         else
-            requestURL += CPPREFERENCE_URL + "c/string/byte/" + methodName;
-        return requestURL;
+            return CPPREFERENCE_URL + "c/string/byte/" + methodName;
     }
 
-    private String getStdIOUrl(String methodName, String requestURL) {
+    private String getStdIOUrl(String methodName) {
         if (methodName.matches("(f|s)?scanf"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/fscanf";
+            return CPPREFERENCE_URL + "cpp/io/c/fscanf";
         else if (methodName.matches("v(f|s)?scanf"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfscanf";
+            return CPPREFERENCE_URL + "cpp/io/c/vfscanf";
         else if (methodName.matches("(f|sn?)?printf"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/fprintf";
+            return CPPREFERENCE_URL + "cpp/io/c/fprintf";
         else if (methodName.matches("v(f|sn?)?printf"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfprintf";
+            return CPPREFERENCE_URL + "cpp/io/c/vfprintf";
         else if (methodName.matches("(f|s)?wscanf"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/fwscanf";
+            return CPPREFERENCE_URL + "cpp/io/c/fwscanf";
         else if (methodName.matches("v(f|s)?wscanf"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfwscanf";
+            return CPPREFERENCE_URL + "cpp/io/c/vfwscanf";
         else if (methodName.matches("(f|s)?wprintf"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/fwprintf";
+            return CPPREFERENCE_URL + "cpp/io/c/fwprintf";
         else if (methodName.matches("v(f|s)?wprintf"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/vfwprintf";
+            return CPPREFERENCE_URL + "cpp/io/c/vfwprintf";
         else if (methodName.matches("f?putc"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/fputc";
+            return CPPREFERENCE_URL + "cpp/io/c/fputc";
         else if (methodName.matches("f?getc"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/fgetc";
+            return CPPREFERENCE_URL + "cpp/io/c/fgetc";
         else if (methodName.matches("f?putwc"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/fputwc";
+            return CPPREFERENCE_URL + "cpp/io/c/fputwc";
         else if (methodName.matches("f?getwc"))
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/fgetwc";
+            return CPPREFERENCE_URL + "cpp/io/c/fgetwc";
         else
-            requestURL += CPPREFERENCE_URL + "cpp/io/c/" + methodName;
-        return requestURL;
+            return CPPREFERENCE_URL + "cpp/io/c/" + methodName;
     }
 
     private boolean isAnyStringLibrary(String s) {
