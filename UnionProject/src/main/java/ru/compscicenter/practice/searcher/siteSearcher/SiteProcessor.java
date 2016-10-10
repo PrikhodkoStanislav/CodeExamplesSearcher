@@ -111,7 +111,7 @@ public abstract class SiteProcessor extends Thread {
     protected boolean isCStdIOFunction(String s) {
         return s.matches("(f((re)?open|close|flush|wide|read|write)|setv?buf|" +
                 "(f|un)?(get|put)(w?(c|char|s))|" +
-                "v?(f|sn?)?w?(scan|print)f|" +
+                "v?(f|sn?)?w?(scan|print)f(_s)?|" +
                 "f((get|set)pos|seek|tell)|re(wind|move|name)|" +
                 "clearerr|(f|p)e(rror|of)|tmp(file|nam))");
     }

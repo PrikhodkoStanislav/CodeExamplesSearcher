@@ -73,9 +73,10 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
                     return getStdLibUrl(fullMethodName[0]);
-                } else if (isCStdIOFunction(fullMethodName[0]))
+                } else if (isCStdIOFunction(fullMethodName[0])) {
+                    fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     return getStdIOUrl(fullMethodName[0]);
-                else if (isAlgorithmFunction(fullMethodName[0]))
+                } else if (isAlgorithmFunction(fullMethodName[0]))
                     return CPPREFERENCE_URL + "cpp/algorithm/" + fullMethodName[0];
                 else
                     return "";
@@ -100,6 +101,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             methodName = methodName.replaceAll("errorlen$", "error");
             return getStdLibUrl(methodName);
         } else if (isCStdIOFunction(methodName)) {
+            methodName = methodName.replaceAll("_s$", "");
             return getStdIOUrl(methodName);
         } else if (isAlgorithmFunction(methodName)) {
             return CPPREFERENCE_URL + "cpp/algorithm/" + methodName;

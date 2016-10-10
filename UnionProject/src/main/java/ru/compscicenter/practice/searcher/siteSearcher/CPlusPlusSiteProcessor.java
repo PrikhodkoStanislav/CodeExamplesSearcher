@@ -62,7 +62,9 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                 } else if (isCStdLibFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
                 else if (isCStdIOFunction(fullMethodName[0])) {
-                    if (fullMethodName[0].matches("^v?(f|s)?w") || fullMethodName[0].matches("w(c|char|s)$"))
+                    fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
+                    if (fullMethodName[0].matches("v?(f|s)?w(scan|print)f") ||
+                            fullMethodName[0].matches("w(c|char|s)$"))
                         return CPLUSPLUS_URL + "cwchar/" + fullMethodName[0] + "/";
                     else
                         return CPLUSPLUS_URL + "cstdio/" + fullMethodName[0] + "/";
@@ -101,7 +103,9 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         } else if (isCStdLibFunction(methodName)) {
             return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
         } else if (isCStdIOFunction(methodName)) {
-            if (methodName.matches("v?(f|s)?w(scan|print)f") || methodName.matches(".*w(c|char|s)$"))
+            methodName = methodName.replaceAll("_s$", "");
+            if (methodName.matches("v?(f|s)?w(scan|print)f") ||
+                    methodName.matches(".*w(c|char|s)$"))
                 return CPLUSPLUS_URL + "cwchar/" + methodName + "/";
             else
                 return CPLUSPLUS_URL + "cstdio/" + methodName + "/";

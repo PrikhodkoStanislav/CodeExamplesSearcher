@@ -122,6 +122,18 @@ public class SiteSearcherTest {
     }
 
     @Test
+    public void testCppRefFWrite() {
+        assertEquals("http://en.cppreference.com/w/c/io/fwrite",
+                testCorrectURL(cppReferenceProcessor, "std::fwrite"));
+    }
+
+    @Test
+    public void testCppFWrite() {
+        assertEquals("http://www.cplusplus.com/reference/cstdio/fwrite/",
+                testCorrectURL(cppProcessor, "std::fwrite"));
+    }
+
+    @Test
     public void testCppRefFgetC() {
         assertEquals("http://en.cppreference.com/w/c/io/fgetc",
                 testCorrectURL(cppReferenceProcessor, "std::getc"));
@@ -161,6 +173,18 @@ public class SiteSearcherTest {
     public void testCppWScanf() {
         assertEquals("http://www.cplusplus.com/reference/cwchar/wscanf/",
                 testCorrectURL(cppProcessor, "std::wscanf"));
+    }
+
+    @Test
+    public void testCppRefFScanfS() {
+        assertEquals("http://en.cppreference.com/w/c/io/fscanf",
+                testCorrectURL(cppReferenceProcessor, "std::fscanf_s"));
+    }
+
+    @Test
+    public void testCppFScanfS() {
+        assertEquals("http://www.cplusplus.com/reference/cstdio/fscanf/",
+                testCorrectURL(cppProcessor, "std::fscanf_s"));
     }
 
     @Test
