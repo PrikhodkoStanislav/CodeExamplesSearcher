@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.selfProjectSearcher;
+package ru.compscicenter.practice.searcher.selfprojectsearcher;
 
 import ru.compscicenter.practice.searcher.Searcher;
 
