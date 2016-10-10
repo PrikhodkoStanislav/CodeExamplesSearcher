@@ -128,11 +128,12 @@ public abstract class SiteProcessor extends Thread {
     }
 
     protected boolean isCStdLibFunction(String s) {
-        return s.matches("(ato(ll?|f|i)?|strto(u?ll?|f|l?d))");
+        return s.matches("(ato(ll?|f|i)?|(str|wcs)to(u?ll?|f|l?d|(i|u)max))");
     }
 
     protected boolean isCTypeFunction(String s) {
-        return s.matches("isw?(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|tow?(low|upp)er|wc(type|trans)");
+        return s.matches("isw?(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|" +
+                "tow?(low|upp)er|(is|to)?wc(type|trans)");
     }
 
     protected boolean isCAssert(String s) {

@@ -60,7 +60,10 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     else
                         return CPLUSPLUS_URL + "cstring/" + fullMethodName[0] + "/";
                 } else if (isCStdLibFunction(fullMethodName[0]))
-                    return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
+                    if (fullMethodName[0].startsWith("wcs"))
+                        return CPLUSPLUS_URL + "cwchar/" + fullMethodName[0] + "/";
+                    else
+                        return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
                 else if (isCStdIOFunction(fullMethodName[0])) {
                     fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     if (fullMethodName[0].matches("v?(f|s)?w(scan|print)f") ||
@@ -101,6 +104,9 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             else
                 return CPLUSPLUS_URL + "cstring/" + methodName + "/";
         } else if (isCStdLibFunction(methodName)) {
+            if (methodName.startsWith("wcs"))
+                return CPLUSPLUS_URL + "cwchar/" + methodName + "/";
+            else
             return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
         } else if (isCStdIOFunction(methodName)) {
             methodName = methodName.replaceAll("_s$", "");

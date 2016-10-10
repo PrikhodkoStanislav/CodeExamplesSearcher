@@ -223,6 +223,18 @@ public class SiteSearcherTest {
                 testCorrectURL(cppProcessor, "std::wcslen_s"));
     }
 
+    @Test
+    public void testCppRefWcsToLl() {
+        assertEquals("http://en.cppreference.com/w/c/string/wide/wcstol",
+                testCorrectURL(cppReferenceProcessor, "std::wcstoll"));
+    }
+
+    @Test
+    public void testCppWcsToLl() {
+        assertEquals("http://www.cplusplus.com/reference/cwchar/wcstoll/",
+                testCorrectURL(cppProcessor, "std::wcstoll"));
+    }
+
     public String testCorrectURL(SiteProcessor processor, String query) {
         return processor.generateRequestURL(query);
     }

@@ -121,20 +121,30 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     }
 
     private String getStdLibUrl(String methodName) {
-        if (methodName.startsWith("w") || methodName.startsWith("isw") || methodName.startsWith("tow") || methodName.startsWith("wc"))
-            return CPPREFERENCE_URL + "c/string/wide/" + methodName;
-        else if (methodName.matches("ato(ll?|i)?"))
+        if (methodName.matches("ato(ll?|i)?"))
             return CPPREFERENCE_URL + "c/string/byte/atoi";
         else if (methodName.matches("atof"))
             return CPPREFERENCE_URL + "c/string/byte/atof";
-        else if (methodName.matches("strto(ll?)"))
-            return CPPREFERENCE_URL + "c/string/byte/strtol";
-        else if (methodName.matches("strtoll?"))
-            return CPPREFERENCE_URL + "c/string/byte/strtoul";
-        else if (methodName.matches("strto(f|l?d)"))
-            return CPPREFERENCE_URL + "c/string/byte/strtod";
+        else if (methodName.matches("(str|wcs)to(ll?)"))
+            return CPPREFERENCE_URL + "c/string/" + byteOrWideMethod(methodName) + "tol";
+        else if (methodName.matches("(str|wcs)toull?"))
+            return CPPREFERENCE_URL + "c/string/" + byteOrWideMethod(methodName) + "toul";
+        else if (methodName.matches("(str|wcs)to(f|l?d)"))
+            return CPPREFERENCE_URL + "c/string/" + byteOrWideMethod(methodName) + "tof";
+        else if (methodName.matches("(str|wcs)to(i|u)max"))
+            return CPPREFERENCE_URL + "c/string/" + byteOrWideMethod(methodName) + "toimax";
+        else if (methodName.startsWith("w") || methodName.startsWith("isw") ||
+                methodName.startsWith("tow") || methodName.startsWith("wc"))
+            return CPPREFERENCE_URL + "c/string/wide/" + methodName;
         else
             return CPPREFERENCE_URL + "c/string/byte/" + methodName;
+    }
+
+    private String byteOrWideMethod(String methodName) {
+        if (methodName.startsWith("str"))
+            return "byte/str";
+        else
+            return "wide/wcs";
     }
 
     private String getStdIOUrl(String methodName) {
