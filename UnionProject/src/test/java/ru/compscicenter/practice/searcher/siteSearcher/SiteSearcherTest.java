@@ -27,7 +27,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppSin() {
-        assertEquals("http://www.cplusplus.com/reference/cmath/sin",
+        assertEquals("http://www.cplusplus.com/reference/cmath/sin/",
                 testCorrectURL(cppProcessor, "sin"));
     }
 
@@ -39,7 +39,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppStrlen() {
-        assertEquals("http://www.cplusplus.com/reference/cstring/strlen",
+        assertEquals("http://www.cplusplus.com/reference/cstring/strlen/",
                 testCorrectURL(cppProcessor, "strlen"));
     }
 
@@ -51,7 +51,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppStrlenS() {
-        assertEquals("http://www.cplusplus.com/reference/cstring/strlen",
+        assertEquals("http://www.cplusplus.com/reference/cstring/strlen/",
                 testCorrectURL(cppProcessor, "strlen_s"));
     }
 
@@ -63,7 +63,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppErrorlenS() {
-        assertEquals("http://www.cplusplus.com/reference/cstring/strerror",
+        assertEquals("http://www.cplusplus.com/reference/cstring/strerror/",
                 testCorrectURL(cppProcessor, "strerrorlen_s"));
     }
 
@@ -111,7 +111,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppRefScanf() {
-        assertEquals("http://en.cppreference.com/w/cpp/io/c/fscanf",
+        assertEquals("http://en.cppreference.com/w/c/io/fscanf",
                 testCorrectURL(cppReferenceProcessor, "std::scanf"));
     }
 
@@ -123,7 +123,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppRefFgetC() {
-        assertEquals("http://en.cppreference.com/w/cpp/io/c/fgetc",
+        assertEquals("http://en.cppreference.com/w/c/io/fgetc",
                 testCorrectURL(cppReferenceProcessor, "std::getc"));
     }
 
@@ -140,14 +140,26 @@ public class SiteSearcherTest {
     }
 
     @Test
+    public void testCppGetWC() {
+        assertEquals("http://www.cplusplus.com/reference/cwchar/getwc/",
+                testCorrectURL(cppProcessor, "std::getwc"));
+    }
+
+    @Test
+    public void testCppFgetWC() {
+        assertEquals("http://www.cplusplus.com/reference/cwchar/fgetwc/",
+                testCorrectURL(cppProcessor, "std::fgetwc"));
+    }
+
+    @Test
     public void testCppRefWScanf() {
-        assertEquals("http://en.cppreference.com/w/cpp/io/c/fwscanf",
+        assertEquals("http://en.cppreference.com/w/c/io/fwscanf",
                 testCorrectURL(cppReferenceProcessor, "std::wscanf"));
     }
 
     @Test
     public void testCppWScanf() {
-        assertEquals("http://www.cplusplus.com/reference/cstdio/wscanf/",
+        assertEquals("http://www.cplusplus.com/reference/cwchar/wscanf/",
                 testCorrectURL(cppProcessor, "std::wscanf"));
     }
 

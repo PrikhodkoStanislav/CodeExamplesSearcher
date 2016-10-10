@@ -123,13 +123,8 @@ public abstract class SiteProcessor extends Thread {
     }
 
     protected boolean isCStringFunction(String s) {
-        return s.matches("(mem(chr|cmp|(cpy|move|set)(_s)?)|" +
-                "str(r?chr|((n?c(at|py)|error(len)?|len|tok)(_s)?)|n?cmp|coll|c?spn|pbrk|str))");
-    }
-
-    protected boolean isCWideStringFunction(String s) {
-        return s.matches("(wmem(chr|cmp|(cpy|move|set)(_s)?)|" +
-                "wcs(r?chr|((n?c(at|py)|error(len)?|len|tok)(_s)?)|n?cmp|coll|c?spn|pbrk|str))");
+        return s.matches("(w?mem(chr|cmp|(cpy|move|set)(_s)?)|" +
+                "(str|wcs)(r?chr|((n?c(at|py)|error(len)?|len|tok)(_s)?)|n?cmp|coll|c?spn|pbrk|str))");
     }
 
     protected boolean isCStdLibFunction(String s) {

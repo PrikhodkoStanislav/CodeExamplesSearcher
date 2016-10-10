@@ -68,7 +68,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                 else if (isCAssert(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/error/" + fullMethodName[0];
                 else if (isCStringFunction(fullMethodName[0]) || isCStdLibFunction(fullMethodName[0]) || isCTypeFunction(fullMethodName[0]) ||
-                        isCWideTypeFunction(fullMethodName[0]) || isCWideStringFunction(fullMethodName[0])) {
+                        isCWideTypeFunction(fullMethodName[0])) {
                     fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
                     return getStdLibUrl(fullMethodName[0]);
@@ -93,7 +93,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         } else if (isCAssert(methodName)) {
             return CPPREFERENCE_URL + "c/error/" + methodName;
         } else if (isCStringFunction(methodName) || isCStdLibFunction(methodName) || isCTypeFunction(methodName) ||
-                isCWideTypeFunction(methodName) || isCWideStringFunction(methodName)) {
+                isCWideTypeFunction(methodName)) {
             methodName = methodName.replaceAll("_s$", "");
             methodName = methodName.replaceAll("errorlen$", "error");
             return getStdLibUrl(methodName);
@@ -135,31 +135,31 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
 
     private String getStdIOUrl(String methodName) {
         if (methodName.matches("(f|s)?scanf"))
-            return CPPREFERENCE_URL + "cpp/io/c/fscanf";
+            return CPPREFERENCE_URL + "c/io/fscanf";
         else if (methodName.matches("v(f|s)?scanf"))
-            return CPPREFERENCE_URL + "cpp/io/c/vfscanf";
+            return CPPREFERENCE_URL + "c/io/vfscanf";
         else if (methodName.matches("(f|sn?)?printf"))
-            return CPPREFERENCE_URL + "cpp/io/c/fprintf";
+            return CPPREFERENCE_URL + "c/io/fprintf";
         else if (methodName.matches("v(f|sn?)?printf"))
-            return CPPREFERENCE_URL + "cpp/io/c/vfprintf";
+            return CPPREFERENCE_URL + "c/io/vfprintf";
         else if (methodName.matches("(f|s)?wscanf"))
-            return CPPREFERENCE_URL + "cpp/io/c/fwscanf";
+            return CPPREFERENCE_URL + "c/io/fwscanf";
         else if (methodName.matches("v(f|s)?wscanf"))
-            return CPPREFERENCE_URL + "cpp/io/c/vfwscanf";
+            return CPPREFERENCE_URL + "c/io/vfwscanf";
         else if (methodName.matches("(f|s)?wprintf"))
-            return CPPREFERENCE_URL + "cpp/io/c/fwprintf";
+            return CPPREFERENCE_URL + "c/io/fwprintf";
         else if (methodName.matches("v(f|s)?wprintf"))
-            return CPPREFERENCE_URL + "cpp/io/c/vfwprintf";
+            return CPPREFERENCE_URL + "c/io/vfwprintf";
         else if (methodName.matches("f?putc"))
-            return CPPREFERENCE_URL + "cpp/io/c/fputc";
+            return CPPREFERENCE_URL + "c/io/fputc";
         else if (methodName.matches("f?getc"))
-            return CPPREFERENCE_URL + "cpp/io/c/fgetc";
+            return CPPREFERENCE_URL + "c/io/fgetc";
         else if (methodName.matches("f?putwc"))
-            return CPPREFERENCE_URL + "cpp/io/c/fputwc";
+            return CPPREFERENCE_URL + "c/io/fputwc";
         else if (methodName.matches("f?getwc"))
-            return CPPREFERENCE_URL + "cpp/io/c/fgetwc";
+            return CPPREFERENCE_URL + "c/io/fgetwc";
         else
-            return CPPREFERENCE_URL + "cpp/io/c/" + methodName;
+            return CPPREFERENCE_URL + "c/io/" + methodName;
     }
 
     private boolean isAnyStringLibrary(String s) {
