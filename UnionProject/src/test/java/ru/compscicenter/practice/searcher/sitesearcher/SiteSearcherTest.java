@@ -32,6 +32,18 @@ public class SiteSearcherTest {
     }
 
     @Test
+    public void testCppRefCalloc() {
+        assertEquals("http://en.cppreference.com/w/c/memory/calloc",
+                testCorrectURL(cppReferenceProcessor, "calloc"));
+    }
+
+    @Test
+    public void testCppCalloc() {
+        assertEquals("http://www.cplusplus.com/reference/cstdlib/calloc/",
+                testCorrectURL(cppProcessor, "calloc"));
+    }
+
+    @Test
     public void testResize() {
         assertEquals("http://www.cplusplus.com/reference/vector/vector/resize/",
                 testCorrectURL(cppProcessor, "vector::resize"));

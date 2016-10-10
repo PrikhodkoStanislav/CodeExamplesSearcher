@@ -67,6 +67,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     return CPPREFERENCE_URL + "c/numeric/math/" + fullMethodName[0];
                 else if (isCAssert(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/error/" + fullMethodName[0];
+                else if (isCMemory(fullMethodName[0]))
+                    return CPPREFERENCE_URL + "c/memory/" + fullMethodName[0];
                 else if (isCStringFunction(fullMethodName[0]) ||
                         isCStdLibFunction(fullMethodName[0]) ||
                         isCTypeFunction(fullMethodName[0])) {
@@ -94,6 +96,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             return CPPREFERENCE_URL + "c/numeric/math/" + methodName;
         } else if (isCAssert(methodName)) {
             return CPPREFERENCE_URL + "c/error/" + methodName;
+        } else if (isCMemory(methodName)) {
+            return CPPREFERENCE_URL + "c/memory/" + methodName;
         } else if (isCStringFunction(methodName) ||
                 isCStdLibFunction(methodName) ||
                 isCTypeFunction(methodName)) {

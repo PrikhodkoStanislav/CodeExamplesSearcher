@@ -52,6 +52,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     return CPLUSPLUS_URL + "cmath/" + fullMethodName[0] + "/";
                 else if (isCAssert(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cassert/" + fullMethodName[0] + "/";
+                else if (isCMemory(fullMethodName[0]))
+                    return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
                 else if (isCStringFunction(fullMethodName[0])) {
                     fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
@@ -96,6 +98,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             return CPLUSPLUS_URL + "cmath/" + methodName + "/";
         } else if (isCAssert(methodName)) {
             return CPLUSPLUS_URL + "cassert" + methodName + "/";
+        } else if (isCMemory(methodName)) {
+            return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
         } else if (isCStringFunction(methodName)) {
             methodName = methodName.replaceAll("_s$", "");
             methodName = methodName.replaceAll("errorlen$", "error");
