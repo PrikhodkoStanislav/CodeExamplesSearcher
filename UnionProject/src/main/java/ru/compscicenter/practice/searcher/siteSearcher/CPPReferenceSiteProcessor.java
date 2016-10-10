@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher.siteSearcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +67,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     return CPPREFERENCE_URL + "c/numeric/math/" + fullMethodName[0];
                 else if (isCAssert(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/error/" + fullMethodName[0];
-                else if (isCStringFunction(fullMethodName[0]) || isCStdLibFunction(fullMethodName[0]) || isCTypeFunction(fullMethodName[0]) ||
-                        isCWideTypeFunction(fullMethodName[0])) {
+                else if (isCStringFunction(fullMethodName[0]) ||
+                        isCStdLibFunction(fullMethodName[0]) ||
+                        isCTypeFunction(fullMethodName[0])) {
                     fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
                     return getStdLibUrl(fullMethodName[0]);
@@ -92,8 +93,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             return CPPREFERENCE_URL + "c/numeric/math/" + methodName;
         } else if (isCAssert(methodName)) {
             return CPPREFERENCE_URL + "c/error/" + methodName;
-        } else if (isCStringFunction(methodName) || isCStdLibFunction(methodName) || isCTypeFunction(methodName) ||
-                isCWideTypeFunction(methodName)) {
+        } else if (isCStringFunction(methodName) ||
+                isCStdLibFunction(methodName) ||
+                isCTypeFunction(methodName)) {
             methodName = methodName.replaceAll("_s$", "");
             methodName = methodName.replaceAll("errorlen$", "error");
             return getStdLibUrl(methodName);

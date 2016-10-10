@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher.siteSearcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,10 +67,13 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     else
                         return CPLUSPLUS_URL + "cstdio/" + fullMethodName[0] + "/";
                 } else if (isCTypeFunction(fullMethodName[0])) {
-                    return CPLUSPLUS_URL + "cctype/" + fullMethodName[0] + "/";
-                } else if (isCWideTypeFunction(fullMethodName[0]))
-                    return CPLUSPLUS_URL + "cwtype/" + fullMethodName[0] + "/";
-                else if (isAlgorithmFunction(fullMethodName[0]))
+                    if (fullMethodName[0].startsWith("isw") ||
+                            fullMethodName[0].startsWith("tow") ||
+                            fullMethodName[0].startsWith("wc"))
+                        return CPLUSPLUS_URL + "cwctype/" + fullMethodName[0] + "/";
+                    else
+                        return CPLUSPLUS_URL + "cctype/" + fullMethodName[0] + "/";
+                } else if (isAlgorithmFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "algorithm/" + fullMethodName[0] + "/";
                 else
                     return "";
@@ -103,9 +106,12 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             else
                 return CPLUSPLUS_URL + "cstdio/" + methodName + "/";
         } else if (isCTypeFunction(methodName)) {
-            return CPLUSPLUS_URL + "cctype/" + methodName + "/";
-        } else if (isCWideTypeFunction(methodName)) {
-                return CPLUSPLUS_URL + "cwtype/" + methodName + "/";
+            if (methodName.startsWith("isw") ||
+                    methodName.startsWith("tow") ||
+                    methodName.startsWith("wc"))
+                return CPLUSPLUS_URL + "cwctype/" + methodName + "/";
+            else
+                return CPLUSPLUS_URL + "cctype/" + methodName + "/";
         } else if (isAlgorithmFunction(methodName)) {
             return CPLUSPLUS_URL + "algorithm/" + methodName + "/";
         } else if (isVectorContainer(structureName)) {

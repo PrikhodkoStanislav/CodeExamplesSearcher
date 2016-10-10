@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher.siteSearcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,11 +132,7 @@ public abstract class SiteProcessor extends Thread {
     }
 
     protected boolean isCTypeFunction(String s) {
-        return s.matches("is(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|to(low|upp)er");
-    }
-
-    protected boolean isCWideTypeFunction(String s) {
-        return s.matches("isw(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|tow(low|upp)er|wc(type|trans)");
+        return s.matches("isw?(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|tow?(low|upp)er|wc(type|trans)");
     }
 
     protected boolean isCAssert(String s) {

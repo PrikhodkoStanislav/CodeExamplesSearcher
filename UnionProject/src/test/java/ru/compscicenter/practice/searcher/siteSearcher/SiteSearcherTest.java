@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher.siteSearcher;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -183,7 +183,7 @@ public class SiteSearcherTest {
 
     @Test
     public void testCppIsWAlpha() {
-        assertEquals("http://www.cplusplus.com/reference/cwtype/iswalpha/",
+        assertEquals("http://www.cplusplus.com/reference/cwctype/iswalpha/",
                 testCorrectURL(cppProcessor, "std::iswalpha"));
     }
 
