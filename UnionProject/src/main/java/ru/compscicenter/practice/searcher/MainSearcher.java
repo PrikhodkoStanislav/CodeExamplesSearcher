@@ -1,7 +1,7 @@
 package ru.compscicenter.practice.searcher;
 
-import ru.compscicenter.practice.searcher.selfProjectSearcher.SelfProjectSearcher;
-import ru.compscicenter.practice.searcher.siteSearcher.SiteSearcher;
+import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
+import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
 /**
  * Created by Станислав on 05.10.2016.
