@@ -47,7 +47,7 @@ public class SelfProjectSearcher extends Searcher {
             String str = "";
             int numberOfExample = 0;
             int strNumber = 0;
-            List<String> buffer = new LinkedList<String>();
+            List<String> buffer = new LinkedList<>();
 
             while ((str = in.readLine()) != null) {
                 strNumber++;

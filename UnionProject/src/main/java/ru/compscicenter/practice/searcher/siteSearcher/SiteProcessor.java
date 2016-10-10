@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.siteSearcher;
+package ru.compscicenter.practice.searcher.sitesearcher;
 
 import java.util.ArrayList;
 import java.util.List;
