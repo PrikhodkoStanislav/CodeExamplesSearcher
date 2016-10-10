@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher.siteSearcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,11 +123,28 @@ public abstract class SiteProcessor extends Thread {
     }
 
     protected boolean isCStringFunction(String s) {
-        return s.matches("(mem(chr|cmp|cpy|move|set)|" +
-                "str(r?chr|n?cat(_s)?|n?cmp|coll|n?cpy(_s)?|c?spn|error|len(_s)?|pbrk|str|tok))");
+        return s.matches("(mem(chr|cmp|(cpy|move|set)(_s)?)|" +
+                "str(r?chr|((n?c(at|py)|error(len)?|len|tok)(_s)?)|n?cmp|coll|c?spn|pbrk|str))");
+    }
+
+    protected boolean isCWideStringFunction(String s) {
+        return s.matches("(wmem(chr|cmp|(cpy|move|set)(_s)?)|" +
+                "wcs(r?chr|((n?c(at|py)|error(len)?|len|tok)(_s)?)|n?cmp|coll|c?spn|pbrk|str))");
     }
 
     protected boolean isCStdLibFunction(String s) {
         return s.matches("(ato(ll?|f|i)?|strto(u?ll?|f|l?d))");
+    }
+
+    protected boolean isCTypeFunction(String s) {
+        return s.matches("is(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|to(low|upp)er");
+    }
+
+    protected boolean isCWideTypeFunction(String s) {
+        return s.matches("isw(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|tow(low|upp)er|wc(type|trans)");
+    }
+
+    protected boolean isCAssert(String s) {
+        return s.matches("assert");
     }
 }
