@@ -247,6 +247,54 @@ public class SiteSearcherTest {
                 testCorrectURL(cppProcessor, "std::wcstoll"));
     }
 
+    @Test
+    public void testCppRefWcsrToMbsS() {
+        assertEquals("http://en.cppreference.com/w/c/string/multibyte/wcsrtombs",
+                testCorrectURL(cppReferenceProcessor, "std::wcsrtombs_s"));
+    }
+
+    @Test
+    public void testCppWcsrToMbsS() {
+        assertEquals("http://www.cplusplus.com/reference/cwchar/wcsrtombs/",
+                testCorrectURL(cppProcessor, "std::wcsrtombs_s"));
+    }
+
+    @Test
+    public void testCppRefWcsToMbsS() {
+        assertEquals("http://en.cppreference.com/w/c/string/multibyte/wcstombs",
+                testCorrectURL(cppReferenceProcessor, "std::wcstombs_s"));
+    }
+
+    @Test
+    public void testCppWcsToMbsS() {
+        assertEquals("http://www.cplusplus.com/reference/cstdlib/wcstombs/",
+                testCorrectURL(cppProcessor, "std::wcstombs_s"));
+    }
+
+    @Test
+    public void testCppRefTestUnicodeChar() {
+        assertEquals("http://en.cppreference.com/w/c/string/multibyte/c16rtomb",
+                testCorrectURL(cppReferenceProcessor, "std::c16rtomb"));
+    }
+
+    @Test
+    public void testCppTestUnicodeChar() {
+        assertEquals("http://www.cplusplus.com/reference/cuchar/c16rtomb/",
+                testCorrectURL(cppProcessor, "std::c16rtomb"));
+    }
+
+    @Test
+    public void testCppRefTestBSearch() {
+        assertEquals("http://en.cppreference.com/w/c/algorithm/bsearch",
+                testCorrectURL(cppReferenceProcessor, "std::bsearch_s"));
+    }
+
+    @Test
+    public void testCppTestBSearch() {
+        assertEquals("http://www.cplusplus.com/reference/cstdlib/bsearch/",
+                testCorrectURL(cppProcessor, "std::bsearch_s"));
+    }
+
     public String testCorrectURL(SiteProcessor processor, String query) {
         return processor.generateRequestURL(query);
     }

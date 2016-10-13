@@ -30,6 +30,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
 
             String prettyCode = toPrettyCode(codeExample);
             int intMain = prettyCode.indexOf("int main ()");
+            if (intMain < 0)
+                intMain = prettyCode.indexOf("int main()");
             String code = prettyCode.substring(0, intMain)
                 + '\n' + prettyCode.substring(intMain);
 
@@ -48,26 +50,34 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         if (fullMethodName.length == 1) {
             fullMethodName = query.split(" ");
             if (fullMethodName.length == 1) {
+                fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                 if (isMathFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cmath/" + fullMethodName[0] + "/";
                 else if (isCAssert(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cassert/" + fullMethodName[0] + "/";
-                else if (isCMemory(fullMethodName[0]))
+                else if (isCMemory(fullMethodName[0]) || isCAlgorithmFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
+                else if (isCUnicodeCharFunction(fullMethodName[0]))
+                    return CPLUSPLUS_URL + "cuchar/" + fullMethodName[0] + "/";
                 else if (isCStringFunction(fullMethodName[0])) {
-                    fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
                     if (fullMethodName[0].startsWith("wmem") || fullMethodName[0].startsWith("wcs"))
                         return CPLUSPLUS_URL + "cwchar/" + fullMethodName[0] + "/";
                     else
                         return CPLUSPLUS_URL + "cstring/" + fullMethodName[0] + "/";
+                } else if (isCMultyStringFunction(fullMethodName[0])) {
+                    if (fullMethodName[0].startsWith("wcr") || fullMethodName[0].startsWith("wcsr") ||
+                            fullMethodName[0].startsWith("mbr") || fullMethodName[0].startsWith("mbsr") ||
+                            "btowc".equals(fullMethodName[0]) || "mbsinit".equals(fullMethodName[0]))
+                        return CPLUSPLUS_URL + "cwchar/" + fullMethodName[0] + "/";
+                    else
+                        return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
                 } else if (isCStdLibFunction(fullMethodName[0]))
                     if (fullMethodName[0].startsWith("wcs"))
                         return CPLUSPLUS_URL + "cwchar/" + fullMethodName[0] + "/";
                     else
                         return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
                 else if (isCStdIOFunction(fullMethodName[0])) {
-                    fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     if (fullMethodName[0].matches("v?(f|s)?w(scan|print)f") ||
                             fullMethodName[0].matches("w(c|char|s)$"))
                         return CPLUSPLUS_URL + "cwchar/" + fullMethodName[0] + "/";
@@ -94,26 +104,34 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
     }
 
     private String buildURL(String methodName, String structureName) {
+        methodName = methodName.replaceAll("_s$", "");
         if (isMathFunction(methodName)) {
             return CPLUSPLUS_URL + "cmath/" + methodName + "/";
         } else if (isCAssert(methodName)) {
             return CPLUSPLUS_URL + "cassert" + methodName + "/";
-        } else if (isCMemory(methodName)) {
+        } else if (isCMemory(methodName) || isCAlgorithmFunction(methodName)) {
             return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
+        } else if (isCUnicodeCharFunction(methodName)) {
+            return CPLUSPLUS_URL + "cuchar/" + methodName + "/";
         } else if (isCStringFunction(methodName)) {
-            methodName = methodName.replaceAll("_s$", "");
             methodName = methodName.replaceAll("errorlen$", "error");
             if (methodName.startsWith("wmem") || methodName.startsWith("wcs"))
                 return CPLUSPLUS_URL + "cwchar/" + methodName + "/";
             else
                 return CPLUSPLUS_URL + "cstring/" + methodName + "/";
+        } else if (isCMultyStringFunction(methodName)) {
+            if (methodName.startsWith("wcr") || methodName.startsWith("wcsr") ||
+                    methodName.startsWith("mbr") || methodName.startsWith("mbsr") ||
+                    "btowc".equals(methodName) || "mbsinit".equals(methodName))
+                return CPLUSPLUS_URL + "cwchar/" + methodName + "/";
+            else
+                return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
         } else if (isCStdLibFunction(methodName)) {
             if (methodName.startsWith("wcs"))
                 return CPLUSPLUS_URL + "cwchar/" + methodName + "/";
             else
-            return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
+                return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
         } else if (isCStdIOFunction(methodName)) {
-            methodName = methodName.replaceAll("_s$", "");
             if (methodName.matches("v?(f|s)?w(scan|print)f") ||
                     methodName.matches(".*w(c|char|s)$"))
                 return CPLUSPLUS_URL + "cwchar/" + methodName + "/";

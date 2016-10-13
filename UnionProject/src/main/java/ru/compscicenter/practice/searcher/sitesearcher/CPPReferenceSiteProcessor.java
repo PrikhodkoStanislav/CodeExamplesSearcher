@@ -63,8 +63,11 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         if (fullMethodName.length == 1) {
             fullMethodName = query.split(" ");
             if (fullMethodName.length == 1) {
+                fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                 if (isMathFunction(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/numeric/math/" + fullMethodName[0];
+                else if (isCAlgorithmFunction(fullMethodName[0]))
+                    return CPPREFERENCE_URL + "c/algorithm/" + fullMethodName[0];
                 else if (isCAssert(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/error/" + fullMethodName[0];
                 else if (isCMemory(fullMethodName[0]))
@@ -72,11 +75,11 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                 else if (isCStringFunction(fullMethodName[0]) ||
                         isCStdLibFunction(fullMethodName[0]) ||
                         isCTypeFunction(fullMethodName[0])) {
-                    fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
                     return getStdLibUrl(fullMethodName[0]);
+                } else if (isCMultyStringFunction(fullMethodName[0]) || isCUnicodeCharFunction(fullMethodName[0])) {
+                    return CPPREFERENCE_URL + "c/string/multibyte/" + fullMethodName[0];
                 } else if (isCStdIOFunction(fullMethodName[0])) {
-                    fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                     return getStdIOUrl(fullMethodName[0]);
                 } else if (isAlgorithmFunction(fullMethodName[0]))
                     return CPPREFERENCE_URL + "cpp/algorithm/" + fullMethodName[0];
@@ -92,20 +95,23 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     }
 
     private String buildURL(String methodName, String structureName) {
+        methodName = methodName.replaceAll("_s$", "");
         if (isMathFunction(methodName)) {
             return CPPREFERENCE_URL + "c/numeric/math/" + methodName;
         } else if (isCAssert(methodName)) {
             return CPPREFERENCE_URL + "c/error/" + methodName;
+        } else if (isCAlgorithmFunction(methodName)) {
+            return CPPREFERENCE_URL + "c/algorithm/" + methodName;
         } else if (isCMemory(methodName)) {
             return CPPREFERENCE_URL + "c/memory/" + methodName;
         } else if (isCStringFunction(methodName) ||
                 isCStdLibFunction(methodName) ||
                 isCTypeFunction(methodName)) {
-            methodName = methodName.replaceAll("_s$", "");
             methodName = methodName.replaceAll("errorlen$", "error");
             return getStdLibUrl(methodName);
+        } else if (isCMultyStringFunction(methodName) || isCUnicodeCharFunction(methodName)) {
+            return CPPREFERENCE_URL + "c/string/multibyte/" + methodName;
         } else if (isCStdIOFunction(methodName)) {
-            methodName = methodName.replaceAll("_s$", "");
             return getStdIOUrl(methodName);
         } else if (isAlgorithmFunction(methodName)) {
             return CPPREFERENCE_URL + "cpp/algorithm/" + methodName;

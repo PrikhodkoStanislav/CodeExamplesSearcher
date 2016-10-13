@@ -127,6 +127,15 @@ public abstract class SiteProcessor extends Thread {
                 "(str|wcs)(r?chr|((n?c(at|py)|error(len)?|len|tok)(_s)?)|n?cmp|coll|c?spn|pbrk|str))");
     }
 
+    protected boolean isCMultyStringFunction(String s) {
+        return s.matches("(mbr?(len|towc)|mbsr?towcs(_s)?|mbsinit|btowc|" +
+                "wctob|wcr?tomb(_s)?|wcsr?tombs(_s)?)");
+    }
+
+    protected boolean isCUnicodeCharFunction(String s) {
+        return s.matches("(mbrtoc(16|32)|c(16|32)rtomb)");
+    }
+
     protected boolean isCStdLibFunction(String s) {
         return s.matches("(ato(ll?|f|i)?|(str|wcs)to(u?ll?|f|l?d|(i|u)max))");
     }
@@ -134,6 +143,10 @@ public abstract class SiteProcessor extends Thread {
     protected boolean isCTypeFunction(String s) {
         return s.matches("isw?(al(num|pha)|(low|upp)er|blank|cntrl|x?digit|graph|space|p(rint|unct))|" +
                 "tow?(low|upp)er|(is|to)?wc(type|trans)");
+    }
+
+    protected boolean isCAlgorithmFunction(String s) {
+        return s.matches("(bsearch|qsort)(_s)?");
     }
 
     protected boolean isCAssert(String s) {
