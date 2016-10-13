@@ -18,7 +18,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
     public List<String> findAndProcessCodeExamples(final String result) {
         List<String> answers = new ArrayList<>();
         
-        Pattern p = Pattern.compile("<code>((<cite>.*)?(<dfn>.*)?<var>.*)</code>");
+        Pattern p = Pattern.compile("Example.*<code>((<cite>.*)?(<dfn>.*)?<var>.*})</code>");
         Matcher matcher = p.matcher(result);
         String codeExample;
 
