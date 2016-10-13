@@ -1,6 +1,7 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
 import ru.compscicenter.practice.searcher.CodeExamplesStorage;
+import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             String code = intMain > 0 ? (prettyCode.substring(0, intMain) +
                 '\n' + prettyCode.substring(intMain)) : prettyCode;
 
-            CodeExamplesStorage.getInstance().addCodeExample(code);
+            CodeExamplesStorage.getInstance().addCodeExample(new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), code));
         }
     }
 

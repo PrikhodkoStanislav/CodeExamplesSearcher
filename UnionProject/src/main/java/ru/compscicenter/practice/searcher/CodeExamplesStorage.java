@@ -1,5 +1,7 @@
 package ru.compscicenter.practice.searcher;
 
+import ru.compscicenter.practice.searcher.codeexample.CodeExample;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ import java.util.List;
  */
 public class CodeExamplesStorage {
 
-    private List<String> examples;
+    private List<CodeExample> examples;
 
     private static CodeExamplesStorage instance;
 
@@ -22,11 +24,11 @@ public class CodeExamplesStorage {
         return instance;
     }
 
-    public synchronized void addCodeExample(String example) {
+    public synchronized void addCodeExample(CodeExample example) {
         examples.add(example);
     }
 
-    public List<String> getExamples() {
+    public List<CodeExample> getExamples() {
         return examples;
     }
 

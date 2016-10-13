@@ -1,6 +1,7 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
 import ru.compscicenter.practice.searcher.CodeExamplesStorage;
+import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             String code = prettyCode.substring(0, intMain)
                 + '\n' + prettyCode.substring(intMain);
 
-            CodeExamplesStorage.getInstance().addCodeExample(code);
+            CodeExamplesStorage.getInstance().addCodeExample(new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), code));
         }
     }
 

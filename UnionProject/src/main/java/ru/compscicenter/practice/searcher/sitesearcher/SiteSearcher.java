@@ -2,6 +2,7 @@ package ru.compscicenter.practice.searcher.sitesearcher;
 
 import ru.compscicenter.practice.searcher.CodeExamplesStorage;
 import ru.compscicenter.practice.searcher.Searcher;
+import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
 import java.util.List;
 
@@ -29,10 +30,10 @@ public class SiteSearcher extends Searcher {
 
         StringBuilder sb = new StringBuilder();
         sb.append("Examples of this method usage:").append("\n");
-        List<String> answers = CodeExamplesStorage.getInstance().getExamples();
+        List<CodeExample> answers = CodeExamplesStorage.getInstance().getExamples();
         if (answers != null)
-            for (String answer : answers) {
-                sb.append(answer).append("\n");
+            for (CodeExample answer : answers) {
+                sb.append(answer.toString()).append("\n");
             }
         else
             sb.append("Sorry! Connection was interrupted!").append("\n");

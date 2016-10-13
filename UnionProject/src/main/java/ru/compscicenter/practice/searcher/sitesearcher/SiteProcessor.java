@@ -1,6 +1,7 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
 import ru.compscicenter.practice.searcher.CodeExamplesStorage;
+import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,9 +25,8 @@ public abstract class SiteProcessor extends Thread {
             try {
                 String webContent = sendGet(request);
                 if (webContent.contains("Page Not Found")) {
-                    CodeExamplesStorage.getInstance().addCodeExample("No such method found!");
+                    CodeExamplesStorage.getInstance().addCodeExample(new SiteCodeExample("No such method found!"));
                 } else {
-                    CodeExamplesStorage.getInstance().addCodeExample(getSiteName() + "\n");
                     findAndProcessCodeExamples(webContent);
                 }
             } catch (Exception e) {
