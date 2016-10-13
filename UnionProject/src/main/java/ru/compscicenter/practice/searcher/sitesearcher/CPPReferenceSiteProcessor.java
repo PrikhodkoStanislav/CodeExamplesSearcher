@@ -1,5 +1,7 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
+import ru.compscicenter.practice.searcher.CodeExamplesStorage;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,10 +17,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     private static final String CPPREFERENCE_URL = "http://en.cppreference.com/w/";
 
     @Override
-    public List<String> findAndProcessCodeExamples(final String result) {
-        List<String> answers = new ArrayList<>();
-
-        Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
+    public void findAndProcessCodeExamples(final String result) {
+         Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
         Matcher matcher = p.matcher(result);
         String codeExample;
         while (matcher.find()) {
@@ -47,9 +47,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             String code = intMain > 0 ? (prettyCode.substring(0, intMain) +
                 '\n' + prettyCode.substring(intMain)) : prettyCode;
 
-            answers.add(code);
+            CodeExamplesStorage.getInstance().addCodeExample(code);
         }
-        return answers;
     }
 
     @Override

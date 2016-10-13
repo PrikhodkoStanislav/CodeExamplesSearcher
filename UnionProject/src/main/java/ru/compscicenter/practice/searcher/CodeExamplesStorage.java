@@ -22,8 +22,12 @@ public class CodeExamplesStorage {
         return instance;
     }
 
-    public void addCodeExample(String example) {
+    public synchronized void addCodeExample(String example) {
         examples.add(example);
+    }
+
+    public List<String> getExamples() {
+        return examples;
     }
 
     public void removeDuplicates() {}

@@ -1,5 +1,7 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
+import ru.compscicenter.practice.searcher.CodeExamplesStorage;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,13 +17,11 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
     private static final String CPLUSPLUS_URL = "http://www.cplusplus.com/reference/";
 
     @Override
-    public List<String> findAndProcessCodeExamples(final String result) {
-        List<String> answers = new ArrayList<>();
+    public void findAndProcessCodeExamples(final String result) {
         
         Pattern p = Pattern.compile("Example.*<code>((<cite>.*)?(<dfn>.*)?<var>.*})</code>");
         Matcher matcher = p.matcher(result);
         String codeExample;
-
         while (matcher.find()) {
             codeExample = matcher.group(1);
             codeExample = codeExample.replaceAll("<(/)?(cite|dfn|var|span|kbd)>", "");
@@ -35,9 +35,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             String code = prettyCode.substring(0, intMain)
                 + '\n' + prettyCode.substring(intMain);
 
-            answers.add(code);
+            CodeExamplesStorage.getInstance().addCodeExample(code);
         }
-        return answers;
     }
 
     @Override

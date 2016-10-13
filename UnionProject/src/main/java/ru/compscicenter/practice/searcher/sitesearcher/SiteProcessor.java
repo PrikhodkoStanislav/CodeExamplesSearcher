@@ -1,7 +1,7 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
-import java.util.ArrayList;
-import java.util.List;
+import ru.compscicenter.practice.searcher.CodeExamplesStorage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,7 +12,6 @@ import java.net.URL;
  * Created by user on 28.09.2016!
  */
 public abstract class SiteProcessor extends Thread {
-    private List<String> answers = new ArrayList<>();
     private String query;
     private CodeFormatter codeFormatter = CodeFormatter.getInstance();
 
@@ -20,14 +19,15 @@ public abstract class SiteProcessor extends Thread {
     public void run() {
         String request = generateRequestURL(getQuery());
         if (request == null || "".equals(request)) {
-            answers.add("Please, exact your function name");
+            System.out.print("Please, exact your function name");
         } else {
             try {
                 String webContent = sendGet(request);
                 if (webContent.contains("Page Not Found")) {
-                    answers.add("No such method found!");
+                    CodeExamplesStorage.getInstance().addCodeExample("No such method found!");
                 } else {
-                    answers = findAndProcessCodeExamples(webContent);
+                    CodeExamplesStorage.getInstance().addCodeExample(getSiteName() + "\n");
+                    findAndProcessCodeExamples(webContent);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -46,9 +46,8 @@ public abstract class SiteProcessor extends Thread {
      * Find and process search results (remove extra tags and spans)
      * and then make code examples pretty
      * @param result - finding html page
-     * @return list with code examples
      * */
-    public abstract List<String> findAndProcessCodeExamples(final String result);
+    public abstract void findAndProcessCodeExamples(final String result);
 
     public abstract String getSiteName();
 
@@ -84,10 +83,6 @@ public abstract class SiteProcessor extends Thread {
 
     public String toPrettyCode(String code) {
         return codeFormatter.toPrettyCode(code);
-    }
-
-    public List<String> getAnswers() {
-        return answers;
     }
 
     public String getQuery() {

@@ -1,5 +1,6 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
+import ru.compscicenter.practice.searcher.CodeExamplesStorage;
 import ru.compscicenter.practice.searcher.Searcher;
 
 import java.util.List;
@@ -28,16 +29,13 @@ public class SiteSearcher extends Searcher {
 
         StringBuilder sb = new StringBuilder();
         sb.append("Examples of this method usage:").append("\n");
-        for (SiteProcessor processor : processors) {
-            sb.append(processor.getSiteName()).append("\n");
-            List<String> answers = processor.getAnswers();
-            if (answers != null)
-                for (String answer : answers) {
-                    sb.append(answer).append("\n");
-                }
-            else
-                sb.append("Sorry! Connection was interrupted!").append("\n");
-        }
+        List<String> answers = CodeExamplesStorage.getInstance().getExamples();
+        if (answers != null)
+            for (String answer : answers) {
+                sb.append(answer).append("\n");
+            }
+        else
+            sb.append("Sorry! Connection was interrupted!").append("\n");
 
         return sb.toString();
     }
