@@ -24,18 +24,10 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         while (matcher.find()) {
             codeExample = matcher.group(1);
             codeExample = codeExample.replaceAll("<(/)?(cite|dfn|var|span|kbd)>", "");
-            codeExample = codeExample.replaceAll("&gt;", ">");
-            codeExample = codeExample.replaceAll("&lt;", "<");
 
             String prettyCode = toPrettyCode(codeExample);
-            int intMain = prettyCode.indexOf("int main ()");
-            if (intMain < 0)
-                intMain = prettyCode.indexOf("int main()");
-            String code = prettyCode.substring(0, intMain)
-                + '\n' + prettyCode.substring(intMain);
-
             CodeExamplesStorage.getInstance().addCodeExample(
-                    new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), code));
+                    new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), prettyCode));
         }
     }
 
