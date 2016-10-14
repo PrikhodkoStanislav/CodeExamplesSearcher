@@ -36,7 +36,7 @@ public class SiteSearcher extends Searcher {
         List<CodeExample> answers = CodeExamplesStorage.getInstance().getExamples();
         if (answers != null)
             for (CodeExample answer : answers) {
-                sb.append("<p>").append(answer.toString()).append("</p>").append("<br>");
+                sb.append("<div clas=\"pretty\">").append(answer.toString()).append("</div>").append("<br>");
             }
         else
             sb.append("<p>Sorry! Connection was interrupted! :(<p>").append("<br>");
