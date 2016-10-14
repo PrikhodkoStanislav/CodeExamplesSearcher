@@ -13,7 +13,8 @@ public class SiteCodeExample extends CodeExample {
         this.codeExample = codeExample;
     }
 
-    public SiteCodeExample(String notFound) {
+    public SiteCodeExample(String siteName, String notFound) {
+        this.siteName = siteName;
         this.codeExample = notFound;
     }
 
@@ -27,11 +28,12 @@ public class SiteCodeExample extends CodeExample {
 
     @Override
     public String toString() {
-        if (siteName != null && url != null)
+        if (url != null)
             return "Site: " + siteName +
                     "\nWeb page: " + url +
                     "\nExample:\n" + codeExample;
         else
-            return codeExample;
+            return "Site: " + siteName +
+                    "\n" + codeExample;
     }
 }

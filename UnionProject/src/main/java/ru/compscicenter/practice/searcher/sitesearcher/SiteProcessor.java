@@ -25,7 +25,8 @@ public abstract class SiteProcessor extends Thread {
             try {
                 String webContent = sendGet(request);
                 if (webContent.contains("Page Not Found")) {
-                    CodeExamplesStorage.getInstance().addCodeExample(new SiteCodeExample("No such method found!"));
+                    CodeExamplesStorage.getInstance().addCodeExample(
+                            new SiteCodeExample(getSiteName(), "No such method found!"));
                 } else {
                     findAndProcessCodeExamples(webContent);
                 }
@@ -49,6 +50,11 @@ public abstract class SiteProcessor extends Thread {
      * */
     public abstract void findAndProcessCodeExamples(final String result);
 
+    /**
+     * Find and process search results (remove extra tags and spans)
+     * and then make code examples pretty
+     * @return name of site
+     * */
     public abstract String getSiteName();
 
     public String sendGet(String url) throws IOException {
