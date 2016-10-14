@@ -6,10 +6,13 @@ package ru.compscicenter.practice.searcher.codeexample;
 public class SelfProjectCodeExample extends CodeExample {
     private long numberOfExample;
     private long strNumber;
+    private String pathToTheFile;
 
-    public SelfProjectCodeExample(long numberOfExample, long strNumber) {
+    public SelfProjectCodeExample(String pathToTheFile, long numberOfExample, long strNumber, String codeExample) {
+        this.pathToTheFile = pathToTheFile;
         this.numberOfExample = numberOfExample;
         this.strNumber = strNumber;
+        this.codeExample = codeExample;
     }
 
     public long getNumberOfExample() {
@@ -20,8 +23,18 @@ public class SelfProjectCodeExample extends CodeExample {
         return strNumber;
     }
 
+    public String getPathToTheFile() {
+        return pathToTheFile;
+    }
+
     @Override
     public String toString() {
-        return "";
+        final String newLine = "\n";
+        String result = "Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine;
+        result += "----------" + newLine;
+        result += codeExample;
+        result += "----------" + newLine;
+        result += newLine;
+        return result;
     }
 }
