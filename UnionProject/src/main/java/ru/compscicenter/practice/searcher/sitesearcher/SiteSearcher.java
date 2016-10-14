@@ -29,14 +29,19 @@ public class SiteSearcher extends Searcher {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Examples of this method usage:").append("\n");
+        sb.append("<!DOCTYPE html>").append(System.lineSeparator())
+                .append("<html>").append(System.lineSeparator());
+        sb.append("<h3>Examples of this method usage from sites:</h3>").append(System.lineSeparator());
+        sb.append("<body>");
         List<CodeExample> answers = CodeExamplesStorage.getInstance().getExamples();
         if (answers != null)
             for (CodeExample answer : answers) {
-                sb.append(answer.toString()).append("\n");
+                sb.append("<p>").append(answer.toString()).append("</p>").append(System.lineSeparator());
             }
         else
-            sb.append("Sorry! Connection was interrupted!").append("\n");
+            sb.append("<p>Sorry! Connection was interrupted! :(<p>").append(System.lineSeparator());
+        sb.append("</body>");
+        sb.append("</html>");
 
         return sb.toString();
     }

@@ -20,16 +20,16 @@ public class CodeFormatter {
         for (int i = 0; i < code.length(); i++) {
             char symbol = code.charAt(i);
             if (symbol == '#') {
-                sb.append("\n").append(symbol);
+                sb.append(System.lineSeparator()).append(symbol);
             } else if (symbol == ';') {
                 if (isNotEmptyAfterSemicolon(code, i)) {
                     sb.append(symbol);
                 } else {
-                    sb.append(symbol).append("\n");
+                    sb.append(symbol).append(System.lineSeparator());
                 }
             } else if (symbol == ')') {
                 if (isBeforeNewLine(code, i)) {
-                    sb.append(symbol).append("\n");
+                    sb.append(symbol).append(System.lineSeparator());
                 } else {
                     sb.append(symbol);
                 }
@@ -43,7 +43,7 @@ public class CodeFormatter {
                 if ((i + 2) < code.length() && (isNoSpaceChar(code, i + 1) || isNoSpaceChar(code, i + 2)))
                     sb.append(symbol);
                 else
-                    sb.append(symbol).append("\n");
+                    sb.append(symbol).append(System.lineSeparator());
             } else {
                 sb.append(symbol);
             }
