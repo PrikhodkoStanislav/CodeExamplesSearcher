@@ -20,16 +20,16 @@ public class CodeFormatter {
         for (int i = 0; i < code.length(); i++) {
             char symbol = code.charAt(i);
             if (symbol == '#') {
-                sb.append(System.lineSeparator()).append(symbol);
+                sb.append("<br>").append(symbol);
             } else if (symbol == ';') {
                 if (isNotEmptyAfterSemicolon(code, i)) {
                     sb.append(symbol);
                 } else {
-                    sb.append(symbol).append(System.lineSeparator());
+                    sb.append(symbol).append("<br>");
                 }
             } else if (symbol == ')') {
                 if (isBeforeNewLine(code, i)) {
-                    sb.append(symbol).append(System.lineSeparator());
+                    sb.append(symbol).append("<br>");
                 } else {
                     sb.append(symbol);
                 }
@@ -43,12 +43,19 @@ public class CodeFormatter {
                 if ((i + 2) < code.length() && (isNoSpaceChar(code, i + 1) || isNoSpaceChar(code, i + 2)))
                     sb.append(symbol);
                 else
-                    sb.append(symbol).append(System.lineSeparator());
+                    sb.append(symbol).append("<br>");
             } else {
                 sb.append(symbol);
             }
         }
-        return sb.toString();
+
+        String prettyCode = sb.toString();
+        int intMain = prettyCode.indexOf("int main ()");
+        if (intMain < 0)
+            intMain = prettyCode.indexOf("int main()");
+        String result = intMain > 0 ? (prettyCode.substring(0, intMain) +
+                "<br>" + prettyCode.substring(intMain)) : prettyCode;
+        return result;
     }
 
     private boolean isBeforeNewLine(String code, int i) {

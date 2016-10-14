@@ -34,20 +34,12 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             codeExample = codeExample.replaceAll("&#123;", "{");
             codeExample = codeExample.replaceAll("&#125;", "}");
             codeExample = codeExample.replaceAll("&#160;", " ");
-            codeExample = codeExample.replaceAll("&gt;", ">");
-            codeExample = codeExample.replaceAll("&lt;", "<");
             codeExample = codeExample.replaceAll("&quot;", "\"");
             codeExample = codeExample.replaceAll("&amp;", "&");
 
             String prettyCode = toPrettyCode(codeExample);
-            int intMain = prettyCode.indexOf("int main ()");
-            if (intMain < 0)
-                intMain = prettyCode.indexOf("int main()");
-            String code = intMain > 0 ? (prettyCode.substring(0, intMain) +
-                '\n' + prettyCode.substring(intMain)) : prettyCode;
-
             CodeExamplesStorage.getInstance().addCodeExample(
-                    new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), code));
+                    new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), prettyCode));
         }
     }
 
