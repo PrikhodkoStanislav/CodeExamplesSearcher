@@ -12,16 +12,26 @@ public class CommandLineSearcher {
     public CommandLineSearcher() {
         //https://commons.apache.org/proper/commons-cli/usage.html
         //https://habrahabr.ru/post/123360/
-        options.addOption(new Option("online", "search code examples on web sites"));
-        options.addOption(new Option("offline", "search code examples in project"));
-        options.addOption(new Option("all", "search code examples on web sites and in project"));
-        options.addOption("f", true, "function name");
-        options.addOption("p", true, "name of the project root");
-        options.addOption("help", false, "help for utility");
+        options.addOption("on", "online", false, "search code examples on web sites");
+        options.addOption("off", "offline", false, "search code examples in project");
+        options.addOption("a", "all", false, "search code examples on web sites and in project");
+        options.addOption("f", "file", true, "function name");
+        options.addOption("p", "path", true, "name of the project root");
+        options.addOption("h", "help", false, "All functions of this utility");
     }
 
     public CommandLine parseArguments(String[] args) throws ParseException {
         CommandLineParser parser = new DefaultParser();
         return parser.parse(options, args);
+    }
+
+    public void printHelp() {
+        System.out.println(options.getOption("help").getDescription());
+        for (Option option : options.getOptions()) {
+            System.out.println(" -" + option.getOpt() + ", " +
+                    " --" + (option.getLongOpt() != null ? option.getLongOpt() : "") +
+                    (option.hasArg() ? "[[=\\s]<" + option.getLongOpt() + "_name>]" : "") +
+                     " --- " + option.getDescription());
+        }
     }
 }

@@ -39,14 +39,18 @@ public class MainSearcher {
             if (cmd.hasOption("online")) {
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
+                processResults(l1);
             } else if (cmd.hasOption("offline")) {
                 //search in SRC
                 //l2 = searcher2.search(functionName);
-            } else {
+            } else if (cmd.hasOption("all")) {
                 //search in SRC and on sites
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
                 //l2 = searcher2.search(functionName);
+                processResults(l1);
+            } else {
+                commandLine.printHelp();
             }
         } catch (ParseException e) {
             System.out.println("Wrong arguments");
@@ -67,17 +71,6 @@ public class MainSearcher {
 //            System.out.println(s2);
         }
 
-        //TODO remove duplicates
-        if (l1 != null) {
-            for (CodeExample codeExample : l1) {
-                codeExample.setCodeExample(codeFormatter.toPrettyCode(codeExample.codeExample));
-            }
-
-            codeFormatter.createHTML(l1);
-        } else {
-            System.out.println("No such example found!");
-        }
-
         if (args.length > 1) {
             String path2 = "examplesFromProject.html";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(path2))) {
@@ -94,6 +87,19 @@ public class MainSearcher {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private static void processResults(List<CodeExample> l1) {
+        //TODO remove duplicates
+        if (l1 != null) {
+            for (CodeExample codeExample : l1) {
+                codeExample.setCodeExample(codeFormatter.toPrettyCode(codeExample.codeExample));
+            }
+
+            codeFormatter.createHTML(l1);
+        } else {
+            System.out.println("No such example found!");
         }
     }
 }
