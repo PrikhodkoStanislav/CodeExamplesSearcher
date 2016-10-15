@@ -30,10 +30,11 @@ public class SelfProjectCodeExample extends CodeExample {
     @Override
     public String toString() {
         final String newLine = "\n";
-        String result = "Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine;
-        result += "----------" + newLine;
+        String result = "Path to the file: " + pathToTheFile + newLine;
+        result += "Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine;
+//        result += "----------" + newLine;
         result += codeExample;
-        result += "----------" + newLine;
+//        result += "----------" + newLine;
         result += newLine;
         return result;
     }
