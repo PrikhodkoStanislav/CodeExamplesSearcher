@@ -2,6 +2,7 @@ package ru.compscicenter.practice.searcher;
 
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
+import ru.compscicenter.practice.searcher.sitesearcher.CodeFormatter;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
 import java.awt.*;
@@ -9,19 +10,24 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Станислав on 05.10.2016.
  */
 public class MainSearcher {
+    private static CodeFormatter codeFormatter = CodeFormatter.getInstance();
+
     public static void main(String[] args) {
-        String s1 = "";
+        List<CodeExample> l1;
         String s2 = "";
         Searcher searcher1 = new SiteSearcher();
         SelfProjectSearcher searcher2 = new SelfProjectSearcher();
-        s1 = searcher1.search(args[0]);
+        l1 = searcher1.search(args[0]);
         if (args.length > 1) {
             s2 = searcher2.search(args[0], args[1]);
+            //TODO method return List<CodeExample>
+            //l1.addAll(l2);
 //            s2 = searcher2.search("strlen", "../UnionProject/src/main/resources");
 //            for (CodeExample s  : searcher2.list) {
 //                System.out.println(s.toString());
@@ -30,21 +36,11 @@ public class MainSearcher {
 //            System.out.println(s2);
         }
 
-        String path = "examples.html";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-            writer.write(s1);
-            writer.newLine();
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (CodeExample codeExample : l1) {
+            codeExample.setCodeExample(codeFormatter.toPrettyCode(codeExample.codeExample));
         }
 
-        File htmlFile = new File(path);
-        try {
-            Desktop.getDesktop().browse(htmlFile.toURI());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        codeFormatter.createHTML(l1);
 
         if (args.length > 1) {
             String path2 = "examplesFromProject.html";

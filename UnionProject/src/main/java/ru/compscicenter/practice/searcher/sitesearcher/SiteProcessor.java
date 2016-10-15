@@ -1,6 +1,7 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
 import ru.compscicenter.practice.searcher.CodeExamplesStorage;
+import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
 import java.io.BufferedReader;
@@ -8,13 +9,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by user on 28.09.2016!
  */
 public abstract class SiteProcessor extends Thread {
     private String query;
-    private CodeFormatter codeFormatter = CodeFormatter.getInstance();
+    private List<CodeExample> answers;
 
     @Override
     public void run() {
@@ -28,7 +30,7 @@ public abstract class SiteProcessor extends Thread {
                     CodeExamplesStorage.getInstance().addCodeExample(
                             new SiteCodeExample(getSiteName(), "No such method found!"));
                 } else {
-                    findAndProcessCodeExamples(webContent);
+                    answers = findAndProcessCodeExamples(webContent);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -48,7 +50,7 @@ public abstract class SiteProcessor extends Thread {
      * and then make code examples pretty
      * @param result - finding html page
      * */
-    public abstract void findAndProcessCodeExamples(final String result);
+    public abstract List<CodeExample> findAndProcessCodeExamples(final String result);
 
     /**
      * Find and process search results (remove extra tags and spans)
@@ -85,10 +87,6 @@ public abstract class SiteProcessor extends Thread {
         in.close();
         con.disconnect();
         return response.toString();
-    }
-
-    public String toPrettyCode(String code) {
-        return codeFormatter.toPrettyCode(code);
     }
 
     public String getQuery() {
@@ -156,5 +154,9 @@ public abstract class SiteProcessor extends Thread {
 
     protected boolean isCMemory(String s) {
         return s.matches("(c|m|re|aligned_)alloc|free");
+    }
+
+    public List<CodeExample> getAnswers() {
+        return answers;
     }
 }
