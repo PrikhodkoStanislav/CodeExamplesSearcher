@@ -15,6 +15,20 @@
             <artifactId>junit</artifactId>
             <version>4.7</version>
         </dependency>
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>4.5.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/antlr-4.5.3-complete.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>antlrclasses</groupId>
+            <artifactId>antlrclasses</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/antlrclasses.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>

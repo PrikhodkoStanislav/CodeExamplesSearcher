@@ -3,9 +3,9 @@ package ru.compscicenter.practice.searcher.selfprojectsearcher;
 import ru.compscicenter.practice.searcher.Searcher;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.codeexample.SelfProjectCodeExample;
-import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class SelfProjectSearcher extends Searcher {
 
-    public List<CodeExample> list = new LinkedList<>();
+    public List<CodeExample> list = new ArrayList<>();
 
     private String makeResult() {
         StringBuilder sb = new StringBuilder();
