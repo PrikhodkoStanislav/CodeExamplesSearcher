@@ -1,6 +1,5 @@
 package ru.compscicenter.practice.searcher;
 
-import ru.compscicenter.practice.searcher.codeduplicateremover.CodeDuplicateRemover;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
