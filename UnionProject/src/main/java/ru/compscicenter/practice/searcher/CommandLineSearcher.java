@@ -27,16 +27,14 @@ public class CommandLineSearcher {
         Option offline = Option.builder("s")
                 .longOpt("offline")
                 .numberOfArgs(2)
-                .argName("func")
-                .argName("path")
+                .argName("func> <path")
                 .desc("search code examples only in the a project")
                 .build();
 
         Option all = Option.builder("a")
                 .longOpt("all")
                 .numberOfArgs(2)
-                .argName("func")
-                .argName("path")
+                .argName("func> <path")
                 .desc("search code examples both on web sites and in a project")
                 .build();
 

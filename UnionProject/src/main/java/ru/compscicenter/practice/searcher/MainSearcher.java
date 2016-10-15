@@ -36,7 +36,7 @@ public class MainSearcher {
             CommandLine cmd = commandLine.parseArguments(args);
 
             if (cmd.hasOption("online")) {
-                functionName = cmd.getOptionValue(cmd.getOptionValue("online"));
+                functionName = cmd.getOptionValues("online")[0];
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
                 processResults(l1);
