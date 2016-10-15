@@ -1,8 +1,7 @@
 # CodeExamplesSearcher
-All functions of this utility
- -on,  --online --- search code examples on web sites
- -off,  --offline --- search code examples in project
- -a,  --all --- search code examples on web sites and in project
- -f,  --file[[=\s]<file_name>] --- function name
- -p,  --path[[=\s]<path_name>] --- name of the project root
- -h,  --help --- All functions of this utility
+usage: Code examples searcher
+ -a,--all <func> <path>       search code examples both on web sites and
+                              in a project
+    --help                    all functions of this utility
+ -s,--offline <func> <path>   search code examples only in the a project
+ -w,--online <func>           search code examples only on web sites
