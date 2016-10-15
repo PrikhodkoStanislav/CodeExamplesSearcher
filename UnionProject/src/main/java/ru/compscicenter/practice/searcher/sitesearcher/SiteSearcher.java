@@ -13,7 +13,6 @@ public class SiteSearcher extends Searcher {
 
     @Override
     public List<CodeExample> search(String methodNameQuery) {
-
         SiteProcessor[] processors = {new CPlusPlusSiteProcessor(), new CPPReferenceSiteProcessor()};
 
         for (SiteProcessor processor : processors) {

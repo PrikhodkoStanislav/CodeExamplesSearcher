@@ -31,7 +31,7 @@ public class SiteCodeExample extends CodeExample {
         if (url != null)
             return "Site: " + siteName + "\n" +
                     "Web page: " + url + "\n" +
-                    "Example:&nbsp;" + codeExample;
+                    "Example:\n" + codeExample;
         else
             return "Site: " + siteName + "\n" +
                     codeExample;

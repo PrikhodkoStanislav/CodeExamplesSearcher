@@ -36,6 +36,8 @@ public class MainSearcher {
 //            System.out.println(s2);
         }
 
+        //TODO remove duplicates
+
         for (CodeExample codeExample : l1) {
             codeExample.setCodeExample(codeFormatter.toPrettyCode(codeExample.codeExample));
         }
