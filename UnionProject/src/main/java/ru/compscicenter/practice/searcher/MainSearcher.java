@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Станислав on 05.10.2016.
  */
 public class MainSearcher {
-    private static CommandLineSearcher commandLine = new CommandLineSearcher();
+    private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
     private static CodeFormatter codeFormatter = CodeFormatter.getInstance();
     private static String functionName;
     private static String path;
@@ -29,28 +29,38 @@ public class MainSearcher {
 
         try {
             CommandLine cmd = commandLine.parseArguments(args);
-            if (cmd.hasOption("f")) {
-                functionName = cmd.getOptionValue("f");
-            }
-            if (cmd.hasOption("p")) {
-                path = cmd.getOptionValue("p");
-            }
 
             if (cmd.hasOption("online")) {
+                if (cmd.hasOption("f")) {
+                    functionName = cmd.getOptionValue("f");
+                }
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
                 processResults(l1);
             } else if (cmd.hasOption("offline")) {
+                if (cmd.hasOption("f")) {
+                    functionName = cmd.getOptionValue("f");
+                }
+                if (cmd.hasOption("p")) {
+                    path = cmd.getOptionValue("p");
+                }
                 //search in SRC
                 //l2 = searcher2.search(functionName);
             } else if (cmd.hasOption("all")) {
+                if (cmd.hasOption("f")) {
+                    functionName = cmd.getOptionValue("f");
+                }
+                if (cmd.hasOption("p")) {
+                    path = cmd.getOptionValue("p");
+                }
                 //search in SRC and on sites
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
                 //l2 = searcher2.search(functionName);
                 processResults(l1);
-            } else {
-                commandLine.printHelp();
+            } else if (cmd.hasOption("help")) {
+                if (cmd.getOptions().length <= 1)
+                    commandLine.printHelp();
             }
         } catch (ParseException e) {
             System.out.println("Wrong arguments");

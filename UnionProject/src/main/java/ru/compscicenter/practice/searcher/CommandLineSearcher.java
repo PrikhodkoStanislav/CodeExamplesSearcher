@@ -7,17 +7,25 @@ import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
  * Created by user on 15.10.2016!
  */
 public class CommandLineSearcher {
-    private Options options = new Options();
+    private static CommandLineSearcher instanceOf;
+    private final Options options;
 
-    public CommandLineSearcher() {
-        //https://commons.apache.org/proper/commons-cli/usage.html
-        //https://habrahabr.ru/post/123360/
-        options.addOption("on", "online", false, "search code examples on web sites");
-        options.addOption("off", "offline", false, "search code examples in project");
-        options.addOption("a", "all", false, "search code examples on web sites and in project");
-        options.addOption("f", "file", true, "function name");
-        options.addOption("p", "path", true, "name of the project root");
-        options.addOption("h", "help", false, "All functions of this utility");
+    //https://commons.apache.org/proper/commons-cli/usage.html
+    //https://habrahabr.ru/post/123360/
+    private CommandLineSearcher() {
+        options = new Options();
+        options.addOption("on", "online", false, "search code examples on web sites")
+                .addOption("off", "offline", false, "search code examples in project")
+                .addOption("a", "all", false, "search code examples on web sites and in project")
+                .addOption("f", "file", true, "function name")
+                .addOption("p", "path", true, "name of the project root")
+                .addOption(null, "help", false, "All functions of this utility");
+    }
+
+    public static CommandLineSearcher getInstanceOf() {
+        if (instanceOf == null)
+            instanceOf = new CommandLineSearcher();
+        return instanceOf;
     }
 
     public CommandLine parseArguments(String[] args) throws ParseException {
@@ -26,12 +34,8 @@ public class CommandLineSearcher {
     }
 
     public void printHelp() {
-        System.out.println(options.getOption("help").getDescription());
-        for (Option option : options.getOptions()) {
-            System.out.println(" -" + option.getOpt() + ", " +
-                    " --" + (option.getLongOpt() != null ? option.getLongOpt() : "") +
-                    (option.hasArg() ? "[[=\\s]<" + option.getLongOpt() + "_name>]" : "") +
-                     " --- " + option.getDescription());
-        }
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("Main", options);
+        System.exit(0);
     }
 }
