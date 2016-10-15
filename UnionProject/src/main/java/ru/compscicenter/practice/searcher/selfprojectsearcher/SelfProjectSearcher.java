@@ -3,6 +3,7 @@ package ru.compscicenter.practice.searcher.selfprojectsearcher;
 import ru.compscicenter.practice.searcher.Searcher;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.codeexample.SelfProjectCodeExample;
+import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -14,6 +15,8 @@ import java.util.regex.Pattern;
  * Created by Станислав on 05.10.2016.
  */
 public class SelfProjectSearcher extends Searcher {
+
+    public List<CodeExample> list = new LinkedList<>();
 
     @Override
     public String search(String functionName, String pathToFile) {
@@ -91,6 +94,7 @@ public class SelfProjectSearcher extends Searcher {
                     sb.append(newLine);
                     CodeExample codeExample = new SelfProjectCodeExample(pathToFile,
                             numberOfExample, strNumber, sb.toString());
+                    list.add(codeExample);
                     continue;
                 }
 
