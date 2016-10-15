@@ -1,5 +1,7 @@
 package ru.compscicenter.practice.searcher;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.ParseException;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
 import ru.compscicenter.practice.searcher.sitesearcher.CodeFormatter;
@@ -16,14 +18,43 @@ import java.util.List;
  * Created by Станислав on 05.10.2016.
  */
 public class MainSearcher {
+    private static CommandLineSearcher commandLine = new CommandLineSearcher();
     private static CodeFormatter codeFormatter = CodeFormatter.getInstance();
+    private static String functionName;
+    private static String path;
 
     public static void main(String[] args) {
-        List<CodeExample> l1;
+        Searcher searcher1;
+        List<CodeExample> l1 = null;
+
+        try {
+            CommandLine cmd = commandLine.parseArguments(args);
+            if (cmd.hasOption("f")) {
+                functionName = cmd.getOptionValue("f");
+            }
+            if (cmd.hasOption("p")) {
+                path = cmd.getOptionValue("p");
+            }
+
+            if (cmd.hasOption("online")) {
+                searcher1 = new SiteSearcher();
+                l1 = searcher1.search(functionName);
+            } else if (cmd.hasOption("offline")) {
+                //search in SRC
+                //l2 = searcher2.search(functionName);
+            } else {
+                //search in SRC and on sites
+                searcher1 = new SiteSearcher();
+                l1 = searcher1.search(functionName);
+                //l2 = searcher2.search(functionName);
+            }
+        } catch (ParseException e) {
+            System.out.println("Wrong arguments");
+        }
+
         String s2 = "";
-        Searcher searcher1 = new SiteSearcher();
         SelfProjectSearcher searcher2 = new SelfProjectSearcher();
-        l1 = searcher1.search(args[0]);
+
         if (args.length > 1) {
             s2 = searcher2.search(args[0], args[1]);
             //TODO method return List<CodeExample>
@@ -37,12 +68,15 @@ public class MainSearcher {
         }
 
         //TODO remove duplicates
+        if (l1 != null) {
+            for (CodeExample codeExample : l1) {
+                codeExample.setCodeExample(codeFormatter.toPrettyCode(codeExample.codeExample));
+            }
 
-        for (CodeExample codeExample : l1) {
-            codeExample.setCodeExample(codeFormatter.toPrettyCode(codeExample.codeExample));
+            codeFormatter.createHTML(l1);
+        } else {
+            System.out.println("No such example found!");
         }
-
-        codeFormatter.createHTML(l1);
 
         if (args.length > 1) {
             String path2 = "examplesFromProject.html";
