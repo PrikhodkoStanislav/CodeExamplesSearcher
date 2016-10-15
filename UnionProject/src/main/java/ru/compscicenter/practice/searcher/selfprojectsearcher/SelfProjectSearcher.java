@@ -18,6 +18,25 @@ public class SelfProjectSearcher extends Searcher {
 
     public List<CodeExample> list = new LinkedList<>();
 
+    private String makeResult() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html>").append("<br>")
+                .append("<html>").append("<br>");
+        sb.append("<h3>Examples of this method usage from projects:</h3>").append("<br>");
+        sb.append("<body>");
+        List<CodeExample> answers = list;
+        if (answers != null)
+            for (CodeExample answer : answers) {
+                sb.append("<div clas=\"pretty\">").append(answer.toString()).append("</div>").append("<br>");
+            }
+        else
+            sb.append("<p>Sorry! Connection was interrupted! :(<p>").append("<br>");
+        sb.append("</body>");
+        sb.append("</html>");
+
+        return sb.toString();
+    }
+
     @Override
     public String search(String functionName, String pathToFile) {
         final String newLine = "\n";
@@ -44,7 +63,8 @@ public class SelfProjectSearcher extends Searcher {
 ////                    sb.append(search(functionName, f.getPath()));
 //                }
             }
-            return "";
+            return makeResult();
+//            return "";
 //            return;
 //            return sb.toString();
         }
@@ -134,7 +154,8 @@ public class SelfProjectSearcher extends Searcher {
         catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+        return makeResult();
+//        return "";
 //        return sb.toString();
     }
 }

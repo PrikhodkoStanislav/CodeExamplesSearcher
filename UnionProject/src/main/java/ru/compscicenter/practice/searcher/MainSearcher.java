@@ -33,7 +33,6 @@ public class MainSearcher {
         String path = "examples.html";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
             writer.write(s1);
-//            writer.write(s2);
             writer.newLine();
             writer.close();
         } catch (Exception e) {
@@ -45,6 +44,24 @@ public class MainSearcher {
             Desktop.getDesktop().browse(htmlFile.toURI());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if (args.length > 1) {
+            String path2 = "examplesFromProject.html";
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(path2))) {
+                writer.write(s2);
+                writer.newLine();
+                writer.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            File htmlFile2 = new File(path2);
+            try {
+                Desktop.getDesktop().browse(htmlFile2.toURI());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
