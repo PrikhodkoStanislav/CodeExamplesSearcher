@@ -20,16 +20,16 @@ public class MainSearcher {
         String s2 = "";
         Searcher searcher1 = new SiteSearcher();
         SelfProjectSearcher searcher2 = new SelfProjectSearcher();
-//        s1 = searcher1.search(args[0]);
-//        if (args.length > 1) {
-//            s2 = searcher2.search(args[0], args[1]);
-            s2 = searcher2.search("strlen", "../UnionProject/src/main/resources");
-            for (CodeExample s  : searcher2.list) {
-                System.out.println(s.toString());
-            }
-            CodeDuplicateRemover.run(searcher2.list);
+        s1 = searcher1.search(args[0]);
+        if (args.length > 1) {
+            s2 = searcher2.search(args[0], args[1]);
+//            s2 = searcher2.search("strlen", "../UnionProject/src/main/resources");
+//            for (CodeExample s  : searcher2.list) {
+//                System.out.println(s.toString());
+//            }
+//            CodeDuplicateRemover.run(searcher2.list);
 //            System.out.println(s2);
-//        }
+        }
 
         String path = "examples.html";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
