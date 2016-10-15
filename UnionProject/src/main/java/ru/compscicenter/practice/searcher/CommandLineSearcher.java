@@ -1,7 +1,6 @@
 package ru.compscicenter.practice.searcher;
 
 import org.apache.commons.cli.*;
-import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
 /**
  * Created by user on 15.10.2016!
@@ -10,16 +9,42 @@ public class CommandLineSearcher {
     private static CommandLineSearcher instanceOf;
     private final Options options;
 
-    //https://commons.apache.org/proper/commons-cli/usage.html
-    //https://habrahabr.ru/post/123360/
     private CommandLineSearcher() {
+        Option help = Option.builder(null)
+                .longOpt("help")
+                .optionalArg(true)
+                .argName("opt")
+                .desc("all functions of this utility")
+                .build();
+
+        Option online = Option.builder("w")
+                .longOpt("online")
+                .numberOfArgs(1)
+                .argName("func")
+                .desc("search code examples only on web sites")
+                .build();
+
+        Option offline = Option.builder("s")
+                .longOpt("offline")
+                .numberOfArgs(2)
+                .argName("func")
+                .argName("path")
+                .desc("search code examples only in the a project")
+                .build();
+
+        Option all = Option.builder("a")
+                .longOpt("all")
+                .numberOfArgs(2)
+                .argName("func")
+                .argName("path")
+                .desc("search code examples both on web sites and in a project")
+                .build();
+
         options = new Options();
-        options.addOption("on", "online", false, "search code examples on web sites")
-                .addOption("off", "offline", false, "search code examples in project")
-                .addOption("a", "all", false, "search code examples on web sites and in project")
-                .addOption("f", "file", true, "function name")
-                .addOption("p", "path", true, "name of the project root")
-                .addOption(null, "help", false, "All functions of this utility");
+        options.addOption(online)
+                .addOption(offline)
+                .addOption(all)
+                .addOption(help);
     }
 
     public static CommandLineSearcher getInstanceOf() {
@@ -35,7 +60,7 @@ public class CommandLineSearcher {
 
     public void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("Main", options);
+        formatter.printHelp("Code examples searcher", options);
         System.exit(0);
     }
 }

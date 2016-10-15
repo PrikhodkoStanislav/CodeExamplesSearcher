@@ -24,34 +24,35 @@ public class MainSearcher {
     private static String path;
 
     public static void main(String[] args) {
-        Searcher searcher1;
-        List<CodeExample> l1 = null;
+        if (args.length <= 0) {
+            System.out.println("There are no command for program!");
+            System.exit(0);
+        }
 
         try {
+            Searcher searcher1;
+            List<CodeExample> l1 = null;
+
             CommandLine cmd = commandLine.parseArguments(args);
 
             if (cmd.hasOption("online")) {
-                if (cmd.hasOption("f")) {
-                    functionName = cmd.getOptionValue("f");
-                }
+                functionName = cmd.getOptionValue(cmd.getOptionValue("online"));
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
                 processResults(l1);
             } else if (cmd.hasOption("offline")) {
-                if (cmd.hasOption("f")) {
-                    functionName = cmd.getOptionValue("f");
-                }
-                if (cmd.hasOption("p")) {
-                    path = cmd.getOptionValue("p");
+                String[] vals = cmd.getOptionValues("offline");
+                functionName = vals[0];
+                if (vals.length > 1) {
+                    path = vals[1];
                 }
                 //search in SRC
                 //l2 = searcher2.search(functionName);
             } else if (cmd.hasOption("all")) {
-                if (cmd.hasOption("f")) {
-                    functionName = cmd.getOptionValue("f");
-                }
-                if (cmd.hasOption("p")) {
-                    path = cmd.getOptionValue("p");
+                String[] vals = cmd.getOptionValues("all");
+                functionName = vals[0];
+                if (vals.length > 1) {
+                    path = vals[1];
                 }
                 //search in SRC and on sites
                 searcher1 = new SiteSearcher();
@@ -63,7 +64,7 @@ public class MainSearcher {
                     commandLine.printHelp();
             }
         } catch (ParseException e) {
-            System.out.println("Wrong arguments");
+            e.printStackTrace();
         }
 
         String s2 = "";
