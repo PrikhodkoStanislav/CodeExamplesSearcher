@@ -29,11 +29,11 @@ public class SiteCodeExample extends CodeExample {
     @Override
     public String toString() {
         if (url != null)
-            return "Site: " + siteName + "<br>" +
-                    "Web page: " + url + "<br>" +
-                    "Example:&nbsp;" + codeExample;
+            return "Site: " + siteName + "\n" +
+                    "Web page: " + url + "\n" +
+                    "Example:\n" + codeExample;
         else
-            return "Site: " + siteName + "<br>" +
+            return "Site: " + siteName + "\n" +
                     codeExample;
     }
 }

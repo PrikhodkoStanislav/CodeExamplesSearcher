@@ -1,8 +1,10 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
-import ru.compscicenter.practice.searcher.CodeExamplesStorage;
+import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,8 +18,9 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
     private static final String CPLUSPLUS_URL = "http://www.cplusplus.com/reference/";
 
     @Override
-    public void findAndProcessCodeExamples(final String result) {
-        
+    public List<CodeExample> findAndProcessCodeExamples(final String result) {
+        List<CodeExample> examples = new ArrayList<>();
+
         Pattern p = Pattern.compile("Example.*<code>((<cite>.*)?(<dfn>.*)?<var>.*})</code>");
         Matcher matcher = p.matcher(result);
         String codeExample;
@@ -25,10 +28,9 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             codeExample = matcher.group(1);
             codeExample = codeExample.replaceAll("<(/)?(cite|dfn|var|span|kbd)>", "");
 
-            String prettyCode = toPrettyCode(codeExample);
-            CodeExamplesStorage.getInstance().addCodeExample(
-                    new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), prettyCode));
+            examples.add(new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), codeExample));
         }
+        return examples;
     }
 
     @Override

@@ -1,5 +1,15 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
+import ru.compscicenter.practice.searcher.codeexample.CodeExample;
+
+import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
+
 /**
  * Created by user on 06.10.2016!
  */
@@ -13,6 +23,30 @@ public class CodeFormatter {
         if (instance == null)
             instance = new CodeFormatter();
         return instance;
+    }
+
+    public void createHTML(List<CodeExample> examples) {
+        String path = "examples.html";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+            writer.write("<html>");
+            writer.write("<h3>Code examples from sites</h3>");
+            writer.write("<body>");
+            for (CodeExample example : examples) {
+                writer.write("<pre>" + example.toString() + "</pre><br>");
+            }
+            writer.write("</body>");
+            writer.write("</html>");
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        File htmlFile = new File(path);
+        try {
+            Desktop.getDesktop().browse(htmlFile.toURI());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String toPrettyCode(String code) {

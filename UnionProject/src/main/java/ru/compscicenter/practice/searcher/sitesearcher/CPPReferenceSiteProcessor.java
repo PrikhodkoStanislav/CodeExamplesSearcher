@@ -1,8 +1,10 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
-import ru.compscicenter.practice.searcher.CodeExamplesStorage;
+import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,8 +18,10 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     private static final String CPPREFERENCE_URL = "http://en.cppreference.com/w/";
 
     @Override
-    public void findAndProcessCodeExamples(final String result) {
-         Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
+    public List<CodeExample> findAndProcessCodeExamples(final String result) {
+        List<CodeExample> examples = new ArrayList<>();
+
+        Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
         Matcher matcher = p.matcher(result);
         String codeExample;
         while (matcher.find()) {
@@ -37,10 +41,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             codeExample = codeExample.replaceAll("&quot;", "\"");
             codeExample = codeExample.replaceAll("&amp;", "&");
 
-            String prettyCode = toPrettyCode(codeExample);
-            CodeExamplesStorage.getInstance().addCodeExample(
-                    new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), prettyCode));
+            examples.add(new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), codeExample));
         }
+        return examples;
     }
 
     @Override

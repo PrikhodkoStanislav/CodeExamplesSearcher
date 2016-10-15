@@ -8,4 +8,12 @@ public abstract class CodeExample {
 
     @Override
     public abstract String toString();
+
+    public void setCodeExample(String codeExample) {
+        this.codeExample = codeExample;
+    }
+
+    public String getCodeExample() {
+        return codeExample;
+    }
 }
