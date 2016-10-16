@@ -31,6 +31,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                         "<(/)?(span|a)(\\s((class=\"[a-z]{2}\\d+\")|(href=\"https?://[a-zA-Z\\.]([_a-zA-Z\\./])*\")))?>"
                         , ""
                 );
+
             codeExample = codeExample.replaceAll("&#40;", "(");
             codeExample = codeExample.replaceAll("&#41;", ")");
             codeExample = codeExample.replaceAll("&#91;", "[");

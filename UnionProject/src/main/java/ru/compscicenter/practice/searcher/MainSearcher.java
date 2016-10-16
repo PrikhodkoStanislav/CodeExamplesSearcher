@@ -22,6 +22,7 @@ public class MainSearcher {
     private static CodeFormatter codeFormatter = CodeFormatter.getInstance();
     private static String functionName;
     private static String path;
+    private static boolean isTxt = true;
 
     public static void main(String[] args) {
         if (args.length <= 0) {
@@ -31,40 +32,69 @@ public class MainSearcher {
 
         try {
             Searcher searcher1;
-            List<CodeExample> l1 = null;
+            List<CodeExample> l1;
 
             CommandLine cmd = commandLine.parseArguments(args);
 
+            if (cmd.hasOption("online") && cmd.hasOption("offline") ||
+                    cmd.hasOption("all") && cmd.hasOption("online") ||
+                    cmd.hasOption("all") && cmd.hasOption("offline") ||
+                    cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
+                throw new ParseException("You must enter only one option!");
+
             if (cmd.hasOption("online")) {
-                functionName = cmd.getOptionValues("online")[0];
+                String[] vals = cmd.getOptionValues("online");
+                if (vals == null)
+                    throw new ParseException("Option has required arguments!");
+
+                functionName = vals[0];
+                if (vals.length > 1) {
+                    isTxt = !"html".equals(vals[1]);
+                }
+
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
-                processResults(l1);
+                processResults(l1, isTxt);
             } else if (cmd.hasOption("offline")) {
                 String[] vals = cmd.getOptionValues("offline");
+                if (vals == null)
+                    throw new ParseException("Option has required arguments!");
+
                 functionName = vals[0];
                 if (vals.length > 1) {
                     path = vals[1];
+                }
+
+                if (vals.length > 2) {
+                    isTxt = !"html".equals(vals[2]);
                 }
                 //search in SRC
                 //l2 = searcher2.search(functionName);
             } else if (cmd.hasOption("all")) {
                 String[] vals = cmd.getOptionValues("all");
+                if (vals == null)
+                    throw new ParseException("Option has required arguments!");
+
                 functionName = vals[0];
                 if (vals.length > 1) {
                     path = vals[1];
+                }
+
+                if (vals.length > 2) {
+                    isTxt = !"html".equals(vals[2]);
                 }
                 //search in SRC and on sites
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
                 //l2 = searcher2.search(functionName);
-                processResults(l1);
+                processResults(l1, isTxt);
             } else if (cmd.hasOption("help")) {
                 if (cmd.getOptions().length <= 1)
                     commandLine.printHelp();
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            commandLine.printHelp();
         }
 
         String s2 = "";
@@ -101,14 +131,17 @@ public class MainSearcher {
         }
     }
 
-    private static void processResults(List<CodeExample> l1) {
+    private static void processResults(List<CodeExample> l1, boolean isTxt) {
         //TODO remove duplicates
         if (l1 != null) {
             for (CodeExample codeExample : l1) {
                 codeExample.setCodeExample(codeFormatter.toPrettyCode(codeExample.codeExample));
             }
 
-            codeFormatter.createHTML(l1);
+            if (!isTxt)
+                codeFormatter.createHTML(l1);
+            else
+                codeFormatter.createTxt(l1);
         } else {
             System.out.println("No such example found!");
         }

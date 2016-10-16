@@ -40,11 +40,22 @@ public class CodeFormatter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-        File htmlFile = new File(path);
-        try {
-            Desktop.getDesktop().browse(htmlFile.toURI());
-        } catch (IOException e) {
+    public void createTxt(List<CodeExample> examples) {
+        String path = "examples.txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+            writer.write("Code examples from sites:");
+            for (CodeExample example : examples) {
+                String code = example.getCodeExample();
+                code = code.replaceAll("&lt;", "<");
+                code = code.replaceAll("&gt;", ">");
+                example.setCodeExample(code);
+                writer.write(example.toString());
+                writer.newLine();
+            }
+            writer.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -54,16 +65,16 @@ public class CodeFormatter {
         for (int i = 0; i < code.length(); i++) {
             char symbol = code.charAt(i);
             if (symbol == '#') {
-                sb.append("<br>").append(symbol);
+                sb.append("\n").append(symbol);
             } else if (symbol == ';') {
                 if (isNotEmptyAfterSemicolon(code, i)) {
                     sb.append(symbol);
                 } else {
-                    sb.append(symbol).append("<br>");
+                    sb.append(symbol).append("\n");
                 }
             } else if (symbol == ')') {
                 if (isBeforeNewLine(code, i)) {
-                    sb.append(symbol).append("<br>");
+                    sb.append(symbol).append("\n");
                 } else {
                     sb.append(symbol);
                 }
@@ -77,7 +88,7 @@ public class CodeFormatter {
                 if ((i + 2) < code.length() && (isNoSpaceChar(code, i + 1) || isNoSpaceChar(code, i + 2)))
                     sb.append(symbol);
                 else
-                    sb.append(symbol).append("<br>");
+                    sb.append(symbol).append("\n");
             } else {
                 sb.append(symbol);
             }
@@ -88,7 +99,7 @@ public class CodeFormatter {
         if (intMain < 0)
             intMain = prettyCode.indexOf("int main()");
         String result = intMain > 0 ? (prettyCode.substring(0, intMain) +
-                "<br>" + prettyCode.substring(intMain)) : prettyCode;
+                "\n" + prettyCode.substring(intMain)) : prettyCode;
         return result;
     }
 

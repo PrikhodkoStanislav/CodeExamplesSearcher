@@ -10,31 +10,32 @@ public class CommandLineSearcher {
     private final Options options;
 
     private CommandLineSearcher() {
-        Option help = Option.builder(null)
+        Option help = Option.builder("help")
                 .longOpt("help")
-                .optionalArg(true)
-                .argName("opt")
                 .desc("all functions of this utility")
                 .build();
 
         Option online = Option.builder("w")
                 .longOpt("online")
-                .numberOfArgs(1)
-                .argName("func")
+                .numberOfArgs(2)
+                .optionalArg(true)
+                .argName("function> <[result_type]")
                 .desc("search code examples only on web sites")
                 .build();
 
         Option offline = Option.builder("s")
                 .longOpt("offline")
-                .numberOfArgs(2)
-                .argName("func> <path")
+                .numberOfArgs(3)
+                .optionalArg(true)
+                .argName("function> <path> <[result_type]")
                 .desc("search code examples only in the a project")
                 .build();
 
         Option all = Option.builder("a")
                 .longOpt("all")
-                .numberOfArgs(2)
-                .argName("func> <path")
+                .numberOfArgs(3)
+                .optionalArg(true)
+                .argName("func> <path> <[result_type]")
                 .desc("search code examples both on web sites and in a project")
                 .build();
 
