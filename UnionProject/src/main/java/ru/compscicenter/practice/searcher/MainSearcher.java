@@ -4,7 +4,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
-import ru.compscicenter.practice.searcher.sitesearcher.CodeFormatter;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
 import java.awt.*;
@@ -20,9 +19,7 @@ import java.util.List;
 public class MainSearcher {
     private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
     private static CodeFormatter codeFormatter = CodeFormatter.getInstance();
-    private static String functionName;
-    private static String path;
-    private static boolean isTxt = true;
+    private static String format = "txt";
 
     public static void main(String[] args) {
         if (args.length <= 0) {
@@ -42,6 +39,8 @@ public class MainSearcher {
                     cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
                 throw new ParseException("You must enter only one option!");
 
+            String functionName;
+            String path;
             if (cmd.hasOption("online")) {
                 String[] vals = cmd.getOptionValues("online");
                 if (vals == null)
@@ -49,12 +48,14 @@ public class MainSearcher {
 
                 functionName = vals[0];
                 if (vals.length > 1) {
-                    isTxt = !"html".equals(vals[1]);
+                    format = vals[1];
                 }
+
+                check(format);
 
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
-                processResults(l1, isTxt);
+                processResults(l1);
             } else if (cmd.hasOption("offline")) {
                 String[] vals = cmd.getOptionValues("offline");
                 if (vals == null)
@@ -66,10 +67,13 @@ public class MainSearcher {
                 }
 
                 if (vals.length > 2) {
-                    isTxt = !"html".equals(vals[2]);
+                    format = vals[2];
                 }
+
+                check(format);
                 //search in SRC
                 //l2 = searcher2.search(functionName);
+                //processResults(l2, format);
             } else if (cmd.hasOption("all")) {
                 String[] vals = cmd.getOptionValues("all");
                 if (vals == null)
@@ -81,13 +85,15 @@ public class MainSearcher {
                 }
 
                 if (vals.length > 2) {
-                    isTxt = !"html".equals(vals[2]);
+                    format = vals[2];
                 }
+
+                check(format);
                 //search in SRC and on sites
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
                 //l2 = searcher2.search(functionName);
-                processResults(l1, isTxt);
+                processResults(l1);
             } else if (cmd.hasOption("help")) {
                 if (cmd.getOptions().length <= 1)
                     commandLine.printHelp();
@@ -131,17 +137,18 @@ public class MainSearcher {
         }
     }
 
-    private static void processResults(List<CodeExample> l1, boolean isTxt) {
+    private static void check(String format) throws ParseException {
+        if (!format.matches("(html|txt)"))
+            throw new ParseException("This file extension is not supported!");
+    }
+
+    private static void processResults(List<CodeExample> l1) throws ParseException {
         //TODO remove duplicates
         if (l1 != null) {
             for (CodeExample codeExample : l1) {
                 codeExample.setCodeExample(codeFormatter.toPrettyCode(codeExample.codeExample));
             }
-
-            if (!isTxt)
-                codeFormatter.createHTML(l1);
-            else
-                codeFormatter.createTxt(l1);
+            codeFormatter.createResultFile(l1, format);
         } else {
             System.out.println("No such example found!");
         }

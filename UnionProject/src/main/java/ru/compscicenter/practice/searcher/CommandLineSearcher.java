@@ -12,7 +12,7 @@ public class CommandLineSearcher {
     private CommandLineSearcher() {
         Option help = Option.builder("help")
                 .longOpt("help")
-                .desc("all functions of this utility")
+                .desc("All functions of this utility")
                 .build();
 
         Option online = Option.builder("w")
@@ -20,7 +20,10 @@ public class CommandLineSearcher {
                 .numberOfArgs(2)
                 .optionalArg(true)
                 .argName("function> <[result_type]")
-                .desc("search code examples only on web sites")
+                .desc("Search code examples only on web sites\n" +
+                        "Option arguments:\n" +
+                        "<function> - function or method name\n" +
+                        "<result_type> [is optional] - write results to the file")
                 .build();
 
         Option offline = Option.builder("s")
@@ -28,7 +31,11 @@ public class CommandLineSearcher {
                 .numberOfArgs(3)
                 .optionalArg(true)
                 .argName("function> <path> <[result_type]")
-                .desc("search code examples only in the a project")
+                .desc("Search code examples only in the a project\n" +
+                        "Option arguments:\n" +
+                        "<function> - function or method name\n" +
+                        "<path> - path to the project for search\n" +
+                        "<result_type> [is optional] - write results to the file")
                 .build();
 
         Option all = Option.builder("a")
@@ -36,7 +43,11 @@ public class CommandLineSearcher {
                 .numberOfArgs(3)
                 .optionalArg(true)
                 .argName("func> <path> <[result_type]")
-                .desc("search code examples both on web sites and in a project")
+                .desc("Search code examples both on web sites and in a project\n" +
+                        "Option arguments:\n" +
+                        "<function> - function or method name\n" +
+                        "<path> - path to the project for search\n" +
+                        "<result_type> [is optional] - write results to the file")
                 .build();
 
         options = new Options();
@@ -59,7 +70,7 @@ public class CommandLineSearcher {
 
     public void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("Code examples searcher", options);
+        formatter.printHelp(150, "Code examples searcher", "Help for utility", options, "Code examples searcher");
         System.exit(0);
     }
 }

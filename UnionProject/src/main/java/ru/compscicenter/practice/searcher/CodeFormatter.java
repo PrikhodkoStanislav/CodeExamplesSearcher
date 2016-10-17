@@ -1,13 +1,9 @@
-package ru.compscicenter.practice.searcher.sitesearcher;
+package ru.compscicenter.practice.searcher;
 
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
-import java.awt.*;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
 import java.util.List;
 
 /**
@@ -25,7 +21,14 @@ public class CodeFormatter {
         return instance;
     }
 
-    public void createHTML(List<CodeExample> examples) {
+    public void createResultFile(List<CodeExample> examples, String format) {
+        if ("html".equals(format))
+            createHtml(examples);
+        else
+            createTxt(examples);
+    }
+
+    public void createHtml(List<CodeExample> examples) {
         String path = "examples.html";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
             writer.write("<html>");
