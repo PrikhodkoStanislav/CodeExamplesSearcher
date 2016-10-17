@@ -18,22 +18,23 @@ public class SiteCodeExample extends CodeExample {
         this.codeExample = notFound;
     }
 
-    public String getSiteName() {
-        return siteName;
-    }
-
-    public String getUrl(String url) {
-        return url;
-    }
-
     @Override
-    public String toString() {
-        if (url != null)
-            return "Site: " + siteName + "\n" +
-                    "Web page: " + url + "\n" +
-                    "Example:\n" + codeExample;
+    public String toString(String format) {
+        if ("html".equals(format))
+            if (url != null)
+                return "<b>Site:</b> <i>" + siteName + "</i><br>" +
+                        "<b>Web page:</b> <i>" + url + "</i><br>" +
+                        "<b>Example:</b><br>" + codeExample;
+            else
+                return "<b>Site:</b> " + siteName + "<br>" +
+                        codeExample;
         else
-            return "Site: " + siteName + "\n" +
-                    codeExample;
+            if (url != null)
+                return "Site: " + siteName + "\n" +
+                        "Web page: " + url + "\n" +
+                        "Example:\n" + codeExample;
+            else
+                return "Site: " + siteName + "\n" +
+                        codeExample;
     }
 }

@@ -28,7 +28,7 @@ public class SelfProjectCodeExample extends CodeExample {
     }
 
     @Override
-    public String toString() {
+    public String toString(String format) {
         final String newLine = "\n";
         String result = "Path to the file: " + pathToTheFile + newLine;
         result += "Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine;

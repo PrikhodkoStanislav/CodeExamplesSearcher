@@ -25,7 +25,7 @@ public class CodeFormatter {
             writer.write("<h3 align=\"center\">Code examples from sites</h3>");
             writer.write("<body>");
             for (CodeExample example : examples) {
-                writer.write("<pre>" + example.toString() + "</pre><br>");
+                writer.write("<pre>" + example.toString("html") + "</pre><br>");
             }
             writer.write("</body>");
             writer.write("</html>");
@@ -47,7 +47,7 @@ public class CodeFormatter {
                 code = code.replaceAll("&lt;", "<");
                 code = code.replaceAll("&gt;", ">");
                 example.setCodeExample(code);
-                writer.write(example.toString());
+                writer.write(example.toString("txt"));
                 writer.write("==============================================================================\n");
             }
             writer.close();

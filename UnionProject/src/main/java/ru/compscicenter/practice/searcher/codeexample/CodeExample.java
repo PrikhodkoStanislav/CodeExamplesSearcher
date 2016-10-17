@@ -6,8 +6,7 @@ package ru.compscicenter.practice.searcher.codeexample;
 public abstract class CodeExample {
     public String codeExample;
 
-    @Override
-    public abstract String toString();
+    public abstract String toString(String format);
 
     public void setCodeExample(String codeExample) {
         this.codeExample = codeExample;
