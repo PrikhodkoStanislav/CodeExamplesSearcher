@@ -1,6 +1,5 @@
 package ru.compscicenter.practice.searcher;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
 import java.util.ArrayList;
