@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class MainSearcher {
     private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
-    private static CodeFormatter codeFormatter = CodeFormatter.getInstance();
+    private static CodeFormatter codeFormatter;
     private static String format = "txt";
 
     public static void main(String[] args) {
@@ -145,9 +145,8 @@ public class MainSearcher {
     private static void processResults(List<CodeExample> l1) throws ParseException {
         //TODO remove duplicates
         if (l1 != null) {
-            for (CodeExample codeExample : l1) {
-                codeExample.setCodeExample(codeFormatter.toPrettyCode(codeExample.codeExample));
-            }
+            codeFormatter = new CodeFormatter();
+            codeFormatter.beautifyCode(l1);
             codeFormatter.createResultFile(l1, format);
         } else {
             System.out.println("No such example found!");

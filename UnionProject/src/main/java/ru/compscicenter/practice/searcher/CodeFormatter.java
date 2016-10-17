@@ -11,16 +11,6 @@ import java.util.List;
  */
 public class CodeFormatter {
 
-    private static CodeFormatter instance;
-
-    private CodeFormatter() {}
-
-    public static CodeFormatter getInstance() {
-        if (instance == null)
-            instance = new CodeFormatter();
-        return instance;
-    }
-
     public void createResultFile(List<CodeExample> examples, String format) {
         if ("html".equals(format))
             createHtml(examples);
@@ -32,7 +22,7 @@ public class CodeFormatter {
         String path = "examples.html";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
             writer.write("<html>");
-            writer.write("<h3>Code examples from sites</h3>");
+            writer.write("<h3 align=\"center\">Code examples from sites</h3>");
             writer.write("<body>");
             for (CodeExample example : examples) {
                 writer.write("<pre>" + example.toString() + "</pre><br>");
@@ -48,18 +38,27 @@ public class CodeFormatter {
     public void createTxt(List<CodeExample> examples) {
         String path = "examples.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-            writer.write("Code examples from sites:");
+            writer.write("==============================================================================\n");
+            writer.write("||                       Code examples from sites:                          ||\n");
+            writer.write("==============================================================================\n");
             for (CodeExample example : examples) {
+                writer.write("==============================================================================\n");
                 String code = example.getCodeExample();
                 code = code.replaceAll("&lt;", "<");
                 code = code.replaceAll("&gt;", ">");
                 example.setCodeExample(code);
                 writer.write(example.toString());
-                writer.newLine();
+                writer.write("==============================================================================\n");
             }
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void beautifyCode(List<CodeExample> l1) {
+        for (CodeExample codeExample : l1) {
+            codeExample.setCodeExample(toPrettyCode(codeExample.codeExample));
         }
     }
 
@@ -101,9 +100,8 @@ public class CodeFormatter {
         int intMain = prettyCode.indexOf("int main ()");
         if (intMain < 0)
             intMain = prettyCode.indexOf("int main()");
-        String result = intMain > 0 ? (prettyCode.substring(0, intMain) +
+        return intMain > 0 ? (prettyCode.substring(0, intMain) +
                 "\n" + prettyCode.substring(intMain)) : prettyCode;
-        return result;
     }
 
     private boolean isBeforeNewLine(String code, int i) {
