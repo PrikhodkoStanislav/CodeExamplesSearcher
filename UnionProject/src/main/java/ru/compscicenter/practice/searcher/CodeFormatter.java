@@ -14,8 +14,10 @@ public class CodeFormatter {
     public void createResultFile(List<CodeExample> examples, String format) {
         if ("html".equals(format))
             createHtml(examples);
-        else
+        else if ("txt".equals(format))
             createTxt(examples);
+        else
+            printResults(examples);
     }
 
     public void createHtml(List<CodeExample> examples) {
@@ -53,6 +55,21 @@ public class CodeFormatter {
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void printResults(List<CodeExample> examples) {
+        System.out.print("==============================================================================\n");
+        System.out.print("||                       Code examples from sites:                          ||\n");
+        System.out.print("==============================================================================\n");
+        for (CodeExample example : examples) {
+            System.out.print("==============================================================================\n");
+            String code = example.getCodeExample();
+            code = code.replaceAll("&lt;", "<");
+            code = code.replaceAll("&gt;", ">");
+            example.setCodeExample(code);
+            System.out.print(example.toString("txt"));
+            System.out.print("==============================================================================\n");
         }
     }
 

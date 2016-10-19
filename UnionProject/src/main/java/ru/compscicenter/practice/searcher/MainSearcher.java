@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class MainSearcher {
     private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
-    private static String format = "txt";
+    private static String format = "";
 
     public static void main(String[] args) {
         if (args.length <= 0) {
@@ -137,7 +137,7 @@ public class MainSearcher {
     }
 
     private static void check(String format) throws ParseException {
-        if (!format.matches("(html|txt)"))
+        if (!format.matches("(html|txt|)"))
             throw new ParseException("This file extension is not supported!");
     }
 
