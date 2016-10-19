@@ -34,7 +34,7 @@
             <artifactId>commons-cli</artifactId>
             <version>1.3.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/commons-cli-1.3.1-src/target/commons-cli-1.3.1.jar</systemPath>
+            <systemPath>${project.basedir}/commons-cli-1.3.1.jar</systemPath>
         </dependency>
     </dependencies>
 
