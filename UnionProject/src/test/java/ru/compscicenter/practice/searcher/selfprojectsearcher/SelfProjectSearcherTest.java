@@ -19,6 +19,9 @@ public class SelfProjectSearcherTest {
 
     @Test
     public void testEmptyFile() {
+//        System.out.println(searcher.search("fun", "../UnionProject/src/main/resources/EmptyFile.c"));
+        assertEquals("<!DOCTYPE html><br><html><br><h3>Examples of this method usage from projects:</h3><br><body></body></html>",
+                searcher.search("fun", "../UnionProject/src/main/resources/EmptyFile.c"));
 //        assertEquals("", searcher.search("fun", "../UnionProject/src/main/resources/EmptyFile.c"));
     }
 }

@@ -4,6 +4,7 @@ import antlrclasses.CLexer;
 import org.antlr.v4.runtime.*;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -12,11 +13,13 @@ import java.util.*;
 public class CodeDuplicateRemover {
     private List<CodeExample> list;
 
+    public CodeDuplicateRemover() {}
+
     public CodeDuplicateRemover(List<CodeExample> list) {
         this.list = list;
     }
 
-    public boolean compareFunctionsFromFiles(String fileName1, String fileName2) throws Exception {
+    public boolean compareFunctionsFromFiles(String fileName1, String fileName2) throws IOException {
         Lexer lexer1 = new CLexer(new ANTLRFileStream(fileName1));
         Lexer lexer2 = new CLexer(new ANTLRFileStream(fileName2));
 
