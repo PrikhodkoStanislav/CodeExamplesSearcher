@@ -99,12 +99,9 @@ public class MainSearcher {
             commandLine.printHelp();
         }
 
-        String s2 = "";
-        SelfProjectSearcher searcher2 = new SelfProjectSearcher();
-
         if (args.length > 1) {
-            s2 = searcher2.search(args[0], args[1]);
-            //TODO method return List<CodeExample>
+            SelfProjectSearcher searcher2 = new SelfProjectSearcher(args[1]);
+            List<CodeExample> l2 = searcher2.search(args[0]);
             //l1.addAll(l2);
 //            s2 = searcher2.search("strlen", "../UnionProject/src/main/resources");
 //            for (CodeExample s  : searcher2.list) {
