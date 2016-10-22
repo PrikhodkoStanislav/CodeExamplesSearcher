@@ -14,32 +14,18 @@ import java.util.regex.Pattern;
 /**
  * Created by Станислав on 05.10.2016.
  */
-public class SelfProjectSearcher extends Searcher {
+public class SelfProjectSearcher implements Searcher {
 
-    public List<CodeExample> list = new ArrayList<>();
+    private List<CodeExample> list = new ArrayList<>();
 
-    private String makeResult() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<!DOCTYPE html>").append("<br>")
-                .append("<html>").append("<br>");
-        sb.append("<h3>Examples of this method usage from projects:</h3>").append("<br>");
-        sb.append("<body>");
-        List<CodeExample> answers = list;
-        if (answers != null)
-            for (CodeExample answer : answers) {
-                sb.append("<div clas=\"pretty\">").append(answer.toString()).append("</div>").append("<br>");
-            }
-        else
-            sb.append("<p>Sorry! Connection was interrupted! :(<p>").append("<br>");
-        sb.append("</body>");
-        sb.append("</html>");
+    private String startPath;
 
-        return sb.toString();
+    public SelfProjectSearcher(String startPath) {
+        this.startPath = startPath;
     }
 
-    @Override
-    public String search(String functionName, String pathToFile) {
-        final String newLine = "\n";
+    private List<CodeExample> searchInFile(String functionName, String pathToFile) {
+        final String newLine = "%n";
 
         Pattern patternForFunctionName = Pattern.compile(".*(\\s)(" + functionName + ")(\\().+");
         Pattern patternForOpenBracket = Pattern.compile(".*\\{.*");
@@ -50,23 +36,17 @@ public class SelfProjectSearcher extends Searcher {
         File file = new File(pathToFile);
         if (!file.exists()) {
             System.out.println("Wrong path to the file!");
-//            return;
-            return "";
+            return list;
         }
         if (file.isDirectory()) {
             File[] filesInDirectory = file.listFiles();
-            for (File f : filesInDirectory) {
-//                String res = search(functionName, f.getPath());
-                search(functionName, f.getPath());
-//                if ((res.length() > 0) && f.isFile()) {
-////                    sb.append(f.getPath() + newLine);
-////                    sb.append(search(functionName, f.getPath()));
-//                }
+            if (filesInDirectory == null) {
+                return list;
             }
-            return makeResult();
-//            return "";
-//            return;
-//            return sb.toString();
+            for (File f : filesInDirectory) {
+                searchInFile(functionName, f.getPath());
+            }
+            return list;
         }
 
         try {
@@ -84,30 +64,33 @@ public class SelfProjectSearcher extends Searcher {
                 if (matcherForFunctionName.matches()) {
                     StringBuilder sb = new StringBuilder();
                     numberOfExample++;
-//                    sb.append("Example " + numberOfExample + " :" + " str " + strNumber + " :" + newLine);
-
                     for(String s : buffer) {
-                        sb.append(s + newLine);
+                        sb.append(s);
+                        sb.append(newLine);
                     }
 
                     buffer.clear();
 
-                    sb.append(str + newLine);
+                    sb.append(str);
+                    sb.append(newLine);
                     str = in.readLine();
 
                     while ((str != null)) {
                         Matcher matcherForOpenCloseBracket = patternForOpenCloseBracket.matcher(str);
                         if (matcherForOpenCloseBracket.matches()) {
-                            sb.append(str + newLine);
+                            sb.append(str);
+                            sb.append(newLine);
                             str = in.readLine();
                             continue;
                         }
                         Matcher matcherForCloseBracket = patternForCloseBracket.matcher(str);
                         if (matcherForCloseBracket.matches()) {
-                            sb.append(str + newLine);
+                            sb.append(str);
+                            sb.append(newLine);
                             break;
                         }
-                        sb.append(str + newLine);
+                        sb.append(str);
+                        sb.append(newLine);
                         str = in.readLine();
                     }
 
@@ -154,8 +137,10 @@ public class SelfProjectSearcher extends Searcher {
         catch (IOException e) {
             e.printStackTrace();
         }
-        return makeResult();
-//        return "";
-//        return sb.toString();
+        return list;
+    }
+
+    public List<CodeExample> search(String functionName) {
+        return searchInFile(functionName, startPath);
     }
 }
