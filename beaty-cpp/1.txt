@@ -1,0 +1,1 @@
+ java -cp lib/org.eclipse.cdt.core_6.0.0.201606062011.jar:target/fmt-1.0-SNAPSHOT-jar-with-dependencies.jar FormatterTestC
