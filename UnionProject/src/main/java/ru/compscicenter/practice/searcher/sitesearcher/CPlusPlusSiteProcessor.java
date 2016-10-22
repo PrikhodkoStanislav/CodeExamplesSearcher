@@ -46,9 +46,11 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                 fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
                 if (isMathFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cmath/" + fullMethodName[0] + "/";
-                else if (isCAssert(fullMethodName[0]))
+                else if (isCAssert(fullMethodName[0])) {
+                    if (fullMethodName[0].matches("errno"))
+                        return CPLUSPLUS_URL + "cerrno/" + fullMethodName[0] + "/";
                     return CPLUSPLUS_URL + "cassert/" + fullMethodName[0] + "/";
-                else if (isCMemory(fullMethodName[0]) || isCAlgorithmFunction(fullMethodName[0]))
+                } else if (isCMemory(fullMethodName[0]) || isCAlgorithmFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
                 else if (isCUnicodeCharFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cuchar/" + fullMethodName[0] + "/";
@@ -101,6 +103,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         if (isMathFunction(methodName)) {
             return CPLUSPLUS_URL + "cmath/" + methodName + "/";
         } else if (isCAssert(methodName)) {
+            if (methodName.matches("errno"))
+                return CPLUSPLUS_URL + "cerrno/" + methodName + "/";
             return CPLUSPLUS_URL + "cassert" + methodName + "/";
         } else if (isCMemory(methodName) || isCAlgorithmFunction(methodName)) {
             return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";

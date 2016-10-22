@@ -149,7 +149,7 @@ public abstract class SiteProcessor extends Thread {
     }
 
     protected boolean isCAssert(String s) {
-        return s.matches("assert");
+        return s.matches("assert|errno");
     }
 
     protected boolean isCMemory(String s) {
