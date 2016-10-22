@@ -161,6 +161,15 @@ public abstract class SiteProcessor extends Thread {
                 "fe((g|s)et)(env|exceptflag|round)");
     }
 
+    protected boolean isCEnvironment(String s) {
+        return s.matches("(abort|_Exit|(at_)?(quick_)?exit|" +
+                "atexit|getenv(_s)?|system)");
+    }
+
+    protected boolean isCSignal(String s) {
+        return s.matches("(signal|raise)");
+    }
+
     public List<CodeExample> getAnswers() {
         return answers;
     }

@@ -23,13 +23,13 @@ public class ProjectCodeFormatter {
     private CodeFormatter codeFormatter;
 
     public ProjectCodeFormatter() {
-        Map<String, Boolean> options = new HashMap<>();
+        /*Map<String, Boolean> options = new HashMap<>();
         options.put(DefaultCodeFormatterConstants.FORMATTER_COMPACT_ELSE_IF, true);
         options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_ELSE_IN_IF_STATEMENT, true);
         options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_AFTER_OPENING_BRACE_IN_INITIALIZER_LIST, true);
         options.put(DefaultCodeFormatterConstants.FORMATTER_COMMENT_MIN_DISTANCE_BETWEEN_CODE_AND_LINE_COMMENT, true);
-        options.put(DefaultCodeFormatterConstants.FORMATTER_COMMENT_PRESERVE_WHITE_SPACE_BETWEEN_CODE_AND_LINE_COMMENT, true);
-        codeFormatter = ToolFactory.createDefaultCodeFormatter(options);
+        options.put(DefaultCodeFormatterConstants.FORMATTER_COMMENT_PRESERVE_WHITE_SPACE_BETWEEN_CODE_AND_LINE_COMMENT, true);*/
+        codeFormatter = ToolFactory.createDefaultCodeFormatter(null);
     }
 
     public String createResultFile(List<CodeExample> examples, String format) {
@@ -76,7 +76,7 @@ public class ProjectCodeFormatter {
     }
 
     public String toPrettyCode(String code) {
-        /*TextEdit edit = codeFormatter.format(0, code, 0, code.length(), 0, null);
+        /*TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
 
         IDocument document = new Document(code);
         try {

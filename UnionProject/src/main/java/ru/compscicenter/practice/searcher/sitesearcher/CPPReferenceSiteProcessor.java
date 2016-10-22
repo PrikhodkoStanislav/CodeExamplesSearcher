@@ -68,6 +68,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     return CPPREFERENCE_URL + "c/error/" + fullMethodName[0];
                 else if (isCMemory(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/memory/" + fullMethodName[0];
+                else if (isCEnvironment(fullMethodName[0]) || isCSignal(fullMethodName[0]))
+                    return CPPREFERENCE_URL + "c/program/" + fullMethodName[0];
                 else if (isCFenv(fullMethodName[0])) {
                     if (fullMethodName[0].matches("fe((g|s)et)(env|exceptflag|round)"))
                         return CPPREFERENCE_URL + "c/numeric/fenv/" +
@@ -105,6 +107,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             return CPPREFERENCE_URL + "c/algorithm/" + methodName;
         } else if (isCMemory(methodName)) {
             return CPPREFERENCE_URL + "c/memory/" + methodName;
+        } else if (isCEnvironment(methodName) || isCSignal(methodName)) {
+            return CPPREFERENCE_URL + "c/program/" + methodName;
         } else if (isCFenv(methodName)) {
             if (methodName.matches("fe((g|s)et)(env|exceptflag|round)"))
                 return CPPREFERENCE_URL + "c/numeric/fenv/" +

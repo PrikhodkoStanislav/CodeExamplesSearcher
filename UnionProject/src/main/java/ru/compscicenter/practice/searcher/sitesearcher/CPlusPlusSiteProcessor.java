@@ -53,10 +53,14 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     return CPLUSPLUS_URL + "cassert/" + fullMethodName[0] + "/";
                 } else if (isCFenv(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cfenv/" + fullMethodName[0] + "/";
+                else if (isCEnvironment(fullMethodName[0]))
+                    return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
                 else if (isCMemory(fullMethodName[0]) || isCAlgorithmFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
                 else if (isCUnicodeCharFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cuchar/" + fullMethodName[0] + "/";
+                else if (isCSignal(fullMethodName[0]))
+                    return CPLUSPLUS_URL + "csignal/" + fullMethodName[0] + "/";
                 else if (isCStringFunction(fullMethodName[0])) {
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
                     if (fullMethodName[0].startsWith("wmem") || fullMethodName[0].startsWith("wcs"))
@@ -109,13 +113,17 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             if (methodName.matches("errno"))
                 return CPLUSPLUS_URL + "cerrno/" + methodName + "/";
             return CPLUSPLUS_URL + "cassert" + methodName + "/";
-        } else if (isCMemory(methodName) || isCAlgorithmFunction(methodName)) {
+        } else if (isCEnvironment(methodName))
             return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
-        } else if (isCFenv(methodName)) {
+        else if (isCMemory(methodName) || isCAlgorithmFunction(methodName))
+            return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
+        else if (isCFenv(methodName))
             return CPLUSPLUS_URL + "cfenv/" + methodName + "/";
-        } else if (isCUnicodeCharFunction(methodName)) {
+        else if (isCUnicodeCharFunction(methodName))
             return CPLUSPLUS_URL + "cuchar/" + methodName + "/";
-        } else if (isCStringFunction(methodName)) {
+        else if (isCSignal(methodName))
+            return CPLUSPLUS_URL + "csignal/" + methodName + "/";
+        else if (isCStringFunction(methodName)) {
             methodName = methodName.replaceAll("errorlen$", "error");
             if (methodName.startsWith("wmem") || methodName.startsWith("wcs"))
                 return CPLUSPLUS_URL + "cwchar/" + methodName + "/";
