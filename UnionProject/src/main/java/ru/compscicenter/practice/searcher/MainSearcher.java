@@ -6,15 +6,12 @@ import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
-import java.awt.*;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Станислав on 05.10.2016.
+ * Created by Станислав on 05.10.2016!
  */
 public class MainSearcher {
     private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
@@ -41,12 +38,15 @@ public class MainSearcher {
                 throw new ParseException("You must enter only one option!");
 
             String functionName = args[1];
-            if (args[args.length - 1].matches("html|txt")) {
-                format = args[args.length - 1];
-            }
-            check(format);
-
             String path = "";
+            if (args.length > 2) {
+                path = args[2];
+                if (args[args.length - 1].matches("html|txt")) {
+                    format = args[args.length - 1];
+                }
+                check(format);
+            }
+
             if (cmd.hasOption("online")) {
                 String[] vals = cmd.getOptionValues("online");
                 if (vals == null)
@@ -98,9 +98,11 @@ public class MainSearcher {
     }
 
     private static void processResults(List<CodeExample> l1) throws ParseException {
-        //TODO remove duplicates
         if (l1 != null) {
+            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1);
             CodeFormatter codeFormatter = new CodeFormatter();
+
+            l1 = duplicateRemover.removeDuplicates();
             codeFormatter.beautifyCode(l1);
             String file = codeFormatter.createResultFile(l1, format);
 
