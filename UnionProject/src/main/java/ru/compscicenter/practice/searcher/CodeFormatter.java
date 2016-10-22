@@ -11,66 +11,41 @@ import java.util.List;
  */
 public class CodeFormatter {
 
-    public void createResultFile(List<CodeExample> examples, String format) {
+    public String createResultFile(List<CodeExample> examples, String format) {
         if ("html".equals(format))
-            createHtml(examples);
-        else if ("txt".equals(format))
-            createTxt(examples);
+            return createHtml(examples);
         else
-            printResults(examples);
+            return createTxt(examples);
     }
 
-    public void createHtml(List<CodeExample> examples) {
-        String path = "examples.html";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-            writer.write("<html>");
-            writer.write("<h3 align=\"center\">Code examples from sites</h3>");
-            writer.write("<body>");
-            for (CodeExample example : examples) {
-                writer.write("<pre>" + example.toString("html") + "</pre><br>");
-            }
-            writer.write("</body>");
-            writer.write("</html>");
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createTxt(List<CodeExample> examples) {
-        String path = "examples.txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-            writer.write("==============================================================================\n");
-            writer.write("||                       Code examples from sites:                          ||\n");
-            writer.write("==============================================================================\n");
-            for (CodeExample example : examples) {
-                writer.write("==============================================================================\n");
-                String code = example.getCodeExample();
-                code = code.replaceAll("&lt;", "<");
-                code = code.replaceAll("&gt;", ">");
-                example.setCodeExample(code);
-                writer.write(example.toString("txt"));
-                writer.write("==============================================================================\n");
-            }
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void printResults(List<CodeExample> examples) {
-        System.out.print("==============================================================================\n");
-        System.out.print("||                       Code examples from sites:                          ||\n");
-        System.out.print("==============================================================================\n");
+    public String createHtml(List<CodeExample> examples) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        sb.append("<h3 align=\"center\">Code examples from sites</h3>");
+        sb.append("<body>");
         for (CodeExample example : examples) {
-            System.out.print("==============================================================================\n");
+            sb.append("<pre>").append(example.toString("html")).append("</pre><br>");
+        }
+        sb.append("</body>");
+        sb.append("</html>");
+        return sb.toString();
+    }
+
+    public String createTxt(List<CodeExample> examples) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("==============================================================================\n");
+        sb.append("||                       Code examples from sites:                          ||\n");
+        sb.append("==============================================================================\n");
+        for (CodeExample example : examples) {
+            sb.append("==============================================================================\n");
             String code = example.getCodeExample();
             code = code.replaceAll("&lt;", "<");
             code = code.replaceAll("&gt;", ">");
             example.setCodeExample(code);
-            System.out.print(example.toString("txt"));
-            System.out.print("==============================================================================\n");
+            sb.append(example.toString("txt"));
+            sb.append("==============================================================================\n");
         }
+        return sb.toString();
     }
 
     public void beautifyCode(List<CodeExample> l1) {
