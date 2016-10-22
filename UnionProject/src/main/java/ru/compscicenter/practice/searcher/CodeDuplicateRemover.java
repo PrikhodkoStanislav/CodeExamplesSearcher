@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.codeduplicateremover;
+package ru.compscicenter.practice.searcher;
 
 import antlrclasses.CLexer;
 import org.antlr.v4.runtime.*;

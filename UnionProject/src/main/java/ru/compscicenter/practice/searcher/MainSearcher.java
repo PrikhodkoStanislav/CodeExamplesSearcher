@@ -126,13 +126,6 @@ public class MainSearcher {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            File htmlFile2 = new File(path2);
-            try {
-                Desktop.getDesktop().browse(htmlFile2.toURI());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
