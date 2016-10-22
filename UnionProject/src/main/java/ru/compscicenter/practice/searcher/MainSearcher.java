@@ -28,7 +28,9 @@ public class MainSearcher {
 
         try {
             Searcher searcher1;
+            SelfProjectSearcher searcher2;
             List<CodeExample> l1;
+            List<CodeExample> l2;
 
             CommandLine cmd = commandLine.parseArguments(args);
 
@@ -39,17 +41,16 @@ public class MainSearcher {
                 throw new ParseException("You must enter only one option!");
 
             String functionName = args[1];
-            String path;
+            if (args[args.length - 1].matches("html|txt")) {
+                format = args[args.length - 1];
+            }
+            check(format);
+
+            String path = "";
             if (cmd.hasOption("online")) {
                 String[] vals = cmd.getOptionValues("online");
                 if (vals == null)
                     throw new ParseException("Option has required arguments!");
-
-                if (vals.length > 1) {
-                    format = vals[1];
-                }
-
-                check(format);
 
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
@@ -63,14 +64,9 @@ public class MainSearcher {
                     path = vals[1];
                 }
 
-                if (vals.length > 2) {
-                    format = vals[2];
-                }
-
-                check(format);
-                //search in SRC
-                //l2 = searcher2.search(functionName);
-                //processResults(l2, format);
+                searcher2 = new SelfProjectSearcher(path);
+                l2 = searcher2.search(functionName);
+                processResults(l2);
             } else if (cmd.hasOption("all")) {
                 String[] vals = cmd.getOptionValues("all");
                 if (vals == null)
@@ -80,15 +76,11 @@ public class MainSearcher {
                     path = vals[1];
                 }
 
-                if (vals.length > 2) {
-                    format = vals[2];
-                }
-
-                check(format);
-                //search in SRC and on sites
                 searcher1 = new SiteSearcher();
+                searcher2 = new SelfProjectSearcher(path);
                 l1 = searcher1.search(functionName);
-                //l2 = searcher2.search(functionName);
+                l2 = searcher2.search(functionName);
+                l1.addAll(l2);
                 processResults(l1);
             } else if (cmd.hasOption("help")) {
                 if (cmd.getOptions().length <= 1)
@@ -97,18 +89,6 @@ public class MainSearcher {
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             commandLine.printHelp();
-        }
-
-        if (args.length > 1) {
-            SelfProjectSearcher searcher2 = new SelfProjectSearcher(args[1]);
-            List<CodeExample> l2 = searcher2.search(args[0]);
-            //l1.addAll(l2);
-//            s2 = searcher2.search("strlen", "../UnionProject/src/main/resources");
-//            for (CodeExample s  : searcher2.list) {
-//                System.out.println(s.toString());
-//            }
-//            CodeDuplicateRemover.run(searcher2.list);
-//            System.out.println(s2);
         }
     }
 
