@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by user on 05.10.2016!
  */
-public class SiteSearcher extends Searcher {
+public class SiteSearcher implements Searcher {
 
     @Override
     public List<CodeExample> search(String methodNameQuery) {

@@ -69,19 +69,5 @@ public class CodeDuplicateRemover {
         }
         deleteDuplicates(tokenTypes);
         return list;
-//        List<Integer> arr1 = new ArrayList<>();
-//        List<Integer> arr2 = new ArrayList<>();
-//        List<Integer> arr3 = new ArrayList<>();
-//        for (Token s : str1) {
-//            arr1.add(s.getType());
-//        }
-//        for (Token s : str2) {
-//            arr2.add(s.getType());
-//        }
-//        for (Token s : str3) {
-//            arr3.add(s.getType());
-//        }
-//        System.out.println(arr1.equals(arr2));
-//        System.out.println(arr1.equals(arr3));
     }
 }
