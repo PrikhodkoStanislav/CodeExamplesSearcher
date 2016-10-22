@@ -27,6 +27,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         while (matcher.find()) {
             codeExample = matcher.group(1);
             codeExample = codeExample.replaceAll("<(/)?(cite|dfn|var|span|kbd)>", "");
+            codeExample = codeExample.replaceAll("\\s+", " ");
 
             examples.add(new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), codeExample));
         }

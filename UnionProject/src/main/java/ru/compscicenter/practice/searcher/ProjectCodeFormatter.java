@@ -1,15 +1,36 @@
 package ru.compscicenter.practice.searcher;
 
+import org.eclipse.cdt.core.CCorePlugin;
+import org.eclipse.cdt.core.ToolFactory;
+import org.eclipse.cdt.core.formatter.CodeFormatter;
+import org.eclipse.cdt.core.formatter.DefaultCodeFormatterConstants;
+import org.eclipse.cdt.core.formatter.DefaultCodeFormatterOptions;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.text.edits.MalformedTreeException;
+import org.eclipse.text.edits.TextEdit;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by user on 06.10.2016!
  */
-public class CodeFormatter {
+public class ProjectCodeFormatter {
+    private CodeFormatter codeFormatter;
+
+    public ProjectCodeFormatter() {
+        Map<String, Boolean> options = new HashMap<>();
+        options.put(DefaultCodeFormatterConstants.FORMATTER_COMPACT_ELSE_IF, true);
+        options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_ELSE_IN_IF_STATEMENT, true);
+        options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_AFTER_OPENING_BRACE_IN_INITIALIZER_LIST, true);
+        options.put(DefaultCodeFormatterConstants.FORMATTER_COMMENT_MIN_DISTANCE_BETWEEN_CODE_AND_LINE_COMMENT, true);
+        options.put(DefaultCodeFormatterConstants.FORMATTER_COMMENT_PRESERVE_WHITE_SPACE_BETWEEN_CODE_AND_LINE_COMMENT, true);
+        codeFormatter = ToolFactory.createDefaultCodeFormatter(options);
+    }
 
     public String createResultFile(List<CodeExample> examples, String format) {
         if ("html".equals(format))
@@ -55,6 +76,17 @@ public class CodeFormatter {
     }
 
     public String toPrettyCode(String code) {
+        /*TextEdit edit = codeFormatter.format(0, code, 0, code.length(), 0, null);
+
+        IDocument document = new Document(code);
+        try {
+            edit.apply(document);
+        } catch (MalformedTreeException e) {
+            e.printStackTrace();
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+        return document.get();*/
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < code.length(); i++) {
             char symbol = code.charAt(i);
