@@ -18,17 +18,20 @@ public class MainSearcher {
     private static String format = "";
 
     public static void main(String[] args) {
+        Searcher searcher1;
+        SelfProjectSearcher searcher2;
+        List<CodeExample> l1;
+        List<CodeExample> l2;
+
         if (args.length <= 0) {
             System.out.println("There are no command for program!");
             System.exit(0);
+        } else if (args.length == 1 && args[0].matches("--?help")) {
+            commandLine.printHelp();
+
         }
 
         try {
-            Searcher searcher1;
-            SelfProjectSearcher searcher2;
-            List<CodeExample> l1;
-            List<CodeExample> l2;
-
             CommandLine cmd = commandLine.parseArguments(args);
 
             if (cmd.hasOption("online") && cmd.hasOption("offline") ||
@@ -83,7 +86,7 @@ public class MainSearcher {
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1);
             CodeFormatter codeFormatter = new CodeFormatter();
 
-//            l1 = duplicateRemover.removeDuplicates();
+            l1 = duplicateRemover.removeDuplicates();
             codeFormatter.beautifyCode(l1);
             String file = codeFormatter.createResultFile(l1, format);
 
