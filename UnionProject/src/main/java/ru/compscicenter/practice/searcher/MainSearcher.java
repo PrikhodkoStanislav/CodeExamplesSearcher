@@ -45,37 +45,18 @@ public class MainSearcher {
                     format = args[args.length - 1];
                 }
                 check(format);
-            }
+            } else if (args.length <= 1)
+                throw new ParseException("Option has required arguments!");
 
             if (cmd.hasOption("online")) {
-                String[] vals = cmd.getOptionValues("online");
-                if (vals == null)
-                    throw new ParseException("Option has required arguments!");
-
                 searcher1 = new SiteSearcher();
                 l1 = searcher1.search(functionName);
                 processResults(l1);
             } else if (cmd.hasOption("offline")) {
-                String[] vals = cmd.getOptionValues("offline");
-                if (vals == null)
-                    throw new ParseException("Option has required arguments!");
-
-                if (vals.length > 1) {
-                    path = vals[1];
-                }
-
                 searcher2 = new SelfProjectSearcher(path);
                 l2 = searcher2.search(functionName);
                 processResults(l2);
             } else if (cmd.hasOption("all")) {
-                String[] vals = cmd.getOptionValues("all");
-                if (vals == null)
-                    throw new ParseException("Option has required arguments!");
-
-                if (vals.length > 1) {
-                    path = vals[1];
-                }
-
                 searcher1 = new SiteSearcher();
                 searcher2 = new SelfProjectSearcher(path);
                 l1 = searcher1.search(functionName);
