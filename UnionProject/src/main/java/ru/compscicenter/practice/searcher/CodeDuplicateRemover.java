@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by Станислав on 15.10.2016.
+ * Created by Станислав on 15.10.2016!
  */
 public class CodeDuplicateRemover {
     private List<CodeExample> list;
@@ -27,8 +27,8 @@ public class CodeDuplicateRemover {
     }
 
     public boolean compareCodeExamples(CodeExample codeExample1, CodeExample codeExample2) {
-        Lexer lexer1 = new CLexer(new ANTLRInputStream(codeExample1.codeExample));
-        Lexer lexer2 = new CLexer(new ANTLRInputStream(codeExample2.codeExample));
+        Lexer lexer1 = new CLexer(new ANTLRInputStream(codeExample1.getCodeExample()));
+        Lexer lexer2 = new CLexer(new ANTLRInputStream(codeExample2.getCodeExample()));
 
         return lexerAnalysis(lexer1, lexer2);
     }
@@ -58,7 +58,7 @@ public class CodeDuplicateRemover {
         Map<CodeExample, List<Integer>> tokenTypes = new HashMap<>();
         int i = 0;
         for (CodeExample ce : list) {
-            lexers.set(i, new CLexer(new ANTLRInputStream(ce.codeExample)));
+            lexers.set(i, new CLexer(new ANTLRInputStream(ce.getCodeExample())));
             List<? extends Token> tokens = lexers.get(i).getAllTokens();
             List<Integer> typesOfTokens = new ArrayList<>();
             for (Token t : tokens) {

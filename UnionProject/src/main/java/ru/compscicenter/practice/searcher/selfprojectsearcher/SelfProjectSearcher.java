@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Станислав on 05.10.2016.
+ * Created by Станислав on 05.10.2016!
  */
 public class SelfProjectSearcher implements Searcher {
 
@@ -95,8 +95,8 @@ public class SelfProjectSearcher implements Searcher {
                     }
 
                     sb.append(newLine);
-                    CodeExample codeExample = new SelfProjectCodeExample(pathToFile,
-                            numberOfExample, strNumber, sb.toString());
+                    CodeExample codeExample = new SelfProjectCodeExample(
+                            "C", pathToFile, numberOfExample, strNumber, sb.toString());
                     list.add(codeExample);
                     continue;
                 }

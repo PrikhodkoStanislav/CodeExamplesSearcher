@@ -7,13 +7,15 @@ public class SiteCodeExample extends CodeExample {
     private String siteName;
     private String url;
 
-    public SiteCodeExample(String siteName, String url, String codeExample) {
+    public SiteCodeExample(String language, String siteName, String url, String codeExample) {
+        this.language = language;
         this.siteName = siteName;
         this.url = url;
         this.codeExample = codeExample;
     }
 
-    public SiteCodeExample(String siteName, String notFound) {
+    public SiteCodeExample(String language, String siteName, String notFound) {
+        this.language = language;
         this.siteName = siteName;
         this.codeExample = notFound;
     }

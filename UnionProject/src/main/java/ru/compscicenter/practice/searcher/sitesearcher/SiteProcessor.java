@@ -28,7 +28,7 @@ public abstract class SiteProcessor extends Thread {
                 String webContent = sendGet(request);
                 if (webContent.contains("Page Not Found")) {
                     answers = new ArrayList<>();
-                    answers.add( new SiteCodeExample(getSiteName(), "No such method found!"));
+                    answers.add( new SiteCodeExample("C", getSiteName(), "No such method found!"));
                 } else {
                     answers = findAndProcessCodeExamples(webContent);
                 }

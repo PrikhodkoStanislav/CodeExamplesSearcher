@@ -1,14 +1,15 @@
 package ru.compscicenter.practice.searcher.codeexample;
 
 /**
- * Created by Станислав on 14.10.2016.
+ * Created by Станислав on 14.10.2016!
  */
 public class SelfProjectCodeExample extends CodeExample {
     private long numberOfExample;
     private long strNumber;
     private String pathToTheFile;
 
-    public SelfProjectCodeExample(String pathToTheFile, long numberOfExample, long strNumber, String codeExample) {
+    public SelfProjectCodeExample(String language, String pathToTheFile, long numberOfExample, long strNumber, String codeExample) {
+        this.language = language;
         this.pathToTheFile = pathToTheFile;
         this.numberOfExample = numberOfExample;
         this.strNumber = strNumber;

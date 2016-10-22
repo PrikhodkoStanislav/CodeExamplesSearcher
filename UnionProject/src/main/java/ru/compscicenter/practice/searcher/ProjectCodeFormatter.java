@@ -71,7 +71,7 @@ public class ProjectCodeFormatter {
 
     public void beautifyCode(List<CodeExample> l1) {
         for (CodeExample codeExample : l1) {
-            codeExample.setCodeExample(toPrettyCode(codeExample.codeExample));
+            codeExample.setCodeExample(toPrettyCode(codeExample.getCodeExample()));
         }
     }
 

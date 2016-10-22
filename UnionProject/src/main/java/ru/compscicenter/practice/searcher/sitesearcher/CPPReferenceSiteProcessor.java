@@ -16,6 +16,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
      * URL to http://en.cppreference.com/w/
      */
     private static final String CPPREFERENCE_URL = "http://en.cppreference.com/w/";
+    private static final String language = "C/C++";
 
     @Override
     public List<CodeExample> findAndProcessCodeExamples(final String result) {
@@ -43,7 +44,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             codeExample = codeExample.replaceAll("&amp;", "&");
             codeExample = codeExample.replaceAll("\\s+", " ");
 
-            examples.add(new SiteCodeExample(getSiteName(), generateRequestURL(getQuery()), codeExample));
+            examples.add(new SiteCodeExample(language, getSiteName(), generateRequestURL(getQuery()), codeExample));
         }
         return examples;
     }
