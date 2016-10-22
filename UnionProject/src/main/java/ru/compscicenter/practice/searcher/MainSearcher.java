@@ -83,7 +83,7 @@ public class MainSearcher {
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1);
             CodeFormatter codeFormatter = new CodeFormatter();
 
-            l1 = duplicateRemover.removeDuplicates();
+//            l1 = duplicateRemover.removeDuplicates();
             codeFormatter.beautifyCode(l1);
             String file = codeFormatter.createResultFile(l1, format);
 
