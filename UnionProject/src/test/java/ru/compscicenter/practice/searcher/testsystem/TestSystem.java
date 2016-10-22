@@ -2,7 +2,7 @@ package ru.compscicenter.practice.searcher.testsystem;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.compscicenter.practice.searcher.codeduplicateremover.CodeDuplicateRemover;
+import ru.compscicenter.practice.searcher.CodeDuplicateRemover;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
