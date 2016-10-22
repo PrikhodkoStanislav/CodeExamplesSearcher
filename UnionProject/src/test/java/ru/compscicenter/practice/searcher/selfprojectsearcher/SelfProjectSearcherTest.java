@@ -1,7 +1,11 @@
 package ru.compscicenter.practice.searcher.selfprojectsearcher;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.compscicenter.practice.searcher.codeexample.CodeExample;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -12,16 +16,10 @@ public class SelfProjectSearcherTest {
 
     SelfProjectSearcher searcher;
 
-    @Before
-    public void createSearcher() {
-        searcher = new SelfProjectSearcher();
-    }
-
     @Test
     public void testEmptyFile() {
-//        System.out.println(searcher.search("fun", "../UnionProject/src/main/resources/EmptyFile.c"));
-        assertEquals("<!DOCTYPE html><br><html><br><h3>Examples of this method usage from projects:</h3><br><body></body></html>",
-                searcher.search("fun", "../UnionProject/src/main/resources/EmptyFile.c"));
-//        assertEquals("", searcher.search("fun", "../UnionProject/src/main/resources/EmptyFile.c"));
+        searcher = new SelfProjectSearcher("../UnionProject/src/main/resources/EmptyFile.c");
+        assertEquals(new ArrayList<CodeExample>(), searcher.search("fun"));
+//        System.out.println(searcher.search("fun"));
     }
 }
