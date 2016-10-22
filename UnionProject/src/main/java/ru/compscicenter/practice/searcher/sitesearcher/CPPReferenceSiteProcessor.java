@@ -67,7 +67,12 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     return CPPREFERENCE_URL + "c/error/" + fullMethodName[0];
                 else if (isCMemory(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/memory/" + fullMethodName[0];
-                else if (isCStringFunction(fullMethodName[0]) ||
+                else if (isCFenv(fullMethodName[0])) {
+                    if (fullMethodName[0].matches("fe((g|s)et)(env|exceptflag|round)"))
+                        return CPPREFERENCE_URL + "c/numeric/fenv/" +
+                                "fe"+ fullMethodName[0].substring(5, fullMethodName[0].length());
+                    return CPPREFERENCE_URL + "c/numeric/fenv/" + fullMethodName[0];
+                } else if (isCStringFunction(fullMethodName[0]) ||
                         isCStdLibFunction(fullMethodName[0]) ||
                         isCTypeFunction(fullMethodName[0])) {
                     fullMethodName[0] = fullMethodName[0].replaceAll("errorlen$", "error");
@@ -99,6 +104,11 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             return CPPREFERENCE_URL + "c/algorithm/" + methodName;
         } else if (isCMemory(methodName)) {
             return CPPREFERENCE_URL + "c/memory/" + methodName;
+        } else if (isCFenv(methodName)) {
+            if (methodName.matches("fe((g|s)et)(env|exceptflag|round)"))
+                return CPPREFERENCE_URL + "c/numeric/fenv/" +
+                        "fe"+ methodName.substring(5, methodName.length());
+            return CPPREFERENCE_URL + "c/numeric/fenv/" + methodName;
         } else if (isCStringFunction(methodName) ||
                 isCStdLibFunction(methodName) ||
                 isCTypeFunction(methodName)) {

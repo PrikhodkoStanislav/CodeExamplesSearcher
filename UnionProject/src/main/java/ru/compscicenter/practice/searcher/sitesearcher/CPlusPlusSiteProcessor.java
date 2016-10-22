@@ -50,7 +50,9 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     if (fullMethodName[0].matches("errno"))
                         return CPLUSPLUS_URL + "cerrno/" + fullMethodName[0] + "/";
                     return CPLUSPLUS_URL + "cassert/" + fullMethodName[0] + "/";
-                } else if (isCMemory(fullMethodName[0]) || isCAlgorithmFunction(fullMethodName[0]))
+                } else if (isCFenv(fullMethodName[0]))
+                    return CPLUSPLUS_URL + "cfenv/" + fullMethodName[0] + "/";
+                else if (isCMemory(fullMethodName[0]) || isCAlgorithmFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cstdlib/" + fullMethodName[0] + "/";
                 else if (isCUnicodeCharFunction(fullMethodName[0]))
                     return CPLUSPLUS_URL + "cuchar/" + fullMethodName[0] + "/";
@@ -108,6 +110,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             return CPLUSPLUS_URL + "cassert" + methodName + "/";
         } else if (isCMemory(methodName) || isCAlgorithmFunction(methodName)) {
             return CPLUSPLUS_URL + "cstdlib/" + methodName + "/";
+        } else if (isCFenv(methodName)) {
+            return CPLUSPLUS_URL + "cfenv/" + methodName + "/";
         } else if (isCUnicodeCharFunction(methodName)) {
             return CPLUSPLUS_URL + "cuchar/" + methodName + "/";
         } else if (isCStringFunction(methodName)) {

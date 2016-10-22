@@ -156,6 +156,11 @@ public abstract class SiteProcessor extends Thread {
         return s.matches("(c|m|re|aligned_)alloc|free");
     }
 
+    protected boolean isCFenv(String s) {
+        return s.matches("(fe(clear|hold|raise|test)except)|" +
+                "fe((g|s)et)(env|exceptflag|round)");
+    }
+
     public List<CodeExample> getAnswers() {
         return answers;
     }
