@@ -38,14 +38,13 @@ public class MainSearcher {
                     cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
                 throw new ParseException("You must enter only one option!");
 
-            String functionName;
+            String functionName = args[1];
             String path;
             if (cmd.hasOption("online")) {
                 String[] vals = cmd.getOptionValues("online");
                 if (vals == null)
                     throw new ParseException("Option has required arguments!");
 
-                functionName = vals[0];
                 if (vals.length > 1) {
                     format = vals[1];
                 }
@@ -60,7 +59,6 @@ public class MainSearcher {
                 if (vals == null)
                     throw new ParseException("Option has required arguments!");
 
-                functionName = vals[0];
                 if (vals.length > 1) {
                     path = vals[1];
                 }
@@ -78,7 +76,6 @@ public class MainSearcher {
                 if (vals == null)
                     throw new ParseException("Option has required arguments!");
 
-                functionName = vals[0];
                 if (vals.length > 1) {
                     path = vals[1];
                 }
@@ -116,17 +113,6 @@ public class MainSearcher {
 //            CodeDuplicateRemover.run(searcher2.list);
 //            System.out.println(s2);
         }
-
-        if (args.length > 1) {
-            String path2 = "examplesFromProject.html";
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(path2))) {
-                writer.write(s2);
-                writer.newLine();
-                writer.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private static void check(String format) throws ParseException {
@@ -139,7 +125,26 @@ public class MainSearcher {
         if (l1 != null) {
             CodeFormatter codeFormatter = new CodeFormatter();
             codeFormatter.beautifyCode(l1);
-            codeFormatter.createResultFile(l1, format);
+            String file = codeFormatter.createResultFile(l1, format);
+
+            String path = "";
+            if (!format.isEmpty()) {
+                if (format.matches("html")) {
+                    path = "examples.html";
+                } else if (format.matches("txt")) {
+                    path = "examples.txt";
+                }
+
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+                    writer.write(file);
+                    writer.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println(file);
+            }
+
         } else {
             System.out.println("No such example found!");
         }
