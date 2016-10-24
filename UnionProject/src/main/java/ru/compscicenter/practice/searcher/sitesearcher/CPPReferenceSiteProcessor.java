@@ -43,6 +43,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             codeExample = codeExample.replaceAll("&quot;", "\"");
             codeExample = codeExample.replaceAll("&amp;", "&");
             codeExample = codeExample.replaceAll("\\s+", " ");
+            codeExample = codeExample.replaceAll("\\*/", "\\*\\/\n");
+            codeExample = codeExample.replaceAll("#", "\n#");
 
             examples.add(new SiteCodeExample(language, getSiteName(), generateRequestURL(getQuery()), codeExample));
         }
