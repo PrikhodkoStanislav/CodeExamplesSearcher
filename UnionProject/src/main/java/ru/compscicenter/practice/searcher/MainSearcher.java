@@ -8,6 +8,7 @@ import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,10 +19,8 @@ public class MainSearcher {
     private static String format = "";
 
     public static void main(String[] args) {
-        Searcher searcher1;
-        SelfProjectSearcher searcher2;
+        Searcher[] searchers;
         List<CodeExample> l1;
-        List<CodeExample> l2;
 
         if (args.length <= 0) {
             System.out.println("There are no command for program!");
@@ -51,24 +50,23 @@ public class MainSearcher {
             } else if (args.length <= 1)
                 throw new ParseException("Option has required arguments!");
 
-            if (cmd.hasOption("online")) {
-                searcher1 = new SiteSearcher();
-                l1 = searcher1.search(functionName);
-                processResults(l1);
-            } else if (cmd.hasOption("offline")) {
-                searcher2 = new SelfProjectSearcher(path);
-                l2 = searcher2.search(functionName);
-                processResults(l2);
-            } else if (cmd.hasOption("all")) {
-                searcher1 = new SiteSearcher();
-                searcher2 = new SelfProjectSearcher(path);
-                l1 = searcher1.search(functionName);
-                l2 = searcher2.search(functionName);
-                l1.addAll(l2);
-                processResults(l1);
-            } else if (cmd.hasOption("help")) {
+            searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
+            l1 = new ArrayList<>();
+
+            if (cmd.hasOption("help")) {
                 if (cmd.getOptions().length <= 1)
                     commandLine.printHelp();
+            } else {
+                if (cmd.hasOption("online")) {
+                    l1.addAll(searchers[0].search(functionName));
+                } else if (cmd.hasOption("offline")) {
+                    l1.addAll(searchers[1].search(functionName));
+                } else if (cmd.hasOption("all")) {
+                    for (Searcher searcher : searchers) {
+                        l1.addAll(searcher.search(functionName));
+                    }
+                }
+                processResults(l1);
             }
         } catch (ParseException e) {
             System.out.println(e.getMessage());
