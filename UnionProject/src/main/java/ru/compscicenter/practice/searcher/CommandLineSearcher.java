@@ -2,8 +2,6 @@ package ru.compscicenter.practice.searcher;
 
 import org.apache.commons.cli.*;
 
-import java.io.PrintWriter;
-
 /**
  * Created by user on 15.10.2016!
  */
