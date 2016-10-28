@@ -21,23 +21,23 @@ public class CommandLineSearcher {
                 .longOpt("online")
                 .numberOfArgs(2)
                 .optionalArg(true)
-                .argName("function> <[result_type]")
-                .desc("Search code examples only on web sites\n")
+                .argName("args")
+                .desc("Search code examples only on web sites")
                 .build();
 
         Option offline = Option.builder("s")
                 .longOpt("offline")
                 .numberOfArgs(3)
                 .optionalArg(true)
-                .argName("function> <path> <[result_type]")
-                .desc("Search code examples only in the a project\n")
+                .argName("args")
+                .desc("Search code examples only in the a project")
                 .build();
 
         Option all = Option.builder("a")
                 .longOpt("all")
                 .numberOfArgs(3)
                 .optionalArg(true)
-                .argName("func> <path> <[result_type]")
+                .argName("args")
                 .desc("Search code examples both on web sites and in a project")
                 .build();
 
@@ -61,13 +61,7 @@ public class CommandLineSearcher {
 
     public void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        //formatter.printUsage(new PrintWriter(System.out), 150, "<function> [path] [result_type]");
-        System.out.println("Usage: searcher <option> <function> [path] [result_type]");
-        for (Option option : options.getOptions()) {
-            System.out.println("\t-" + option.getOpt() + ", " +
-                "--" + option.getLongOpt() + "\t" + option.getDescription());
-        }
-        //formatter.printHelp(150, "Code examples searcher", "Help for utility", options, "Code examples searcher");
+        formatter.printHelp("searcher.jar --?option <function> [path] [result_type]", options);
         System.exit(0);
     }
 }
