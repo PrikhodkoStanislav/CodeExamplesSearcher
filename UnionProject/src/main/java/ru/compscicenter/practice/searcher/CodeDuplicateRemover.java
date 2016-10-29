@@ -18,19 +18,18 @@ public class CodeDuplicateRemover {
         this.typeOfCompareExamples = typeOfCompareExamples;
     }
 
-    public CodeDuplicateRemover(List<CodeExample> list, int typeOfComareExamples) {
+    public CodeDuplicateRemover(List<CodeExample> list, int typeOfCompareExamples) {
         this.list = list;
         this.typeOfCompareExamples = typeOfCompareExamples;
     }
 
     public List<CodeExample> removeDuplicates() {
         List<CodeExample> result = new ArrayList<>(list);
-        CodeExample[] arrayOfCodeExamples = (CodeExample[]) result.toArray();
-        int sizeOfList = arrayOfCodeExamples.length;
+        int sizeOfList = result.size();
         for (int i = 0; i < sizeOfList - 1; i++) {
             for (int j = i + 1; j < sizeOfList; j++) {
-                CodeExample ce1 = arrayOfCodeExamples[i];
-                CodeExample ce2 = arrayOfCodeExamples[j];
+                CodeExample ce1 = result.get(i);
+                CodeExample ce2 = result.get(j);
                 if (compareCodeExamples(ce1, ce2)) {
                     result.remove(ce2);
                 }
