@@ -61,7 +61,7 @@ public class TestSystem {
             }
             for (String[] strs : fileNamesOfSimilarFunctions) {
                 int length = strs.length;
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < (length - 1); i++) {
                     String firstFileName = strs[i];
                     String pathtoFile1 = "../UnionProject/src/main/resources/" + firstFileName;
                     // Compare files which must be the same and calculate the error of the first type.
@@ -74,8 +74,7 @@ public class TestSystem {
                         allFirstTypeCompares++;
                     }
                     // Compare files which must be the different and calculate the error of the second type.
-                    List<String> differentFiles = new ArrayList<>();
-                    differentFiles.addAll(allFileNames);
+                    List<String> differentFiles = new ArrayList<>(allFileNames);
                     differentFiles.removeAll(Arrays.asList(strs));
                     for (String differentFileName : differentFiles) {
                         String pathToFile2 = "../UnionProject/src/main/resources/" + differentFileName;

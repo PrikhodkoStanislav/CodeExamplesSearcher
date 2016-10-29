@@ -81,10 +81,10 @@ public class MainSearcher {
 
     private static void processResults(List<CodeExample> l1) throws ParseException {
         if (l1 != null) {
-  //          CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1);
+            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1);
             ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
 
- //           l1 = duplicateRemover.removeDuplicates();
+            l1 = duplicateRemover.removeDuplicates();
             projectCodeFormatter.beautifyCode(l1);
             String file = projectCodeFormatter.createResultFile(l1, format);
 

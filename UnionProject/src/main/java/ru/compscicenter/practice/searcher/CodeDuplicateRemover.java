@@ -50,24 +50,34 @@ public class CodeDuplicateRemover {
         return result;
     }
 
-    public void deleteDuplicates(Map<CodeExample, List<Integer>> tokenTypes) {
-    }
+//    public void deleteDuplicates(Map<CodeExample, List<Integer>> tokenTypes) {
+//    }
 
     public List<CodeExample> removeDuplicates() {
-        List<Lexer> lexers = new ArrayList<>();
-        Map<CodeExample, List<Integer>> tokenTypes = new HashMap<>();
-        int i = 0;
-        for (CodeExample ce : list) {
-            lexers.set(i, new CLexer(new ANTLRInputStream(ce.getCodeExample())));
-            List<? extends Token> tokens = lexers.get(i).getAllTokens();
-            List<Integer> typesOfTokens = new ArrayList<>();
-            for (Token t : tokens) {
-                typesOfTokens.add(t.getType());
+        List<CodeExample> result = new ArrayList<>(list);
+        CodeExample[] arrayOfCodeExamples = (CodeExample[]) result.toArray();
+        int sizeOfList = arrayOfCodeExamples.length;
+        for (int i = 0; i < sizeOfList - 1; i++) {
+            for (int j = i + 1; j < sizeOfList; j++) {
+                CodeExample ce1 = arrayOfCodeExamples[i];
+                CodeExample ce2 = arrayOfCodeExamples[j];
+                if (compareCodeExamples(ce1, ce2)) {
+                    result.remove(ce2);
+                }
             }
-            tokenTypes.put(ce, typesOfTokens);
-            i++;
         }
-        deleteDuplicates(tokenTypes);
-        return list;
+//        Map<CodeExample, Lexer> lexers = new HashMap<>();
+//        Map<CodeExample, List<Integer>> tokenTypes = new HashMap<>();
+//        for (CodeExample ce : list) {
+//            lexers.put(ce, new CLexer(new ANTLRInputStream(ce.getCodeExample())));
+//            List<? extends Token> tokens = lexers.get(ce).getAllTokens();
+//            List<Integer> typesOfTokens = new ArrayList<>();
+//            for (Token t : tokens) {
+//                typesOfTokens.add(t.getType());
+//            }
+//            tokenTypes.put(ce, typesOfTokens);
+//        }
+//        deleteDuplicates(tokenTypes);
+        return result;
     }
 }
