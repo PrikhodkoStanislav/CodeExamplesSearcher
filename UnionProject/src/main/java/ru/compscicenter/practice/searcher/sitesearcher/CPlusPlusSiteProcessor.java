@@ -30,6 +30,13 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             codeExample = codeExample.replaceAll("<(/)?(cite|dfn|var|span|kbd)>", "");
             codeExample = codeExample.replaceAll("\\s+", " ");
 
+            codeExample = codeExample.replaceAll("\\*/", "\\*\\/\n");
+            codeExample = codeExample.replaceAll("#", "\n#");
+
+            int intMain = codeExample.indexOf("int main");
+            codeExample =  intMain > 0 ? (codeExample.substring(0, intMain) +
+                    "\n" + codeExample.substring(intMain)) : codeExample;
+
             String url = generateRequestURL(getQuery());
             CodeExample ce = new SiteCodeExample(language, getSiteName(), url, codeExample);
             ce.setSource(url);
