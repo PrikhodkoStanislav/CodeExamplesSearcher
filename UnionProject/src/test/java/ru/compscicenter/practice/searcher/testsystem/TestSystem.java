@@ -3,6 +3,7 @@ package ru.compscicenter.practice.searcher.testsystem;
 import org.junit.Before;
 import org.junit.Test;
 import ru.compscicenter.practice.searcher.CodeDuplicateRemover;
+import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -40,14 +41,16 @@ public class TestSystem {
     private final String pathToGoldFile = "../UnionProject/src/test/java/resources/GoldFile";
 
     CodeDuplicateRemover codeDuplicateRemover;
+    CodeDuplicateRemover codeDuplicateRemover1;
+    CodeDuplicateRemover codeDuplicateRemover2;
 
     @Before
     public void createCodeDuplicateRemover() {
-        codeDuplicateRemover = new CodeDuplicateRemover();
+        codeDuplicateRemover1 = new CodeDuplicateRemover(1);
+        codeDuplicateRemover2 = new CodeDuplicateRemover(2);
     }
 
-    @Test
-    public void testCodeDuplicateRemover() {
+    public void testCompareFunctionsFromFiles(CodeDuplicateRemover codeDuplicateRemover) {
         try {
             FileReader fileReader = new FileReader(pathToGoldFile);
             BufferedReader in = new BufferedReader(fileReader);
@@ -63,12 +66,12 @@ public class TestSystem {
                 int length = strs.length;
                 for (int i = 0; i < (length - 1); i++) {
                     String firstFileName = strs[i];
-                    String pathtoFile1 = "../UnionProject/src/main/resources/" + firstFileName;
+                    String pathToFile1 = "../UnionProject/src/main/resources/" + firstFileName;
                     // Compare files which must be the same and calculate the error of the first type.
                     for (int j = i + 1; j < length; j++) {
                         String secondFileName = strs[j];
                         String pathToFile2 = "../UnionProject/src/main/resources/" + secondFileName;
-                        if (!codeDuplicateRemover.compareFunctionsFromFiles(pathtoFile1, pathToFile2)) {
+                        if (!codeDuplicateRemover.compareFunctionsFromFiles(pathToFile1, pathToFile2)) {
                             failsFirstType++;
                         }
                         allFirstTypeCompares++;
@@ -78,7 +81,7 @@ public class TestSystem {
                     differentFiles.removeAll(Arrays.asList(strs));
                     for (String differentFileName : differentFiles) {
                         String pathToFile2 = "../UnionProject/src/main/resources/" + differentFileName;
-                        if (codeDuplicateRemover.compareFunctionsFromFiles(pathtoFile1, pathToFile2)) {
+                        if (codeDuplicateRemover.compareFunctionsFromFiles(pathToFile1, pathToFile2)) {
                             failsSecondType++;
                         }
                         allSecondTypeCompares++;
@@ -91,5 +94,18 @@ public class TestSystem {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testCodeDuplicateRemoverWithEqualsList() {
+        System.out.println("CodeDuplicateRemover with typeOfCompareExamples = equalsList");
+        testCompareFunctionsFromFiles(codeDuplicateRemover1);
+    }
+
+    @Test
+    public void testCodeDuplicateRemoverWithLevenshteinDistance() {
+        System.out.println("CodeDuplicateRemover with typeOfCompareExamples = levenshteinDistance " +
+                "and maxDistance = 10");
+        testCompareFunctionsFromFiles(codeDuplicateRemover2);
     }
 }
