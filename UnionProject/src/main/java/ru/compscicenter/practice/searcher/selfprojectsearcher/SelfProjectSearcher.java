@@ -97,6 +97,7 @@ public class SelfProjectSearcher implements Searcher {
                     sb.append(newLine);
                     CodeExample codeExample = new SelfProjectCodeExample(
                             "C", pathToFile, numberOfExample, strNumber, sb.toString());
+                    codeExample.setSource(pathToFile);
                     list.add(codeExample);
                     continue;
                 }

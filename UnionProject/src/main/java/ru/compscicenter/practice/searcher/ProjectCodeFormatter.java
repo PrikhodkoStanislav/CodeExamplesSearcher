@@ -31,11 +31,37 @@ public class ProjectCodeFormatter {
     public String createHtml(List<CodeExample> examples) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
-        sb.append("<h3 align=\"center\">Code examples from sites</h3>");
+        sb.append("<head>");
+        sb.append("<style>\n" +
+                "table, td, th {\n" +
+                "    border: 1px solid black;\n" +
+                "}\n" +
+                "\n" +
+                "table {\n" +
+                "    border-collapse: collapse;\n" +
+                "    width: 100%;\n" +
+                "}\n" +
+                "\n" +
+                "th {\n" +
+                "    background-color: #6AB75D;\n" +
+                "    height: 50px;\n" +
+                "}\n" +
+                "</style>");
+        sb.append("</head>");
+        sb.append("<h3 align=\"center\">Code examples</h3>");
         sb.append("<body>");
+        sb.append("<table>");
+        sb.append("<tr>");
+        sb.append("<th>").append("SOURCE").append("</th>");
+        sb.append("<th>").append("CODE EXAMPLE").append("</th>");
+        sb.append("</tr>");
         for (CodeExample example : examples) {
-            sb.append("<pre>").append(example.toString("html")).append("</pre><br>");
+            sb.append("<tr>");
+            sb.append("<td>").append(example.getSource()).append("</td>");
+            sb.append("<td><pre>").append(example.getCodeExample()).append("</pre></td>");
+            sb.append("</tr>");
         }
+        sb.append("</table>");
         sb.append("</body>");
         sb.append("</html>");
         return sb.toString();
