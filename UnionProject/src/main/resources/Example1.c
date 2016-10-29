@@ -1,6 +1,3 @@
-#include <string.h>
-#include <stdio.h>
-
 int main()
 {
 	char a[1000];

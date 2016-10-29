@@ -12,11 +12,43 @@ import java.util.*;
  */
 public class CodeDuplicateRemover {
     private List<CodeExample> list;
+    private int typeOfCompareExamples = 1;
 
-    public CodeDuplicateRemover() {}
+    public CodeDuplicateRemover(int typeOfCompareExamples) {
+        this.typeOfCompareExamples = typeOfCompareExamples;
+    }
 
-    public CodeDuplicateRemover(List<CodeExample> list) {
+    public CodeDuplicateRemover(List<CodeExample> list, int typeOfCompareExamples) {
         this.list = list;
+        this.typeOfCompareExamples = typeOfCompareExamples;
+    }
+
+    public List<CodeExample> removeDuplicates() {
+        List<CodeExample> result = new ArrayList<>(list);
+        CodeExample[] arrayOfCodeExamples = result.toArray(new CodeExample[result.size()]);
+        int sizeOfList = arrayOfCodeExamples.length;
+        for (int i = 0; i < sizeOfList - 1; i++) {
+            for (int j = i + 1; j < sizeOfList; j++) {
+                CodeExample ce1 = arrayOfCodeExamples[i];
+                CodeExample ce2 = arrayOfCodeExamples[j];
+                if (compareCodeExamples(ce1, ce2)) {
+                    result.remove(ce2);
+                }
+            }
+        }
+//        Map<CodeExample, Lexer> lexers = new HashMap<>();
+//        Map<CodeExample, List<Integer>> tokenTypes = new HashMap<>();
+//        for (CodeExample ce : list) {
+//            lexers.put(ce, new CLexer(new ANTLRInputStream(ce.getCodeExample())));
+//            List<? extends Token> tokens = lexers.get(ce).getAllTokens();
+//            List<Integer> typesOfTokens = new ArrayList<>();
+//            for (Token t : tokens) {
+//                typesOfTokens.add(t.getType());
+//            }
+//            tokenTypes.put(ce, typesOfTokens);
+//        }
+//        deleteDuplicates(tokenTypes);
+        return result;
     }
 
     public boolean compareFunctionsFromFiles(String fileName1, String fileName2) throws IOException {
@@ -46,28 +78,66 @@ public class CodeDuplicateRemover {
         for (Token s : str2) {
             arr2.add(s.getType());
         }
-        boolean result = arr1.equals(arr2);
+
+        boolean result = false;
+
+        switch (typeOfCompareExamples) {
+            case (1):
+                result = listEquals(arr1, arr2);
+                break;
+            case (2):
+                int ld = levenshteinDistance(arr1, arr2);
+                final int maxForLevenshteinDistance = 10;
+                result = (ld <= maxForLevenshteinDistance);
+                break;
+            default:
+                break;
+        }
+
         return result;
     }
 
-    public void deleteDuplicates(Map<CodeExample, List<Integer>> tokenTypes) {
+    private boolean listEquals(List<Integer> arr1, List<Integer> arr2) {
+        return arr1.equals(arr2);
     }
 
-    public List<CodeExample> removeDuplicates() {
-        List<Lexer> lexers = new ArrayList<>();
-        Map<CodeExample, List<Integer>> tokenTypes = new HashMap<>();
-        int i = 0;
-        for (CodeExample ce : list) {
-            lexers.set(i, new CLexer(new ANTLRInputStream(ce.getCodeExample())));
-            List<? extends Token> tokens = lexers.get(i).getAllTokens();
-            List<Integer> typesOfTokens = new ArrayList<>();
-            for (Token t : tokens) {
-                typesOfTokens.add(t.getType());
+    private int levenshteinDistance(List<Integer> lhs, List<Integer> rhs) {
+        int len0 = lhs.size() + 1;
+        int len1 = rhs.size() + 1;
+
+        // the array of distances
+        int[] cost = new int[len0];
+        int[] newcost = new int[len0];
+
+        // initial cost of skipping prefix in String s0
+        for (int i = 0; i < len0; i++) cost[i] = i;
+
+        // dynamically computing the array of distances
+
+        // transformation cost for each letter in s1
+        for (int j = 1; j < len1; j++) {
+            // initial cost of skipping prefix in String s1
+            newcost[0] = j;
+
+            // transformation cost for each letter in s0
+            for(int i = 1; i < len0; i++) {
+                // matching current letters in both strings
+                int match = (lhs.get(i - 1).equals(rhs.get(j - 1))) ? 0 : 1;
+
+                // computing cost for each transformation
+                int cost_replace = cost[i - 1] + match;
+                int cost_insert  = cost[i] + 1;
+                int cost_delete  = newcost[i - 1] + 1;
+
+                // keep minimum cost
+                newcost[i] = Math.min(Math.min(cost_insert, cost_delete), cost_replace);
             }
-            tokenTypes.put(ce, typesOfTokens);
-            i++;
+
+            // swap cost/newcost arrays
+            int[] swap = cost; cost = newcost; newcost = swap;
         }
-        deleteDuplicates(tokenTypes);
-        return list;
+
+        // the distance is the cost for transforming all letters in both strings
+        return cost[len0 - 1];
     }
 }

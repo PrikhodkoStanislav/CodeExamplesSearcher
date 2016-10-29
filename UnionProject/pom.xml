@@ -20,14 +20,14 @@
             <artifactId>antlr</artifactId>
             <version>4.5.3</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/antlr-4.5.3-complete.jar</systemPath>
+            <systemPath>${project.basedir}/lib/antlr-4.5.3-complete.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>antlrclasses</groupId>
             <artifactId>antlrclasses</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/antlrclasses.jar</systemPath>
+            <systemPath>${project.basedir}/lib/antlrclasses.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -44,7 +44,7 @@
             <artifactId>cdt</artifactId>
             <version>5.3</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/org.eclipse.cdt.core_6.0.0.201606062011.jar</systemPath>
+            <systemPath>${project.basedir}/lib/org.eclipse.cdt.core_6.0.0.201606062011.jar</systemPath>
         </dependency>
 
         <dependency>
