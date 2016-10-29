@@ -43,17 +43,17 @@ public class ProjectCodeFormatter {
 
     public String createTxt(List<CodeExample> examples) {
         StringBuilder sb = new StringBuilder();
-        sb.append("==============================================================================\n");
-        sb.append("||                       Code examples from sites:                          ||\n");
-        sb.append("==============================================================================\n");
+        sb.append("==============================================================================").append(System.getProperty("line.separator"));
+        sb.append("||                       Code examples from sites:                          ||").append(System.getProperty("line.separator"));
+        sb.append("==============================================================================").append(System.getProperty("line.separator"));
         for (CodeExample example : examples) {
-            sb.append("==============================================================================\n");
+            sb.append("==============================================================================").append(System.getProperty("line.separator"));
             String code = example.getCodeExample();
             code = code.replaceAll("&lt;", "<");
             code = code.replaceAll("&gt;", ">");
             example.setCodeExample(code);
             sb.append(example.toString("txt"));
-            sb.append("==============================================================================\n");
+            sb.append("==============================================================================").append(System.getProperty("line.separator"));
         }
         return sb.toString();
     }
@@ -65,11 +65,15 @@ public class ProjectCodeFormatter {
     }
 
     public String toPrettyCode(String code) {
+        code = code.replaceAll("\\*/", "\\*\\/" + System.getProperty("line.separator"));
+        code = code.replaceAll("#", System.getProperty("line.separator") + "#");
+
         int intMain = code.indexOf("int main");
         code =  intMain > 0 ? (code.substring(0, intMain) +
-                "\n" + code.substring(intMain)) : code;
+                System.getProperty("line.separator") + code.substring(intMain)) : code;
 
-        TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
+        TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code,
+                0, code.length(), 0, System.getProperty("line.separator"));
 
         IDocument document = new Document(code);
         try {
