@@ -69,7 +69,7 @@ public class ProjectCodeFormatter {
         code =  intMain > 0 ? (code.substring(0, intMain) +
                 "\n" + code.substring(intMain)) : code;
 
-        TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
+        TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "%n");
 
         IDocument document = new Document(code);
         try {

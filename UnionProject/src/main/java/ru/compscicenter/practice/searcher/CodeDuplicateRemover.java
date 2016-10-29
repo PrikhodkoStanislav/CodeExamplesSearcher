@@ -25,11 +25,12 @@ public class CodeDuplicateRemover {
 
     public List<CodeExample> removeDuplicates() {
         List<CodeExample> result = new ArrayList<>(list);
-        int sizeOfList = result.size();
+        CodeExample[] arrayOfCodeExamples = result.toArray(new CodeExample[result.size()]);
+        int sizeOfList = arrayOfCodeExamples.length;
         for (int i = 0; i < sizeOfList - 1; i++) {
             for (int j = i + 1; j < sizeOfList; j++) {
-                CodeExample ce1 = result.get(i);
-                CodeExample ce2 = result.get(j);
+                CodeExample ce1 = arrayOfCodeExamples[i];
+                CodeExample ce2 = arrayOfCodeExamples[j];
                 if (compareCodeExamples(ce1, ce2)) {
                     result.remove(ce2);
                 }
