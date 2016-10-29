@@ -43,37 +43,41 @@ public class ProjectCodeFormatter {
 
     public String createTxt(List<CodeExample> examples) {
         StringBuilder sb = new StringBuilder();
-        sb.append("==============================================================================").append(System.getProperty("line.separator"));
-        sb.append("||                       Code examples from sites:                          ||").append(System.getProperty("line.separator"));
-        sb.append("==============================================================================").append(System.getProperty("line.separator"));
+        sb.append("==============================================================================\n");
+        sb.append("||                       Code examples from sites:                          ||\n");
+        sb.append("==============================================================================\n");
         for (CodeExample example : examples) {
-            sb.append("==============================================================================").append(System.getProperty("line.separator"));
+            sb.append("==============================================================================\n");
             String code = example.getCodeExample();
             code = code.replaceAll("&lt;", "<");
             code = code.replaceAll("&gt;", ">");
             example.setCodeExample(code);
             sb.append(example.toString("txt"));
-            sb.append("==============================================================================").append(System.getProperty("line.separator"));
+            sb.append("==============================================================================\n");
         }
         return sb.toString();
     }
 
     public void beautifyCode(List<CodeExample> l1) {
         for (CodeExample codeExample : l1) {
+            codeExample.setCodeExample(lineSeparatorUnify(codeExample.getCodeExample()));
             codeExample.setCodeExample(toPrettyCode(codeExample.getCodeExample()));
         }
     }
 
-    public String toPrettyCode(String code) {
-        code = code.replaceAll("\\*/", "\\*\\/" + System.getProperty("line.separator"));
-        code = code.replaceAll("#", System.getProperty("line.separator") + "#");
+    public String lineSeparatorUnify(String code) {
+        String result = code;
+        result.replaceAll("\r\n", "\n");
+        result.replaceAll("\n#.*\n", "\n");
+        return result;
+    }
 
+    public String toPrettyCode(String code) {
         int intMain = code.indexOf("int main");
         code =  intMain > 0 ? (code.substring(0, intMain) +
-                System.getProperty("line.separator") + code.substring(intMain)) : code;
+                "\n" + code.substring(intMain)) : code;
 
-        TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code,
-                0, code.length(), 0, System.getProperty("line.separator"));
+        TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
 
         IDocument document = new Document(code);
         try {

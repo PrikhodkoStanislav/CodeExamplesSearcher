@@ -81,12 +81,13 @@ public class MainSearcher {
 
     private static void processResults(List<CodeExample> l1) throws ParseException {
         if (l1 != null) {
+            ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
+            projectCodeFormatter.beautifyCode(l1);
+
             int typeOfCompareResult = 1;
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1, typeOfCompareResult);
-            ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
-
             l1 = duplicateRemover.removeDuplicates();
-            projectCodeFormatter.beautifyCode(l1);
+
             String file = projectCodeFormatter.createResultFile(l1, format);
 
             String path = "";
