@@ -64,19 +64,19 @@ public class TestSystem {
                 for (int i = 0; i < length; i++) {
                     String firstFileName = strs[i];
                     String pathtoFile1 = "../UnionProject/src/main/resources/" + firstFileName;
-                    List<String> differentFiles = allFileNames;
-                    differentFiles.remove(firstFileName);
                     // Compare files which must be the same and calculate the error of the first type.
                     for (int j = i + 1; j < length; j++) {
                         String secondFileName = strs[j];
                         String pathToFile2 = "../UnionProject/src/main/resources/" + secondFileName;
-                        differentFiles.remove(secondFileName);
                         if (!codeDuplicateRemover.compareFunctionsFromFiles(pathtoFile1, pathToFile2)) {
                             failsFirstType++;
                         }
                         allFirstTypeCompares++;
                     }
                     // Compare files which must be the different and calculate the error of the second type.
+                    List<String> differentFiles = new ArrayList<>();
+                    differentFiles.addAll(allFileNames);
+                    differentFiles.removeAll(Arrays.asList(strs));
                     for (String differentFileName : differentFiles) {
                         String pathToFile2 = "../UnionProject/src/main/resources/" + differentFileName;
                         if (codeDuplicateRemover.compareFunctionsFromFiles(pathtoFile1, pathToFile2)) {
