@@ -59,7 +59,7 @@ public class CommandLineSearcher {
 
     public void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("searcher.jar --?option <function> [path] [result_type]", options);
+        formatter.printHelp("searcher.jar --?option <function> [<path>] [<result_type>]", options);
         System.exit(0);
     }
 }

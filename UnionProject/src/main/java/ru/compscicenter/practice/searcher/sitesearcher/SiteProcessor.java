@@ -21,9 +21,7 @@ public abstract class SiteProcessor extends Thread {
     @Override
     public void run() {
         String request = generateRequestURL(getQuery());
-        if (request == null || "".equals(request)) {
-            System.out.print("Please, exact your function name");
-        } else {
+        if (request != null && !"".equals(request)) {
             try {
                 String webContent = sendGet(request);
                 if (webContent.contains("Page Not Found")) {
