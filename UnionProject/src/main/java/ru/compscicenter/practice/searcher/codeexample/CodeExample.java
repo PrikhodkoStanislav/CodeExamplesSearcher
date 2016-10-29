@@ -6,6 +6,7 @@ package ru.compscicenter.practice.searcher.codeexample;
 public abstract class CodeExample {
     protected String codeExample;
     protected String language;
+    protected String function;
     protected String source;
 
     public abstract String toString(String format);
@@ -28,5 +29,13 @@ public abstract class CodeExample {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getFunction() {
+        return function;
+    }
+
+    public void setFunction(String function) {
+        this.function = function;
     }
 }

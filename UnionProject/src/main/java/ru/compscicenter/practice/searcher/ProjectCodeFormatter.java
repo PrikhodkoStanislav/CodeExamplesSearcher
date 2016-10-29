@@ -48,7 +48,8 @@ public class ProjectCodeFormatter {
                 "}\n" +
                 "</style>");
         sb.append("</head>");
-        sb.append("<h3 align=\"center\">Code examples</h3>");
+        sb.append("<h3 align=\"center\">Code examples for function \"")
+                .append(examples.get(0).getFunction()).append("\"</h3>");
         sb.append("<body>");
         sb.append("<table>");
         sb.append("<tr>");

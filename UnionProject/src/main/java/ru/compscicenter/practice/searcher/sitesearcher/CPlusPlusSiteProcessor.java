@@ -40,6 +40,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             String url = generateRequestURL(getQuery());
             CodeExample ce = new SiteCodeExample(language, getSiteName(), url, codeExample);
             ce.setSource(url);
+            ce.setFunction(getQuery());
             examples.add(ce);
         }
         return examples;
