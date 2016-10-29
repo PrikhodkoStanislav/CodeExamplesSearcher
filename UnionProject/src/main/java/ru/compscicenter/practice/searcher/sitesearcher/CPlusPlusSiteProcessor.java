@@ -16,7 +16,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
      * URL to http://www.cplusplus.com/reference/
      */
     private static final String CPLUSPLUS_URL = "http://www.cplusplus.com/reference/";
-    private static final String language = "C/C++";
+    private static final String language = "C";
 
     @Override
     public List<CodeExample> findAndProcessCodeExamples(final String result) {
@@ -30,7 +30,10 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             codeExample = codeExample.replaceAll("<(/)?(cite|dfn|var|span|kbd)>", "");
             codeExample = codeExample.replaceAll("\\s+", " ");
 
-            examples.add(new SiteCodeExample(language, getSiteName(), generateRequestURL(getQuery()), codeExample));
+            String url = generateRequestURL(getQuery());
+            CodeExample ce = new SiteCodeExample(language, getSiteName(), url, codeExample);
+            ce.setSource(url);
+            examples.add(ce);
         }
         return examples;
     }

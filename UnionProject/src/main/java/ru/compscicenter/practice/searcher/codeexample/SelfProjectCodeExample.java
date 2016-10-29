@@ -11,6 +11,7 @@ public class SelfProjectCodeExample extends CodeExample {
     public SelfProjectCodeExample(String language, String pathToTheFile, long numberOfExample, long strNumber, String codeExample) {
         this.language = language;
         this.pathToTheFile = pathToTheFile;
+        this.source = pathToTheFile;
         this.numberOfExample = numberOfExample;
         this.strNumber = strNumber;
         this.codeExample = codeExample;
