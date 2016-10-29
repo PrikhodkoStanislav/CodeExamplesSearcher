@@ -1,6 +1,3 @@
-#include <string.h>
-#include <stdio.h>
-
 int main()
 {
 	char arr[200];
