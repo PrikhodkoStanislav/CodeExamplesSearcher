@@ -25,7 +25,7 @@ public class SelfProjectSearcher implements Searcher {
     }
 
     private List<CodeExample> searchInFile(String functionName, String pathToFile) {
-        final String newLine = "%n";
+        final String newLine = "\n";
 
         Pattern patternForFunctionName = Pattern.compile(".*(\\s)(" + functionName + ")(\\().+");
         Pattern patternForOpenBracket = Pattern.compile(".*\\{.*");
