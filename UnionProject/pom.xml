@@ -44,7 +44,7 @@
             <artifactId>cdt</artifactId>
             <version>5.3</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/org.eclipse.cdt.core_6.0.0.201606062011.jar</systemPath>
+            <systemPath>${project.basedir}/lib/org.eclipse.cdt.core_6.0.0.201606062011.jar</systemPath>
         </dependency>
 
         <dependency>
