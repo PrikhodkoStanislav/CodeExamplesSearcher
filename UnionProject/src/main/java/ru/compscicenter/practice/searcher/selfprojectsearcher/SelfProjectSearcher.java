@@ -95,10 +95,14 @@ public class SelfProjectSearcher implements Searcher {
                     }
 
                     sb.append(newLine);
-                    CodeExample codeExample = new SelfProjectCodeExample(
-                            "C", pathToFile, numberOfExample, strNumber, sb.toString());
+                    /*CodeExample codeExample = new SelfProjectCodeExample(
+                            "C", pathToFile, numberOfExample, strNumber, sb.toString());*/
+                    CodeExample codeExample = new CodeExample();
+                    codeExample.setLanguage("C");
                     codeExample.setSource(pathToFile);
                     codeExample.setFunction(functionName);
+                    codeExample.setCodeExample("Example " + numberOfExample + " :" +
+                            " str " + strNumber + " :\n" + sb.toString());
                     list.add(codeExample);
                     continue;
                 }

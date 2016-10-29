@@ -52,26 +52,27 @@ public class ProjectCodeFormatter {
                 .append(examples.get(0).getFunction()).append("\"</h3>");
         sb.append("<body>");
         sb.append("<table>");
-        sb.append("<tr>");
-        sb.append("<th>").append("SOURCE").append("</th>");
-        sb.append("<th>").append("CODE EXAMPLE").append("</th>");
-        sb.append("</tr>");
+        sb.append("<tr>")
+            .append("<th>").append("SOURCE").append("</th>")
+            .append("<th>").append("CODE EXAMPLE").append("</th>")
+            .append("</tr>");
         for (CodeExample example : examples) {
-            sb.append("<tr>");
-            sb.append("<td>").append(example.getSource()).append("</td>");
-            sb.append("<td><pre>").append(example.getCodeExample()).append("</pre></td>");
-            sb.append("</tr>");
+            sb.append("<tr>")
+                .append("<td>").append(example.getSource()).append("</td>")
+                .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
+                .append("</tr>");
         }
-        sb.append("</table>");
-        sb.append("</body>");
-        sb.append("</html>");
+        sb.append("</table>")
+            .append("</body>")
+            .append("</html>");
         return sb.toString();
     }
 
     public String createTxt(List<CodeExample> examples) {
         StringBuilder sb = new StringBuilder();
         sb.append("==============================================================================\n");
-        sb.append("||                       Code examples from sites:                          ||\n");
+        sb.append("||                       Code examples for function \"").append(examples.get(0).getFunction())
+                .append("\"                     ||\n");
         sb.append("==============================================================================\n");
         for (CodeExample example : examples) {
             sb.append("==============================================================================\n");
@@ -79,6 +80,7 @@ public class ProjectCodeFormatter {
             code = code.replaceAll("&lt;", "<");
             code = code.replaceAll("&gt;", ">");
             example.setCodeExample(code);
+            sb.append(example.getSource()).append("\n").append(example.getCodeExample());
             sb.append(example.toString("txt"));
             sb.append("==============================================================================\n");
         }

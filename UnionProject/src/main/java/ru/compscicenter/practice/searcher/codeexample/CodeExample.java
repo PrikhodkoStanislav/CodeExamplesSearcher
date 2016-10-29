@@ -3,13 +3,15 @@ package ru.compscicenter.practice.searcher.codeexample;
 /**
  * Created by user on 14.10.2016!
  */
-public abstract class CodeExample {
+public class CodeExample {
     protected String codeExample;
     protected String language;
     protected String function;
     protected String source;
 
-    public abstract String toString(String format);
+    public String toString(String format) {
+        return "";
+    };
 
     public void setCodeExample(String codeExample) {
         this.codeExample = codeExample;
@@ -21,6 +23,10 @@ public abstract class CodeExample {
 
     public String getLanguage() {
         return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getSource() {
