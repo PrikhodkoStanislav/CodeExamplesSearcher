@@ -13,20 +13,20 @@ public class CodeExample {
         return "";
     };
 
-    public void setCodeExample(String codeExample) {
-        this.codeExample = codeExample;
-    }
-
-    public String getCodeExample() {
-        return codeExample;
-    }
-
     public String getLanguage() {
         return language;
     }
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getFunction() {
+        return function;
+    }
+
+    public void setFunction(String function) {
+        this.function = function;
     }
 
     public String getSource() {
@@ -37,11 +37,11 @@ public class CodeExample {
         this.source = source;
     }
 
-    public String getFunction() {
-        return function;
+    public String getCodeExample() {
+        return codeExample;
     }
 
-    public void setFunction(String function) {
-        this.function = function;
+    public void setCodeExample(String codeExample) {
+        this.codeExample = codeExample;
     }
 }

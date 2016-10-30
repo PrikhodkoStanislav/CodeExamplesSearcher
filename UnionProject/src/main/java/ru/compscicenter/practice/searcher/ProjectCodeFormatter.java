@@ -1,5 +1,7 @@
 package ru.compscicenter.practice.searcher;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.cdt.core.ToolFactory;
 import org.eclipse.cdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.text.BadLocationException;
@@ -9,13 +11,18 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by user on 06.10.2016!
  */
 public class ProjectCodeFormatter {
+    private final static Logger logger = Logger.getLogger(ProjectCodeFormatter.class);
+
     private CodeFormatter codeFormatter;
+    private String reportDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
 
     public ProjectCodeFormatter() {
         codeFormatter = ToolFactory.createDefaultCodeFormatter(null);
@@ -42,14 +49,20 @@ public class ProjectCodeFormatter {
                 "    width: 100%;\n" +
                 "}\n" +
                 "\n" +
+                "td {\n" +
+                "    text-indent: 0px;\n" +
+                "}\n" +
+                "\n" +
                 "th {\n" +
+                "    text-align: left;\n" +
                 "    background-color: #6AB75D;\n" +
                 "    height: 50px;\n" +
                 "}\n" +
                 "</style>");
         sb.append("</head>");
-        sb.append("<h3 align=\"center\">Code examples for function \"")
-                .append(examples.get(0).getFunction()).append("\"</h3>");
+        sb.append("<h2 align=\"center\">Code examples for function \"")
+                .append(examples.get(0).getFunction()).append("\"</h2>");
+        sb.append("<h4>Last report date: ").append(reportDate).append("</h4>");
         sb.append("<body>");
         sb.append("<table>");
         sb.append("<tr>")
@@ -73,6 +86,8 @@ public class ProjectCodeFormatter {
         sb.append("==============================================================================\n");
         sb.append("||                       Code examples for function \"").append(examples.get(0).getFunction())
                 .append("\"                     ||\n");
+        sb.append("==============================================================================\n");
+        sb.append("Last report date: ").append(reportDate).append("\n");
         sb.append("==============================================================================\n");
         for (CodeExample example : examples) {
             sb.append("==============================================================================\n");
@@ -102,13 +117,15 @@ public class ProjectCodeFormatter {
     }
 
     public String toPrettyCode(String code) {
+        logger.setLevel(Level.ERROR);
+
         TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
 
         IDocument document = new Document(code);
         try {
             edit.apply(document);
         } catch (MalformedTreeException | BadLocationException e) {
-            e.printStackTrace();
+            logger.error("Sorry, something wrong!", e);
         }
         return document.get();
     }

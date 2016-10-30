@@ -1,5 +1,7 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
@@ -12,6 +14,8 @@ import java.util.regex.Pattern;
  * Created by Rodionova Darya on 28.09.2016!
  */
 public class CPlusPlusSiteProcessor extends SiteProcessor {
+    private final static Logger logger = Logger.getLogger(CPlusPlusSiteProcessor.class);
+
     /**
      * URL to http://www.cplusplus.com/reference/
      */
@@ -20,6 +24,8 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
 
     @Override
     public List<CodeExample> findAndProcessCodeExamples(final String result) {
+        logger.setLevel(Level.INFO);
+
         List<CodeExample> examples = new ArrayList<>();
 
         Pattern p = Pattern.compile("Example.*<code>((<cite>.*)?(<dfn>.*)?<var>.*})</code>");
@@ -43,6 +49,10 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             ce.setSource(url);
             ce.setFunction(getQuery());
             ce.setCodeExample(codeExample);
+            logger.info("Code example parameters: " +
+                    "programming lang=" + ce.getLanguage() + " " +
+                    ", function=" + ce.getFunction() + " " +
+                    ", source=" + ce.getSource());
             examples.add(ce);
         }
         return examples;

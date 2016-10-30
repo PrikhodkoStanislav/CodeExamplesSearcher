@@ -1,7 +1,8 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
-import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,23 +16,36 @@ import java.util.List;
  * Created by user on 28.09.2016!
  */
 public abstract class SiteProcessor extends Thread {
+    private final static Logger logger = Logger.getLogger(SiteProcessor.class);
+
     private String query;
     private List<CodeExample> answers;
 
     @Override
     public void run() {
+        logger.setLevel(Level.INFO);
+
         String request = generateRequestURL(getQuery());
         if (request != null && !"".equals(request)) {
             try {
                 String webContent = sendGet(request);
                 if (webContent.contains("Page Not Found")) {
                     answers = new ArrayList<>();
-                    answers.add( new SiteCodeExample("C", getSiteName(), "No such method found!"));
+                    CodeExample ce = new CodeExample();
+                    ce.setLanguage("C");
+                    ce.setSource(getSiteName());
+                    ce.setCodeExample("No such method found!");
+                    logger.info("Code example parameters: " +
+                            "programming lang=" + ce.getLanguage() + " " +
+                            ", function=" + ce.getFunction() + " " +
+                            ", source=" + ce.getSource() + " " +
+                            ", result="+ ce.getCodeExample());
+                    answers.add(ce);
                 } else {
                     answers = findAndProcessCodeExamples(webContent);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Sorry, something wrong!", e);
             }
         }
     }
@@ -69,8 +83,10 @@ public abstract class SiteProcessor extends Thread {
         con.setRequestProperty("User-Agent", USER_AGENT);
 
         int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
+
+        if (logger.isInfoEnabled()) {
+            logger.info("Sending 'GET' request to URL : " + url + " Response Code : " + responseCode);
+        }
         if (responseCode == 404)
             return "Page Not Found";
 

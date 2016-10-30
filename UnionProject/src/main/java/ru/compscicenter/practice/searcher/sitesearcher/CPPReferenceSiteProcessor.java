@@ -1,5 +1,7 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
@@ -12,6 +14,8 @@ import java.util.regex.Pattern;
  * Created by Rodionova Darya on 28.09.2016!
  */
 public class CPPReferenceSiteProcessor extends SiteProcessor {
+    private final static Logger logger = Logger.getLogger(CPPReferenceSiteProcessor.class);
+
     /**
      * URL to http://en.cppreference.com/w/
      */
@@ -20,6 +24,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
 
     @Override
     public List<CodeExample> findAndProcessCodeExamples(final String result) {
+        logger.setLevel(Level.INFO);
+
         List<CodeExample> examples = new ArrayList<>();
 
         Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
@@ -57,6 +63,10 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             ce.setSource(url);
             ce.setFunction(getQuery());
             ce.setCodeExample(codeExample);
+            logger.info("Code example parameters: " +
+                    "programming lang=" + ce.getLanguage() + " " +
+                    ", function=" + ce.getFunction() + " " +
+                    ", source=" + ce.getSource());
             examples.add(ce);
         }
         return examples;

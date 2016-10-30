@@ -2,6 +2,8 @@ package ru.compscicenter.practice.searcher;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
@@ -15,10 +17,14 @@ import java.util.List;
  * Created by Станислав on 05.10.2016!
  */
 public class MainSearcher {
+    private final static Logger logger = Logger.getLogger(MainSearcher.class);
+
     private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
     private static String format = "";
 
     public static void main(String[] args) {
+        logger.setLevel(Level.ERROR);
+
         Searcher[] searchers;
         List<CodeExample> l1;
 
@@ -102,6 +108,7 @@ public class MainSearcher {
                     writer.write(file);
                     writer.close();
                 } catch (Exception e) {
+                    logger.error("Sorry, something wrong!", e);
                     e.printStackTrace();
                 }
             } else {

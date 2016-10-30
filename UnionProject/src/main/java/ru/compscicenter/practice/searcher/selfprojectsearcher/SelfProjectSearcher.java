@@ -1,5 +1,7 @@
 package ru.compscicenter.practice.searcher.selfprojectsearcher;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.Searcher;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.codeexample.SelfProjectCodeExample;
@@ -15,6 +17,7 @@ import java.util.regex.Pattern;
  * Created by Станислав on 05.10.2016!
  */
 public class SelfProjectSearcher implements Searcher {
+    private final static Logger logger = Logger.getLogger(SelfProjectSearcher.class);
 
     private List<CodeExample> list = new ArrayList<>();
 
@@ -25,6 +28,8 @@ public class SelfProjectSearcher implements Searcher {
     }
 
     private List<CodeExample> searchInFile(String functionName, String pathToFile) {
+        logger.setLevel(Level.INFO);
+
         final String newLine = "\n";
 
         Pattern patternForFunctionName = Pattern.compile(".*(\\s)(" + functionName + ")(\\().+");
@@ -99,10 +104,13 @@ public class SelfProjectSearcher implements Searcher {
                             "C", pathToFile, numberOfExample, strNumber, sb.toString());*/
                     CodeExample codeExample = new CodeExample();
                     codeExample.setLanguage("C");
-                    codeExample.setSource(pathToFile);
+                    codeExample.setSource(pathToFile + ":" + strNumber);
                     codeExample.setFunction(functionName);
-                    codeExample.setCodeExample("Example " + numberOfExample + " :" +
-                            " str " + strNumber + " :\n" + sb.toString());
+                    codeExample.setCodeExample(sb.toString());
+                    logger.info("Code example parameters: " +
+                            "programming lang=" + codeExample.getLanguage() + " " +
+                            ", function=" + codeExample.getFunction() + " " +
+                            ", source=" + codeExample.getSource());
                     list.add(codeExample);
                     continue;
                 }
