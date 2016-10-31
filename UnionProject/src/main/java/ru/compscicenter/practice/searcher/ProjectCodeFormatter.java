@@ -40,11 +40,27 @@ public class ProjectCodeFormatter {
         sb.append("<html>");
         sb.append("<head>");
         sb.append("<style>\n" +
+                "body {\n" +
+                "    background-color: #E4F4DE;\n" +
+                "}\n" +
+                "\n" +
+                "h3 {\n" +
+                "    color: #26557B;\n" +
+                "    font-family: verdana;\n" +
+                "    font-size: 200%;" +
+                "}\n" +
+                "\n" +
+                "span {\n" +
+                "    font-family: courier;\n" +
+                "    color: #424582;\n" +
+                "}\n" +
+                "\n" +
                 "table, td, th {\n" +
                 "    border: 1px solid black;\n" +
                 "}\n" +
                 "\n" +
                 "table {\n" +
+                "    background-color: #FFFFFF;\n" +
                 "    border-collapse: collapse;\n" +
                 "    width: 100%;\n" +
                 "}\n" +
@@ -56,13 +72,16 @@ public class ProjectCodeFormatter {
                 "th {\n" +
                 "    text-align: left;\n" +
                 "    background-color: #6AB75D;\n" +
-                "    height: 50px;\n" +
+                "    height: 30px;\n" +
                 "}\n" +
                 "</style>");
         sb.append("</head>");
-        sb.append("<h2 align=\"center\">Code examples for function \"")
-                .append(examples.get(0).getFunction()).append("\"</h2>");
-        sb.append("<h4>Last report date: ").append(reportDate).append("</h4>");
+        sb.append("<h3>Code examples for function ")
+                .append("<span>")
+                .append("\"").append(examples.get(0).getFunction()).append("\"")
+                .append("</span>")
+                .append("</h3>");
+        sb.append("<p><b>Last report date:</b> ").append(reportDate).append("</p>");
         sb.append("<body>");
         sb.append("<table>");
         sb.append("<tr>")
