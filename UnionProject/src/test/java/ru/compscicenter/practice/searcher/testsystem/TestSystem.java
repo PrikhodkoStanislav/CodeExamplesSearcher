@@ -3,6 +3,7 @@ package ru.compscicenter.practice.searcher.testsystem;
 import org.junit.Before;
 import org.junit.Test;
 import ru.compscicenter.practice.searcher.CodeDuplicateRemover;
+import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -45,8 +46,8 @@ public class TestSystem {
 
     @Before
     public void createCodeDuplicateRemover() {
-        codeDuplicateRemover1 = new CodeDuplicateRemover(1);
-        codeDuplicateRemover2 = new CodeDuplicateRemover(2);
+        codeDuplicateRemover1 = new CodeDuplicateRemover(AlgorithmsRemoveDuplicates.EqualsTokens);
+        codeDuplicateRemover2 = new CodeDuplicateRemover(AlgorithmsRemoveDuplicates.LevenshteinDistance);
     }
 
     public void testCompareFunctionsFromFiles(CodeDuplicateRemover codeDuplicateRemover) {
@@ -97,14 +98,14 @@ public class TestSystem {
 
     @Test
     public void testCodeDuplicateRemoverWithEqualsList() {
-        System.out.println("CodeDuplicateRemover with typeOfCompareExamples = equalsList");
+        System.out.println("CodeDuplicateRemover with algorithmsRemoveDuplicates = EqualsTokens");
         testCompareFunctionsFromFiles(codeDuplicateRemover1);
     }
 
     @Test
     public void testCodeDuplicateRemoverWithLevenshteinDistance() {
-        System.out.println("CodeDuplicateRemover with typeOfCompareExamples = levenshteinDistance " +
-                "and maxDistance = 10");
+        System.out.println("CodeDuplicateRemover with algorithmsRemoveDuplicates = LevenshteinDistance " +
+                "and maxLevenshteinRatio = 30%");
         testCompareFunctionsFromFiles(codeDuplicateRemover2);
     }
 }

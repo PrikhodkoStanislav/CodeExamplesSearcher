@@ -4,6 +4,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
@@ -90,7 +91,7 @@ public class MainSearcher {
             ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
             projectCodeFormatter.beautifyCode(l1);
 
-            int typeOfCompareResult = 1;
+            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.EqualsTokens;
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1, typeOfCompareResult);
             l1 = duplicateRemover.removeDuplicates();
 

@@ -2,6 +2,7 @@ package ru.compscicenter.practice.searcher;
 
 import antlrclasses.CLexer;
 import org.antlr.v4.runtime.*;
+import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
 import java.io.IOException;
@@ -12,29 +13,31 @@ import java.util.*;
  */
 public class CodeDuplicateRemover {
     private List<CodeExample> list;
-    private int typeOfCompareExamples = 1;
+    private AlgorithmsRemoveDuplicates typeOfRemoveAlgorithm = AlgorithmsRemoveDuplicates.EqualsTokens;
+    final double maxLevenshteinRatio = 30.0;
 
-    public CodeDuplicateRemover(int typeOfCompareExamples) {
-        this.typeOfCompareExamples = typeOfCompareExamples;
+    public CodeDuplicateRemover(AlgorithmsRemoveDuplicates typeOfRemoveAlgorithm) {
+        this.typeOfRemoveAlgorithm = typeOfRemoveAlgorithm;
     }
 
-    public CodeDuplicateRemover(List<CodeExample> list, int typeOfCompareExamples) {
+    public CodeDuplicateRemover(List<CodeExample> list, AlgorithmsRemoveDuplicates typeOfRemoveAlgorithm) {
+        this(typeOfRemoveAlgorithm);
         this.list = list;
-        this.typeOfCompareExamples = typeOfCompareExamples;
     }
 
     public List<CodeExample> removeDuplicates() {
-        List<CodeExample> result = new ArrayList<>(list);
-        CodeExample[] arrayOfCodeExamples = result.toArray(new CodeExample[result.size()]);
-        int sizeOfList = arrayOfCodeExamples.length;
-        for (int i = 0; i < sizeOfList - 1; i++) {
-            for (int j = i + 1; j < sizeOfList; j++) {
-                CodeExample ce1 = arrayOfCodeExamples[i];
-                CodeExample ce2 = arrayOfCodeExamples[j];
-                if (compareCodeExamples(ce1, ce2)) {
-                    result.remove(ce2);
+        List<CodeExample> examples = new ArrayList<>(list);
+        List<CodeExample> result = new ArrayList<>();
+        while (!examples.isEmpty()) {
+            CodeExample minCodeExample = examples.stream().min(
+                    (c1, c2) -> tokenLength(c1).compareTo(tokenLength(c2))).get();
+            examples.remove(minCodeExample);
+            for (CodeExample ce : examples) {
+                if (compareCodeExamples(minCodeExample, ce)) {
+                    examples.remove(ce);
                 }
             }
+            result.add(minCodeExample);
         }
 //        Map<CodeExample, Lexer> lexers = new HashMap<>();
 //        Map<CodeExample, List<Integer>> tokenTypes = new HashMap<>();
@@ -48,7 +51,14 @@ public class CodeDuplicateRemover {
 //            tokenTypes.put(ce, typesOfTokens);
 //        }
 //        deleteDuplicates(tokenTypes);
+        list = result;
         return result;
+    }
+
+    public Integer tokenLength(CodeExample codeExample1) {
+        Lexer lexer = new CLexer(new ANTLRInputStream(codeExample1.getCodeExample()));
+        List<? extends Token> str = lexer.getAllTokens();
+        return str.size();
     }
 
     public boolean compareFunctionsFromFiles(String fileName1, String fileName2) throws IOException {
@@ -81,14 +91,15 @@ public class CodeDuplicateRemover {
 
         boolean result = false;
 
-        switch (typeOfCompareExamples) {
-            case (1):
+        switch (typeOfRemoveAlgorithm) {
+            case EqualsTokens:
                 result = listEquals(arr1, arr2);
                 break;
-            case (2):
+            case LevenshteinDistance:
                 int ld = levenshteinDistance(arr1, arr2);
-                final int maxForLevenshteinDistance = 10;
-                result = (ld <= maxForLevenshteinDistance);
+                int maxLength = Math.max(arr1.size(), arr2.size());
+                double levenshteinRatio = (double)ld * 100 / maxLength;
+                result = (levenshteinRatio - maxLevenshteinRatio <= 0.05);
                 break;
             default:
                 break;
@@ -105,39 +116,27 @@ public class CodeDuplicateRemover {
         int len0 = lhs.size() + 1;
         int len1 = rhs.size() + 1;
 
-        // the array of distances
         int[] cost = new int[len0];
         int[] newcost = new int[len0];
 
-        // initial cost of skipping prefix in String s0
-        for (int i = 0; i < len0; i++) cost[i] = i;
+        for (int i = 0; i < len0; i++) {
+            cost[i] = i;
+        }
 
-        // dynamically computing the array of distances
-
-        // transformation cost for each letter in s1
         for (int j = 1; j < len1; j++) {
-            // initial cost of skipping prefix in String s1
             newcost[0] = j;
 
-            // transformation cost for each letter in s0
             for(int i = 1; i < len0; i++) {
-                // matching current letters in both strings
                 int match = (lhs.get(i - 1).equals(rhs.get(j - 1))) ? 0 : 1;
 
-                // computing cost for each transformation
                 int cost_replace = cost[i - 1] + match;
                 int cost_insert  = cost[i] + 1;
                 int cost_delete  = newcost[i - 1] + 1;
 
-                // keep minimum cost
                 newcost[i] = Math.min(Math.min(cost_insert, cost_delete), cost_replace);
             }
-
-            // swap cost/newcost arrays
             int[] swap = cost; cost = newcost; newcost = swap;
         }
-
-        // the distance is the cost for transforming all letters in both strings
         return cost[len0 - 1];
     }
 }
