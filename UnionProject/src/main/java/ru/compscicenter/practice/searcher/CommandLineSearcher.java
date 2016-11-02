@@ -19,7 +19,6 @@ public class CommandLineSearcher {
                 .longOpt("online")
                 .numberOfArgs(2)
                 .optionalArg(true)
-                .argName("args")
                 .desc("Search code examples only on web sites")
                 .build();
 
@@ -27,7 +26,6 @@ public class CommandLineSearcher {
                 .longOpt("offline")
                 .numberOfArgs(3)
                 .optionalArg(true)
-                .argName("args")
                 .desc("Search code examples only in the a project")
                 .build();
 
@@ -35,7 +33,6 @@ public class CommandLineSearcher {
                 .longOpt("all")
                 .numberOfArgs(3)
                 .optionalArg(true)
-                .argName("args")
                 .desc("Search code examples both on web sites and in a project")
                 .build();
 
@@ -59,7 +56,8 @@ public class CommandLineSearcher {
 
     public void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("searcher.jar --?option <function> [<path>] [<result_type>]", options);
-        System.exit(0);
+        formatter.printHelp("searcher.jar --?option <function> [<path>] [<result_type>]",
+                "Code example searcher", options,
+                "Result format can be:\n- html    return HTML-file\n- txt    return TXT-file\nprint results on the screen");
     }
 }

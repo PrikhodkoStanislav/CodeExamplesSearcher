@@ -34,6 +34,7 @@ public class MainSearcher {
             System.exit(0);
         } else if (args.length == 1 && args[0].matches("--?help")) {
             commandLine.printHelp();
+            System.exit(0);
 
         }
 
