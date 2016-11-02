@@ -10,7 +10,9 @@ import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearche
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,16 +49,16 @@ public class MainSearcher {
                     cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
                 throw new ParseException("You must enter only one option!");
 
-            String functionName = args[1];
-            String path = "";
+            String functionName = cmd.getOptionValue("func");
+            String path = cmd.getOptionValue("path");
             if (args.length > 2) {
-                path = args[2];
                 if (args[args.length - 1].matches("html|txt")) {
                     format = args[args.length - 1];
                 }
                 check(format);
-            } else if (args.length <= 1)
+            } else if (args.length <= 1) {
                 throw new ParseException("Option has required arguments!");
+            }
 
             searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
             l1 = new ArrayList<>();
@@ -65,21 +67,33 @@ public class MainSearcher {
                 if (cmd.getOptions().length <= 1)
                     commandLine.printHelp();
             } else {
-                if (cmd.hasOption("online")) {
-                    l1.addAll(searchers[0].search(functionName));
-                } else if (cmd.hasOption("offline")) {
-                    l1.addAll(searchers[1].search(functionName));
-                } else if (cmd.hasOption("all")) {
-                    for (Searcher searcher : searchers) {
-                        l1.addAll(searcher.search(functionName));
+                if (hasSearchOptions(cmd)) {
+                    if (cmd.hasOption("online")) {
+                        l1.addAll(searchers[0].search(functionName));
+                    } else if (cmd.hasOption("offline")) {
+                        l1.addAll(searchers[1].search(functionName));
+                    } else if (cmd.hasOption("all")) {
+                        for (Searcher searcher : searchers) {
+                            l1.addAll(searcher.search(functionName));
+                        }
                     }
+                    processResults(l1);
+                } else {
+                    throw new ParseException("Enter one of three search options: -a, -s or -w");
                 }
-                processResults(l1);
             }
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             commandLine.printHelp();
+        } catch (IOException e) {
+            logger.error("Sorry, something wrong!", e);
         }
+    }
+
+    private static boolean hasSearchOptions(CommandLine cmd) {
+        return cmd.hasOption("online") ||
+                cmd.hasOption("offline") ||
+                cmd.hasOption("all");
     }
 
     private static void check(String format) throws ParseException {
@@ -87,7 +101,7 @@ public class MainSearcher {
             throw new ParseException("This file extension is not supported!");
     }
 
-    private static void processResults(List<CodeExample> l1) throws ParseException {
+    private static void processResults(List<CodeExample> l1) throws ParseException, IOException {
         if (l1 != null) {
             ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
             projectCodeFormatter.beautifyCode(l1);
@@ -96,25 +110,31 @@ public class MainSearcher {
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1, typeOfCompareResult);
             l1 = duplicateRemover.removeDuplicates();
 
-            String file = projectCodeFormatter.createResultFile(l1, format);
+            String fileText = projectCodeFormatter.createResultFile(l1, format);
 
-            String path = "";
+            String path = "result" + File.separator + "examples";
             if (!format.isEmpty()) {
                 if (format.matches("html")) {
-                    path = "examples.html";
+                    path += ".html";
                 } else if (format.matches("txt")) {
-                    path = "examples.txt";
+                    path += ".txt";
                 }
 
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-                    writer.write(file);
+                File file = new File(path);
+                if (!file.exists()) {
+                    file.getParentFile().mkdirs();
+                    file.createNewFile();
+                }
+
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                    writer.write(fileText);
                     writer.close();
                 } catch (Exception e) {
                     logger.error("Sorry, something wrong!", e);
                     e.printStackTrace();
                 }
             } else {
-                System.out.println(file);
+                System.out.println(fileText);
             }
 
         } else {
