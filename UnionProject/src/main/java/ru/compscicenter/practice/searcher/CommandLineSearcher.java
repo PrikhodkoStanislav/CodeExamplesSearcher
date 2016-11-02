@@ -58,6 +58,7 @@ public class CommandLineSearcher {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("searcher.jar --?option <function> [<path>] [<result_type>]",
                 "Code example searcher", options,
-                "Result format can be:\n- html    return HTML-file\n- txt    return TXT-file\nprint results on the screen");
+                "Result format can be:\n    html        return HTML-file\n    txt         return TXT-file\n" +
+                        "    no type     print results on the screen");
     }
 }
