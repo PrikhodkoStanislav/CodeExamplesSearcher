@@ -26,7 +26,7 @@ public class SelfProjectSearcher implements Searcher {
         this.startPath = startPath;
     }
 
-    private List<CodeExample> searchInFile(String functionName, String pathToFile) {
+    private void searchInFile(String functionName, String pathToFile) {
         logger.setLevel(Level.INFO);
 
         final String newLine = "\n";
@@ -36,22 +36,6 @@ public class SelfProjectSearcher implements Searcher {
         Pattern patternForCloseBracket = Pattern.compile(".*\\}.*");
         Pattern patternForOpenCloseBracket = Pattern.compile(".*\\{.*\\}.*");
         Pattern patternForCloseOpenBracket = Pattern.compile(".*\\}.*\\{.*");
-
-        File file = new File(pathToFile);
-        if (!file.exists()) {
-            System.out.println("Wrong path to the file!");
-            return list;
-        }
-        if (file.isDirectory()) {
-            File[] filesInDirectory = file.listFiles();
-            if (filesInDirectory == null) {
-                return list;
-            }
-            for (File f : filesInDirectory) {
-                searchInFile(functionName, f.getPath());
-            }
-            return list;
-        }
 
         try {
             FileReader fileReader = new FileReader(pathToFile);
@@ -99,7 +83,7 @@ public class SelfProjectSearcher implements Searcher {
                     sb.append(newLine);
                     CodeExample codeExample = new CodeExample();
                     codeExample.setLanguage("C");
-                    codeExample.setSource(pathToFile + ":" + strNumber);
+                    codeExample.setSource(pathToFile + " : " + strNumber);
                     codeExample.setFunction(functionName);
                     codeExample.setCodeExample(sb.toString());
                     logger.info("Code example parameters: " +
@@ -146,10 +130,28 @@ public class SelfProjectSearcher implements Searcher {
         catch (IOException e) {
             e.printStackTrace();
         }
-        return list;
+    }
+
+    private void searchInDirectory(String functionName, String pathToFile) {
+        File file = new File(pathToFile);
+        if (!file.exists()) {
+            System.out.println("Wrong path to the file!");
+        }
+        if (file.isDirectory()) {
+            File[] filesInDirectory = file.listFiles();
+            if (filesInDirectory == null) {
+                return;
+            }
+            for (File f : filesInDirectory) {
+                searchInDirectory(functionName, f.getPath());
+            }
+        } else {
+            searchInFile(functionName, pathToFile);
+        }
     }
 
     public List<CodeExample> search(String functionName) {
-        return searchInFile(functionName, startPath);
+        searchInDirectory(functionName, startPath);
+        return list;
     }
 }

@@ -32,11 +32,13 @@ public class CodeDuplicateRemover {
             CodeExample minCodeExample = examples.stream().min(
                     (c1, c2) -> tokenLength(c1).compareTo(tokenLength(c2))).get();
             examples.remove(minCodeExample);
+            List<CodeExample> removedElements = new ArrayList<>();
             for (CodeExample ce : examples) {
                 if (compareCodeExamples(minCodeExample, ce)) {
-                    examples.remove(ce);
+                    removedElements.add(ce);
                 }
             }
+            examples.removeAll(removedElements);
             result.add(minCodeExample);
         }
 //        Map<CodeExample, Lexer> lexers = new HashMap<>();
