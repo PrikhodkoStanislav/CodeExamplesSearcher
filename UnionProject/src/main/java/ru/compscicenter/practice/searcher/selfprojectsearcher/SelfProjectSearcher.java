@@ -4,7 +4,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.Searcher;
 import ru.compscicenter.practice.searcher.codeexample.CodeExample;
-import ru.compscicenter.practice.searcher.codeexample.SelfProjectCodeExample;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -58,7 +57,6 @@ public class SelfProjectSearcher implements Searcher {
             FileReader fileReader = new FileReader(pathToFile);
             BufferedReader in = new BufferedReader(fileReader);
             String str;
-            int numberOfExample = 0;
             int strNumber = 0;
             List<String> buffer = new LinkedList<>();
 
@@ -68,7 +66,6 @@ public class SelfProjectSearcher implements Searcher {
 
                 if (matcherForFunctionName.matches()) {
                     StringBuilder sb = new StringBuilder();
-                    numberOfExample++;
                     for(String s : buffer) {
                         sb.append(s);
                         sb.append(newLine);
@@ -100,8 +97,6 @@ public class SelfProjectSearcher implements Searcher {
                     }
 
                     sb.append(newLine);
-                    /*CodeExample codeExample = new SelfProjectCodeExample(
-                            "C", pathToFile, numberOfExample, strNumber, sb.toString());*/
                     CodeExample codeExample = new CodeExample();
                     codeExample.setLanguage("C");
                     codeExample.setSource(pathToFile + ":" + strNumber);
