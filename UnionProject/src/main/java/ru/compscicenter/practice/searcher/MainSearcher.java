@@ -53,7 +53,7 @@ public class MainSearcher {
             String path = cmd.getOptionValue("path");
             if (args.length > 2) {
                 if (args[args.length - 1].matches("html|txt")) {
-                    format = args[args.length - 1];
+                    format = args[args.length - 1].toLowerCase();
                 }
                 check(format);
             } else if (args.length <= 1) {
