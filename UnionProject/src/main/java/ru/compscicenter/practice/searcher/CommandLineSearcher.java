@@ -70,9 +70,12 @@ public class CommandLineSearcher {
 
     public void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("search [-options] [<result_format>]",
+        formatter.printHelp(150, "search -options [<result_format>]",
                 "Code example searcher", options,
-                "Result format can be:\n    html        return HTML-file\n    txt         return TXT-file\n" +
+                "In order to execute searcher needs one of three options: -a, -s or -w\n" +
+                        "\nResult format can be:\n" +
+                        "    html        return HTML-file\n" +
+                        "    txt         return TXT-file\n" +
                         "    no type     print results on the screen");
     }
 }
