@@ -25,7 +25,7 @@ public class DatabaseConfig {
         return ourInstance;
     }
 
-    public static void init(File envDir) {
+    public static void init() {
         ourInstance = new DatabaseConfig();
     }
 
