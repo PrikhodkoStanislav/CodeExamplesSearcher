@@ -14,6 +14,7 @@ import java.io.File;
  */
 public class DatabaseConfig {
     private static DatabaseConfig ourInstance;
+    private static File envDir = new File("./JEDB");
 
     private Environment envmnt;
     private EntityStore store;
@@ -25,10 +26,10 @@ public class DatabaseConfig {
     }
 
     public static void init(File envDir) {
-        ourInstance = new DatabaseConfig(envDir);
+        ourInstance = new DatabaseConfig();
     }
 
-    private DatabaseConfig(File envDir) {
+    private DatabaseConfig() {
         EnvironmentConfig envConfig = new EnvironmentConfig();
         StoreConfig storeConfig = new StoreConfig();
 
