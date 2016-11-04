@@ -81,6 +81,19 @@ public class CodeExampleDA {
         return result;
     }
 
+    public List<CodeExampleEntity> loadByLanguageAndFunction(String language, String function) {
+        List<CodeExampleEntity> result = new LinkedList<>();
+        ForwardCursor<CodeExampleEntity> entities = findEntitiesByLanguageAndFunction(
+                primaryIndex,
+                secondaryIndexByLanguage, language,
+                secondaryIndexByFunction, function);
+        for (CodeExampleEntity entity : entities) {
+            result.add(entity);
+        }
+        entities.close();
+        return result;
+    }
+
     /**
      * SELECT * FROM examples
      * WHERE language = 'key1' AND function = key2;
