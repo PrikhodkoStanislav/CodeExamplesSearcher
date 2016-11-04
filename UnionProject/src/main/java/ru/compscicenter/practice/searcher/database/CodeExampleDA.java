@@ -8,7 +8,6 @@ import com.sleepycat.persist.SecondaryIndex;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +18,8 @@ public class CodeExampleDA {
     private final static Logger logger = Logger.getLogger(CodeExampleDA.class);
 
     private PrimaryIndex<String, CodeExampleEntity> primaryIndex;
-    private SecondaryIndex<String, String, CodeExampleEntity> secondaryIndex;
+    private SecondaryIndex<String, String, CodeExampleEntity> secondaryIndexByLanguage;
+    private SecondaryIndex<String, String, CodeExampleEntity> secondaryIndexByFunction;
 
     private DatabaseConfig dbConfig;
 
@@ -30,8 +30,10 @@ public class CodeExampleDA {
 
         primaryIndex = dbConfig.getStore().getPrimaryIndex(
                 String.class, CodeExampleEntity.class);
-        secondaryIndex = dbConfig.getStore().getSecondaryIndex(
+        secondaryIndexByLanguage = dbConfig.getStore().getSecondaryIndex(
                 primaryIndex, String.class, "language");
+        secondaryIndexByFunction = dbConfig.getStore().getSecondaryIndex(
+                primaryIndex, String.class, "function");
     }
 
     public void save(CodeExampleEntity entity) {
@@ -44,7 +46,7 @@ public class CodeExampleDA {
             primaryIndex.put(tx, entity);
             logger.info("Add new data to database: CodeExampleEntity {" +
                     "language=" + entity.getLanguage() +
-                    "function=" + entity.getFunctionName() +
+                    "function=" + entity.getFunction() +
                     "source=" + entity.getSource());
             tx.commit();
         } catch (Exception e) {
@@ -59,9 +61,10 @@ public class CodeExampleDA {
     public CodeExampleEntity loadByExample(String example) {
         return primaryIndex.get(example);
     }
+
     public List<CodeExampleEntity> loadByLanguage(String language) {
         List<CodeExampleEntity> result = new LinkedList<>();
-        EntityCursor<CodeExampleEntity> cursor = secondaryIndex.subIndex(language).entities();;
+        EntityCursor<CodeExampleEntity> cursor = secondaryIndexByLanguage.subIndex(language).entities();;
         for (CodeExampleEntity entity : cursor) {
             result.add(entity);
         }
@@ -69,6 +72,15 @@ public class CodeExampleDA {
         return result;
     }
 
+    public List<CodeExampleEntity> loadByFunction(String function) {
+        List<CodeExampleEntity> result = new LinkedList<>();
+        EntityCursor<CodeExampleEntity> cursor = secondaryIndexByFunction.subIndex(function).entities();;
+        for (CodeExampleEntity entity : cursor) {
+            result.add(entity);
+        }
+        cursor.close();
+        return result;
+    }
 
     public void removeCodeExampleEntity(String example) {
         try {

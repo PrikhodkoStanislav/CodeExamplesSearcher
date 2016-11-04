@@ -14,7 +14,9 @@ import java.io.Serializable;
 public class CodeExampleEntity implements Serializable {
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private String language;
-    private String functionName;
+
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
+    private String function;
     private String source;
 
     // Primary key is the example
@@ -31,12 +33,12 @@ public class CodeExampleEntity implements Serializable {
         this.language = language;
     }
 
-    public String getFunctionName() {
-        return functionName;
+    public String getFunction() {
+        return function;
     }
 
-    public void setFunctionName(String functionName) {
-        this.functionName = functionName;
+    public void setFunction(String function) {
+        this.function = function;
     }
 
     public String getSource() {
