@@ -2,6 +2,8 @@ package ru.compscicenter.practice.searcher.database;
 
 import com.sleepycat.persist.model.Entity;
 import com.sleepycat.persist.model.PrimaryKey;
+import com.sleepycat.persist.model.Relationship;
+import com.sleepycat.persist.model.SecondaryKey;
 
 import java.io.Serializable;
 
@@ -10,6 +12,7 @@ import java.io.Serializable;
  */
 @Entity
 public class CodeExampleEntity implements Serializable {
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private String language;
     private String functionName;
     private String source;
