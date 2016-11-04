@@ -1,4 +1,4 @@
-package ru.compscicenter.practice.searcher.codeexample;
+package ru.compscicenter.practice.searcher;
 
 /**
  * Created by user on 14.10.2016!

@@ -9,7 +9,6 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
-import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

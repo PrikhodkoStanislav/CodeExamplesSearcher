@@ -21,7 +21,7 @@ public class DatabaseConfig {
 
     public static DatabaseConfig getInstance() {
         if (ourInstance == null)
-            throw new IllegalArgumentException("You need initialize database config previously!");
+            ourInstance = new DatabaseConfig();
         return ourInstance;
     }
 

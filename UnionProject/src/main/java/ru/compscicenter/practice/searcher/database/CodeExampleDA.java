@@ -6,7 +6,6 @@ import com.sleepycat.persist.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import javax.xml.soap.SAAJResult;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,13 +15,15 @@ import java.util.List;
 public class CodeExampleDA {
     private final static Logger logger = Logger.getLogger(CodeExampleDA.class);
 
+    private static CodeExampleDA instance;
+
     private PrimaryIndex<String, CodeExampleEntity> primaryIndex;
     private SecondaryIndex<String, String, CodeExampleEntity> secondaryIndexByLanguage;
     private SecondaryIndex<String, String, CodeExampleEntity> secondaryIndexByFunction;
 
     private DatabaseConfig dbConfig;
 
-    public CodeExampleDA() {
+    private CodeExampleDA() {
         logger.setLevel(Level.INFO);
 
         dbConfig = DatabaseConfig.getInstance();
@@ -33,6 +34,12 @@ public class CodeExampleDA {
                 primaryIndex, String.class, "language");
         secondaryIndexByFunction = dbConfig.getStore().getSecondaryIndex(
                 primaryIndex, String.class, "function");
+    }
+
+    public static CodeExampleDA getInstance() {
+        if (instance == null)
+            instance = new CodeExampleDA();
+        return instance;
     }
 
     public void save(CodeExampleEntity entity) {

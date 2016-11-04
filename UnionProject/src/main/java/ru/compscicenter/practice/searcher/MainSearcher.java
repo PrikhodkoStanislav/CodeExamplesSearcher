@@ -5,7 +5,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
-import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
@@ -23,6 +22,7 @@ public class MainSearcher {
     private final static Logger logger = Logger.getLogger(MainSearcher.class);
 
     private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
+
     private static String format = "";
 
     public static void main(String[] args) {

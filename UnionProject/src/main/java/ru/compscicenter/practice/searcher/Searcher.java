@@ -1,7 +1,5 @@
 package ru.compscicenter.practice.searcher;
 
-import ru.compscicenter.practice.searcher.codeexample.CodeExample;
-
 import java.util.List;
 
 /**

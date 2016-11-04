@@ -3,7 +3,6 @@ package ru.compscicenter.practice.searcher;
 import antlrclasses.CLexer;
 import org.antlr.v4.runtime.*;
 import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
-import ru.compscicenter.practice.searcher.codeexample.CodeExample;
 
 import java.io.IOException;
 import java.util.*;

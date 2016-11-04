@@ -2,9 +2,8 @@ package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import ru.compscicenter.practice.searcher.CodeExample;
 import ru.compscicenter.practice.searcher.Searcher;
-import ru.compscicenter.practice.searcher.codeexample.CodeExample;
-import ru.compscicenter.practice.searcher.codeexample.SiteCodeExample;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +44,11 @@ public class SiteSearcher implements Searcher {
         }
         if (count == processors.length) {
             List<CodeExample> noExample = new ArrayList<>();
-            noExample.add(
-                    new SiteCodeExample("C", "CPLUSPLUS.RU/CPPREFERENCE.COM", "No such method found!"));
+            CodeExample ce = new CodeExample();
+            ce.setLanguage("C");
+            ce.setSource("CPLUSPLUS.RU/CPPREFERENCE.COM");
+            ce.setCodeExample("No such method found!");
+            noExample.add(ce);
             return noExample;
         }
 
