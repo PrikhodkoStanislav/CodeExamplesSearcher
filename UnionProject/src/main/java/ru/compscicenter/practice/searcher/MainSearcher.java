@@ -49,11 +49,15 @@ public class MainSearcher {
                     cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
                 throw new ParseException("You must enter only one option!");
 
-            String functionName = cmd.getOptionValue("func");
-            String path = cmd.getOptionValue("path");
+            String functionName = args[1];
+            String path = "";
             if (args.length > 2) {
                 if (args[args.length - 1].matches("html|txt")) {
                     format = args[args.length - 1].toLowerCase();
+                    if (args[args.length - 2].startsWith("C:\\") || args[args.length - 2].startsWith("D:\\"))
+                        path = args[args.length - 2];
+                } else if (args[args.length - 1].startsWith("C:\\") || args[args.length - 1].startsWith("D:\\")) {
+                    path = args[args.length - 1];
                 }
                 check(format);
             } else if (args.length <= 1) {
@@ -68,6 +72,7 @@ public class MainSearcher {
                     commandLine.printHelp();
             } else {
                 if (hasSearchOptions(cmd)) {
+                    System.out.println("Start searching ...");
                     if (cmd.hasOption("online")) {
                         l1.addAll(searchers[0].search(functionName));
                     } else if (cmd.hasOption("offline")) {
@@ -77,6 +82,7 @@ public class MainSearcher {
                             l1.addAll(searcher.search(functionName));
                         }
                     }
+                    System.out.println("End searching ...");
                     processResults(l1);
                 } else {
                     throw new ParseException("Enter one of three search options: -a, -s or -w");
@@ -133,6 +139,7 @@ public class MainSearcher {
                     logger.error("Sorry, something wrong!", e);
                     e.printStackTrace();
                 }
+                System.out.println("Find data in folder 'result'");
             } else {
                 System.out.println(fileText);
             }

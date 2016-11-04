@@ -33,28 +33,11 @@ public class CommandLineSearcher {
                 .desc("Search code examples both on web sites and in a project")
                 .build();
 
-        Option function = Option.builder("f")
-                .longOpt("func")
-                .numberOfArgs(1)
-                .argName("func_name")
-                .required()
-                .desc("Function name, required")
-                .build();
-
-        Option path = Option.builder("p")
-                .longOpt("path")
-                .numberOfArgs(1)
-                .argName("path_name")
-                .desc("Path to project")
-                .build();
-
         options = new Options();
         options.addOption(online)
                 .addOption(offline)
                 .addOption(all)
-                .addOption(function)
-                .addOption(help)
-        .       addOption(path);
+                .addOption(help);
     }
 
     public static CommandLineSearcher getInstanceOf() {
@@ -70,7 +53,7 @@ public class CommandLineSearcher {
 
     public void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(150, "search -options [<result_format>]",
+        formatter.printHelp(150, "search -options <function> [<path>] [<result_format>]",
                 "Code example searcher", options,
                 "In order to execute searcher needs one of three options: -a, -s or -w\n" +
                         "\nResult format can be:\n" +

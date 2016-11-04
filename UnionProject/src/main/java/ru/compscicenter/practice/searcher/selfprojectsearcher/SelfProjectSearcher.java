@@ -128,7 +128,7 @@ public class SelfProjectSearcher implements Searcher {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Sorry, something wrong!", e);
         }
     }
 
