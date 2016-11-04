@@ -2,12 +2,11 @@ package ru.compscicenter.practice.searcher.database;
 
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Transaction;
-import com.sleepycat.persist.EntityCursor;
-import com.sleepycat.persist.PrimaryIndex;
-import com.sleepycat.persist.SecondaryIndex;
+import com.sleepycat.persist.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import javax.xml.soap.SAAJResult;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -80,6 +79,26 @@ public class CodeExampleDA {
         }
         cursor.close();
         return result;
+    }
+
+    /**
+     * SELECT * FROM examples
+     * WHERE language = 'key1' AND function = key2;
+     */
+    public ForwardCursor<CodeExampleEntity> findEntitiesByLanguageAndFunction (
+                        PrimaryIndex<String, CodeExampleEntity> pk,
+                        SecondaryIndex<String, String, CodeExampleEntity> sk1,
+                        String key1,
+                        SecondaryIndex<String, String, CodeExampleEntity> sk2,
+                        String key2)
+            throws DatabaseException {
+        assert (pk != null);
+        assert (sk1 != null);
+        assert (sk2 != null);
+        EntityJoin<String, CodeExampleEntity> join = new EntityJoin<>(pk);
+        join.addCondition(sk1, key1);
+        join.addCondition(sk2, key2);
+        return join.entities();
     }
 
     public void removeCodeExampleEntity(String example) {
