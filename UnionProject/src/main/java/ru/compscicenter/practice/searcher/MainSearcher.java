@@ -87,15 +87,15 @@ public class MainSearcher {
                     }
 
                     //find results in DB
-                    /*List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
-                    if (dbExamples == null) {
+                    List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
+                    if (dbExamples == null || dbExamples.size() == 0) {
                         for (CodeExample codeExample : l1) {
                             DATABASE.save(codeExample);
                         }
                     } else {
                         DATABASE.updateDB(l1);
+                        dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
                     }
-                    dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);*/
 
                     System.out.println("End searching ...");
                     processResults(l1);

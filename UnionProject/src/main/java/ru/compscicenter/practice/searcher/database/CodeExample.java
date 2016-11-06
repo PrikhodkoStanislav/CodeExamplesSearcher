@@ -13,13 +13,13 @@ import java.io.Serializable;
 @Entity
 public class CodeExample implements Serializable {
     @PrimaryKey
-    protected String codeExample;
+    private String codeExample;
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
-    protected String language;
+    private String language;
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
-    protected String function;
+    private String function;
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
-    protected String source;
+    private String source;
 
     public String getLanguage() {
         return language;
