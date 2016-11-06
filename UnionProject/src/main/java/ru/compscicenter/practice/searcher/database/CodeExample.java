@@ -13,6 +13,8 @@ import java.io.Serializable;
 @Entity
 public class CodeExample implements Serializable {
     @PrimaryKey
+    private long id;
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private String codeExample;
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private String language;
@@ -20,6 +22,10 @@ public class CodeExample implements Serializable {
     private String function;
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private String source;
+
+    public long getId() {
+        return id;
+    }
 
     public String getLanguage() {
         return language;
@@ -51,5 +57,9 @@ public class CodeExample implements Serializable {
 
     public void setCodeExample(String codeExample) {
         this.codeExample = codeExample;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
