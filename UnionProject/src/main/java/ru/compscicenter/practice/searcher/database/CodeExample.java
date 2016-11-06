@@ -8,22 +8,18 @@ import com.sleepycat.persist.model.SecondaryKey;
 import java.io.Serializable;
 
 /**
- * Created by user on 28.10.2016!
+ * Created by user on 14.10.2016!
  */
 @Entity
-public class CodeExampleEntity implements Serializable {
-    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
-    private String language;
-
-    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
-    private String function;
-    private String source;
-
-    // Primary key is the example
-    // This assumes that the example is
-    // unique in the database.
+public class CodeExample implements Serializable {
     @PrimaryKey
-    private String example;
+    protected String codeExample;
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
+    protected String language;
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
+    protected String function;
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE)
+    protected String source;
 
     public String getLanguage() {
         return language;
@@ -49,11 +45,11 @@ public class CodeExampleEntity implements Serializable {
         this.source = source;
     }
 
-    public String getExample() {
-        return example;
+    public String getCodeExample() {
+        return codeExample;
     }
 
-    public void setExample(String example) {
-        this.example = example;
+    public void setCodeExample(String codeExample) {
+        this.codeExample = codeExample;
     }
 }

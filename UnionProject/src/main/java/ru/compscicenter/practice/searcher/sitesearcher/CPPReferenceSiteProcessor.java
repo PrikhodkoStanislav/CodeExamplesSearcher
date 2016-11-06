@@ -2,9 +2,7 @@ package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import ru.compscicenter.practice.searcher.CodeExample;
-import ru.compscicenter.practice.searcher.database.CodeExampleDA;
-import ru.compscicenter.practice.searcher.database.CodeExampleEntity;
+import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,6 @@ import java.util.regex.Pattern;
  */
 public class CPPReferenceSiteProcessor extends SiteProcessor {
     private final static Logger logger = Logger.getLogger(CPPReferenceSiteProcessor.class);
-//    private final static CodeExampleDA DB = CodeExampleDA.getInstance();
 
     /**
      * URL to http://en.cppreference.com/w/
@@ -70,13 +67,6 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     ", function=" + ce.getFunction() + " " +
                     ", source=" + ce.getSource());
             examples.add(ce);
-
-            /*CodeExampleEntity entity = new CodeExampleEntity();
-            entity.setLanguage(language);
-            entity.setSource(url);
-            entity.setFunction(getQuery());
-            entity.setExample(codeExample);
-            DB.save(entity);*/
         }
         return examples;
     }

@@ -5,6 +5,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
+import ru.compscicenter.practice.searcher.database.CodeExample;
+import ru.compscicenter.practice.searcher.database.CodeExampleDA;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
@@ -20,6 +22,7 @@ import java.util.List;
  */
 public class MainSearcher {
     private final static Logger logger = Logger.getLogger(MainSearcher.class);
+    private final static CodeExampleDA DATABASE = CodeExampleDA.getInstance();
 
     private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
 
@@ -82,6 +85,18 @@ public class MainSearcher {
                             l1.addAll(searcher.search(functionName));
                         }
                     }
+
+                    //find results in DB
+                    /*List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
+                    if (dbExamples == null) {
+                        for (CodeExample codeExample : l1) {
+                            DATABASE.save(codeExample);
+                        }
+                    } else {
+                        DATABASE.updateDB(l1);
+                    }
+                    dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);*/
+
                     System.out.println("End searching ...");
                     processResults(l1);
                 } else {

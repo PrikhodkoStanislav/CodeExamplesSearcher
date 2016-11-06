@@ -2,7 +2,7 @@ package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import ru.compscicenter.practice.searcher.CodeExample;
+import ru.compscicenter.practice.searcher.database.CodeExample;
 import ru.compscicenter.practice.searcher.Searcher;
 
 import java.util.ArrayList;

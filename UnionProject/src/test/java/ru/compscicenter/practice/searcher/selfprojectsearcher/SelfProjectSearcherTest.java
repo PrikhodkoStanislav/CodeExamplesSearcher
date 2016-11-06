@@ -1,7 +1,7 @@
 package ru.compscicenter.practice.searcher.selfprojectsearcher;
 
 import org.junit.Test;
-import ru.compscicenter.practice.searcher.CodeExample;
+import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.util.ArrayList;
 

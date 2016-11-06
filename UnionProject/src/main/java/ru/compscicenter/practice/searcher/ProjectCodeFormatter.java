@@ -9,6 +9,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
+import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -114,7 +115,6 @@ public class ProjectCodeFormatter {
             code = code.replaceAll("&gt;", ">");
             example.setCodeExample(code);
             sb.append(example.getSource()).append("\n").append(example.getCodeExample());
-            sb.append(example.toString("txt"));
             sb.append("==============================================================================\n");
         }
         return sb.toString();

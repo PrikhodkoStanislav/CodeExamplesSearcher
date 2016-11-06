@@ -8,13 +8,15 @@ import com.sleepycat.persist.StoreConfig;
 import com.sleepycat.persist.evolve.IncompatibleClassException;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by user on 04.11.2016!
  */
 public class DatabaseConfig {
     private static DatabaseConfig ourInstance;
-    private static File envDir = new File("./JEDB");
+    private final static String configPath = "." + File.separator + "JEDB";
+    private static File envDir = new File(configPath);
 
     private Environment envmnt;
     private EntityStore store;
@@ -37,6 +39,16 @@ public class DatabaseConfig {
         envConfig.setAllowCreate(true);
         storeConfig.setAllowCreate(true);
         storeConfig.setTransactional(true);
+
+        if (!envDir.exists()) {
+            envDir.mkdirs();
+            try {
+                envDir.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         envmnt = new Environment(envDir, envConfig);
         try {
             store = new EntityStore(envmnt, "codeexamples", storeConfig);
