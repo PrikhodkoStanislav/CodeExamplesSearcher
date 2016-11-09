@@ -34,7 +34,7 @@ public class MainSearcher {
         List<CodeExample> l1 = new ArrayList<>();
         l1.addAll(searchers[0].search(funcName));
         l1.addAll(searchers[1].search(funcName));
-        
+
     }
 
     public static void main(String[] args) {
