@@ -28,11 +28,17 @@ public class MainSearcher {
 
     private static String format = "";
 
+    public static void searchExamples(String funcName) {
+        String path = "./";
+        Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
+        List<CodeExample> l1 = new ArrayList<>();
+        l1.addAll(searchers[0].search(funcName));
+        l1.addAll(searchers[1].search(funcName));
+        
+    }
+
     public static void main(String[] args) {
         logger.setLevel(Level.ERROR);
-
-        Searcher[] searchers;
-        List<CodeExample> l1;
 
         if (args.length <= 0) {
             System.out.println("There are no command for program!");
@@ -67,8 +73,8 @@ public class MainSearcher {
                 throw new ParseException("Option has required arguments!");
             }
 
-            searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
-            l1 = new ArrayList<>();
+            Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
+            List<CodeExample> l1 = new ArrayList<>();
 
             if (cmd.hasOption("help")) {
                 if (cmd.getOptions().length <= 1)
