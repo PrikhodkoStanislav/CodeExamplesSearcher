@@ -50,6 +50,8 @@ public class MainSearcher {
     public static void main(String[] args) {
         logger.setLevel(Level.ERROR);
 
+        boolean server = false;
+
         if (args.length <= 0) {
             System.out.println("There are no command for program!");
             System.exit(0);
@@ -100,6 +102,10 @@ public class MainSearcher {
                         for (Searcher searcher : searchers) {
                             l1.addAll(searcher.search(functionName));
                         }
+                    }
+
+                    if (cmd.hasOption("server")) {
+                        server = true;
                     }
 
                     //find results in DB

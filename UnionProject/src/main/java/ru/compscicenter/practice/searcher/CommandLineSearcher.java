@@ -33,11 +33,17 @@ public class CommandLineSearcher {
                 .desc("Search code examples both on web sites and in a project")
                 .build();
 
+        Option server = Option.builder("j")
+                .longOpt("server")
+                .desc("Load Jetty server")
+                .build();
+
         options = new Options();
         options.addOption(online)
                 .addOption(offline)
                 .addOption(all)
-                .addOption(help);
+                .addOption(help)
+                .addOption(server);
     }
 
     public static CommandLineSearcher getInstanceOf() {
