@@ -28,13 +28,23 @@ public class MainSearcher {
 
     private static String format = "";
 
-    public static void searchExamples(String funcName) {
+    public static String searchExamples(String funcName) throws IOException, ParseException {
         String path = "./";
+        format = "html";
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
         List<CodeExample> l1 = new ArrayList<>();
         l1.addAll(searchers[0].search(funcName));
         l1.addAll(searchers[1].search(funcName));
-
+//        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
+//        if (dbExamples == null || dbExamples.size() == 0) {
+//            for (CodeExample codeExample : l1) {
+//                DATABASE.save(codeExample);
+//            }
+//        } else {
+//            DATABASE.updateDB(l1);
+//            dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
+//        }
+        return htmlWithResult(l1);
     }
 
     public static void main(String[] args) {
@@ -128,12 +138,26 @@ public class MainSearcher {
             throw new ParseException("This file extension is not supported!");
     }
 
+    private static String htmlWithResult(List<CodeExample> l1) throws ParseException, IOException {
+        String result = "";
+        if (l1 != null) {
+            ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
+            projectCodeFormatter.beautifyCode(l1);
+
+            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
+            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1, typeOfCompareResult);
+            l1 = duplicateRemover.removeDuplicates();
+            result = projectCodeFormatter.createResultFile(l1, format);
+        }
+        return result;
+    }
+
     private static void processResults(List<CodeExample> l1) throws ParseException, IOException {
         if (l1 != null) {
             ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
             projectCodeFormatter.beautifyCode(l1);
 
-            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.EqualsTokens;
+            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1, typeOfCompareResult);
             l1 = duplicateRemover.removeDuplicates();
 
