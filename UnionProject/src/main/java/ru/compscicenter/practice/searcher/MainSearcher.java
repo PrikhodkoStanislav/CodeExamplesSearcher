@@ -144,7 +144,7 @@ public class MainSearcher {
                     }
 
                     System.out.println("End searching ...");
-                    processResults(l1);
+                    processResults(dbExamples);
                 } else {
                     throw new ParseException("Enter one of three search options: -a, -s or -w");
                 }
