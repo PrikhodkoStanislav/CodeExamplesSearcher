@@ -28,6 +28,13 @@ public class ProjectCodeFormatter {
         codeFormatter = ToolFactory.createDefaultCodeFormatter(null);
     }
 
+    /**
+     * Create result HTML or TXT file
+     * @param functionName function name
+     * @param examples list with search results
+     * @param format file extension
+     * @return string for the result file
+     * */
     public String createResultFile(String functionName, List<CodeExample> examples, String format) {
         if ("html".equals(format))
             return createHtml(functionName, examples);
@@ -35,6 +42,12 @@ public class ProjectCodeFormatter {
             return createTxt(functionName, examples);
     }
 
+    /**
+     * Create string for HTML file
+     * @param functionName function name
+     * @param examples list with search results
+     * @return html-string
+     * */
     public String createHtml(String functionName, List<CodeExample> examples) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
@@ -100,6 +113,12 @@ public class ProjectCodeFormatter {
         return sb.toString();
     }
 
+    /**
+     * Create string for TXT file
+     * @param functionName function name
+     * @param examples list with search results
+     * @return txt-string
+     * */
     public String createTxt(String functionName, List<CodeExample> examples) {
         StringBuilder sb = new StringBuilder();
         sb.append("==============================================================================\n");
@@ -120,13 +139,22 @@ public class ProjectCodeFormatter {
         return sb.toString();
     }
 
-    public void beautifyCode(List<CodeExample> l1) {
-        for (CodeExample codeExample : l1) {
+    /**
+     * Format code examples
+     * @param examples list with search results
+     * */
+    public void beautifyCode(List<CodeExample> examples) {
+        for (CodeExample codeExample : examples) {
             codeExample.setCodeExample(lineSeparatorUnify(codeExample.getCodeExample()));
             codeExample.setCodeExample(toPrettyCode(codeExample.getCodeExample()));
         }
     }
 
+    /**
+     * Unifies line separator
+     * @param code code for modifications
+     * @return string with normalized line separator
+     * */
     public String lineSeparatorUnify(String code) {
         String result = code;
         result = result.replaceAll("\\\\r\\\\n", "\n");
@@ -134,6 +162,11 @@ public class ProjectCodeFormatter {
         return result;
     }
 
+    /**
+     * Formats code to C-style
+     * @param code code for formatting
+     * @return formatted string
+     * */
     public String toPrettyCode(String code) {
         logger.setLevel(Level.ERROR);
 
