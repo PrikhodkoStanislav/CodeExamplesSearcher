@@ -40,6 +40,7 @@ public class MainSearcher {
     public static String searchExamples(String funcName) throws IOException, ParseException {
         String path = "./";
         format = "html";
+        functionName = funcName;
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
         List<CodeExample> l1 = new ArrayList<>();
         l1.addAll(searchers[0].search(funcName));
@@ -69,6 +70,7 @@ public class MainSearcher {
                 System.exit(0);
             } else if (args[0].equals("--server") || args[0].equals("-j")) {
                 CreateServer.startServer();
+                server = true;
             }
         }
 
