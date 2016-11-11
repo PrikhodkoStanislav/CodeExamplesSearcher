@@ -28,14 +28,14 @@ public class ProjectCodeFormatter {
         codeFormatter = ToolFactory.createDefaultCodeFormatter(null);
     }
 
-    public String createResultFile(List<CodeExample> examples, String format) {
+    public String createResultFile(String functionName, List<CodeExample> examples, String format) {
         if ("html".equals(format))
-            return createHtml(examples);
+            return createHtml(functionName, examples);
         else
-            return createTxt(examples);
+            return createTxt(functionName, examples);
     }
 
-    public String createHtml(List<CodeExample> examples) {
+    public String createHtml(String functionName, List<CodeExample> examples) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
         sb.append("<head>");
@@ -78,7 +78,7 @@ public class ProjectCodeFormatter {
         sb.append("</head>");
         sb.append("<h3>Code examples for function ")
                 .append("<span>")
-                .append("\"").append(examples.get(0).getFunction()).append("\"")
+                .append("\"").append(functionName).append("\"")
                 .append("</span>")
                 .append("</h3>");
         sb.append("<p><b>Last report date:</b> ").append(reportDate).append("</p>");
@@ -100,10 +100,10 @@ public class ProjectCodeFormatter {
         return sb.toString();
     }
 
-    public String createTxt(List<CodeExample> examples) {
+    public String createTxt(String functionName, List<CodeExample> examples) {
         StringBuilder sb = new StringBuilder();
         sb.append("==============================================================================\n");
-        sb.append("||                       Code examples for function \"").append(examples.get(0).getFunction())
+        sb.append("||                       Code examples for function \"").append(functionName)
                 .append("\"                     ||\n");
         sb.append("==============================================================================\n");
         sb.append("Last report date: ").append(reportDate).append("\n");

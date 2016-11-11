@@ -29,6 +29,7 @@ public class MainSearcher {
 
     private static String format = "";
     private static boolean server = false;
+    private static String functionName = "";
 
     /**
      * Search code examples for Sublime server
@@ -77,7 +78,6 @@ public class MainSearcher {
                     cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
                 throw new ParseException("You must enter only one option!");
 
-            String functionName = "";
             String path = "";
             if (args.length > 2) {
                 if (args[args.length - 1].matches("html|txt")) {
@@ -140,8 +140,8 @@ public class MainSearcher {
                         }
                     } else {
                         DATABASE.updateDB(l1);
-                        dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
                     }
+                    dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
 
                     System.out.println("End searching ...");
                     processResults(dbExamples);
@@ -192,7 +192,7 @@ public class MainSearcher {
             AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
             examples = duplicateRemover.removeDuplicates();
-            result = projectCodeFormatter.createResultFile(examples, format);
+            result = projectCodeFormatter.createResultFile(functionName, examples, format);
         }
         return result;
     }
@@ -210,7 +210,7 @@ public class MainSearcher {
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
             examples = duplicateRemover.removeDuplicates();
 
-            String fileText = projectCodeFormatter.createResultFile(examples, format);
+            String fileText = projectCodeFormatter.createResultFile(functionName, examples, format);
 
             String path = "result" + File.separator + "examples";
             if (!format.isEmpty()) {

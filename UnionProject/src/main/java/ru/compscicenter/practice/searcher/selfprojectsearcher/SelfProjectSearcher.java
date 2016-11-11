@@ -146,7 +146,7 @@ public class SelfProjectSearcher implements Searcher {
                 searchInDirectory(functionName, f.getPath());
             }
         } else {
-            if (!pathToFile.endsWith("html") && !pathToFile.endsWith("jdb")) {
+            if (!pathToFile.endsWith("html") && !pathToFile.endsWith("jdb") && !pathToFile.endsWith("txt")) {
                 searchInFile(functionName, pathToFile);
             }
         }
