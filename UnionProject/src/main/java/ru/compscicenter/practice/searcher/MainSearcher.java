@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Станислав on 05.10.2016!
+ * Main application class of examples adviser
+ * @author Станислав on 05.10.2016!
  */
 public class MainSearcher {
     private final static Logger logger = Logger.getLogger(MainSearcher.class);
@@ -27,7 +28,13 @@ public class MainSearcher {
     private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
 
     private static String format = "";
+    private static boolean server = false;
 
+    /**
+     * Search code examples for Sublime server
+     * @param funcName name of function
+     * @return html-string with code examples
+     * */
     public static String searchExamples(String funcName) throws IOException, ParseException {
         String path = "./";
         format = "html";
@@ -50,8 +57,7 @@ public class MainSearcher {
     public static void main(String[] args) {
         logger.setLevel(Level.ERROR);
 
-        boolean server = false;
-
+        // check that arguments exists and print help
         if (args.length <= 0) {
             System.out.println("There are no command for program!");
             System.exit(0);
@@ -61,6 +67,7 @@ public class MainSearcher {
 
         }
 
+        // analyse command line arguments and assign values to program fields
         try {
             CommandLine cmd = commandLine.parseArguments(args);
 
@@ -70,24 +77,41 @@ public class MainSearcher {
                     cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
                 throw new ParseException("You must enter only one option!");
 
-            String functionName = args[args.length - 3];
+            String functionName = "";
             String path = "";
             if (args.length > 2) {
                 if (args[args.length - 1].matches("html|txt")) {
                     format = args[args.length - 1].toLowerCase();
-                    if (args[args.length - 2].startsWith("C:\\") || args[args.length - 2].startsWith("D:\\"))
+                    if (args[args.length - 2].startsWith("./") ||
+                            args[args.length - 2].startsWith("/") ||
+                            args[args.length - 2].startsWith("C:\\") ||
+                            args[args.length - 2].startsWith("D:\\")) {
+                        functionName = args[args.length - 3];
                         path = args[args.length - 2];
-                } else if (args[args.length - 1].startsWith("C:\\") || args[args.length - 1].startsWith("D:\\")) {
+                    } else {
+                        functionName = args[args.length - 2];
+                    }
+                } else if (args[args.length - 1].startsWith("./") ||
+                        args[args.length - 1].startsWith("/") ||
+                        args[args.length - 1].startsWith("C:\\") ||
+                        args[args.length - 1].startsWith("D:\\")) {
+                    functionName = args[args.length - 2];
                     path = args[args.length - 1];
+                } else {
+                    functionName = args[args.length - 1];
                 }
                 check(format);
+            } else if (args.length == 2) {
+                functionName = args[args.length - 1];
             } else if (args.length <= 1) {
                 throw new ParseException("Option has required arguments!");
             }
 
+            // prepare searchers and list for results
             Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
             List<CodeExample> l1 = new ArrayList<>();
 
+            // check options and load searchers for anu option
             if (cmd.hasOption("help")) {
                 if (cmd.getOptions().length <= 1)
                     commandLine.printHelp();
@@ -108,7 +132,7 @@ public class MainSearcher {
                         server = true;
                     }
 
-                    //find results in DB
+                    // find results in DB
                     List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
                     if (dbExamples == null || dbExamples.size() == 0) {
                         for (CodeExample codeExample : l1) {
@@ -133,41 +157,60 @@ public class MainSearcher {
         }
     }
 
+    /**
+     * Checks one of the search options
+     * @param cmd command line with user options
+     * @return true if user typed one of search options, otherwise false
+     * */
     private static boolean hasSearchOptions(CommandLine cmd) {
         return cmd.hasOption("online") ||
                 cmd.hasOption("offline") ||
                 cmd.hasOption("all");
     }
 
+    /**
+     * Checks extension types
+     * if user writes correct file type this method won't return anything, otherwise will throw ParseException
+     * @param format extension type
+     * */
     private static void check(String format) throws ParseException {
         if (!format.matches("(html|txt|)"))
             throw new ParseException("This file extension is not supported!");
     }
 
-    private static String htmlWithResult(List<CodeExample> l1) throws ParseException, IOException {
+    /**
+     * Creates html-string with code examples for Sublime server
+     * @param examples list with search results
+     * @return html-string
+     * */
+    private static String htmlWithResult(List<CodeExample> examples) throws ParseException, IOException {
         String result = "";
-        if (l1 != null) {
+        if (examples != null) {
             ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
-            projectCodeFormatter.beautifyCode(l1);
+            projectCodeFormatter.beautifyCode(examples);
 
             AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
-            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1, typeOfCompareResult);
-            l1 = duplicateRemover.removeDuplicates();
-            result = projectCodeFormatter.createResultFile(l1, format);
+            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
+            examples = duplicateRemover.removeDuplicates();
+            result = projectCodeFormatter.createResultFile(examples, format);
         }
         return result;
     }
 
-    private static void processResults(List<CodeExample> l1) throws ParseException, IOException {
-        if (l1 != null) {
+    /**
+     * Process code examples (format code, remove duplicates, print results to the console or write them to txt/html)
+     * @param examples list with search results
+     * */
+    private static void processResults(List<CodeExample> examples) throws ParseException, IOException {
+        if (examples != null) {
             ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
-            projectCodeFormatter.beautifyCode(l1);
+            projectCodeFormatter.beautifyCode(examples);
 
             AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
-            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(l1, typeOfCompareResult);
-            l1 = duplicateRemover.removeDuplicates();
+            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
+            examples = duplicateRemover.removeDuplicates();
 
-            String fileText = projectCodeFormatter.createResultFile(l1, format);
+            String fileText = projectCodeFormatter.createResultFile(examples, format);
 
             String path = "result" + File.separator + "examples";
             if (!format.isEmpty()) {

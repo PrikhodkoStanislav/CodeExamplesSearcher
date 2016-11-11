@@ -104,6 +104,12 @@ public class CodeExampleDA {
         return result;
     }
 
+    /**
+     * Retrieval data from database by two keys
+     * @param language program language
+     * @param function function name
+     * @return list with results
+     */
     public List<CodeExample> loadByLanguageAndFunction(String language, String function) {
         List<CodeExample> result = new LinkedList<>();
         ForwardCursor<CodeExample> entities = findEntitiesByLanguageAndFunction(
@@ -137,6 +143,13 @@ public class CodeExampleDA {
         return join.entities();
     }
 
+    /**
+     * Retrieval data from database by three keys
+     * @param language program language
+     * @param function function name
+     * @param source url or absolute path to project file
+     * @return list with results
+     */
     public List<CodeExample> loadByLanguageFunctionAndSource(String language, String function, String source) {
         List<CodeExample> result = new LinkedList<>();
         ForwardCursor<CodeExample> entities = findEntitiesByLanguageFunctionAndSource(
@@ -152,8 +165,7 @@ public class CodeExampleDA {
     }
 
     /**
-     * SELECT * FROM examples
-     * WHERE language = 'key1' AND function = 'key2' AND source = 'key3';
+     * Retrieval data from database by three keys
      */
     private ForwardCursor<CodeExample> findEntitiesByLanguageFunctionAndSource (
             PrimaryIndex<Long, CodeExample> pk,
@@ -191,7 +203,7 @@ public class CodeExampleDA {
                     codeExample.getFunction(),
                     codeExample.getSource());
 
-            if (ce != null) {
+            if (ce != null && ce.size() != 0) {
                 CodeExample example = ce.get(0);
                 if (example == null) {
                     save(codeExample);
@@ -200,6 +212,8 @@ public class CodeExampleDA {
                     example.setCodeExample(codeExample.getCodeExample());
                     primaryIndex.put(example);
                 }
+            } else {
+                save(codeExample);
             }
         }
     }
