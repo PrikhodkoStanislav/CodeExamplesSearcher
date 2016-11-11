@@ -8,6 +8,7 @@ import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 import ru.compscicenter.practice.searcher.database.CodeExampleDA;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
+import ru.compscicenter.practice.searcher.server.CreateServer;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
 import java.io.BufferedWriter;
@@ -62,10 +63,13 @@ public class MainSearcher {
         if (args.length <= 0) {
             System.out.println("There are no command for program!");
             System.exit(0);
-        } else if (args.length == 1 && args[0].matches("--?help")) {
-            commandLine.printHelp();
-            System.exit(0);
-
+        } else if (args.length == 1){
+            if (args[0].matches("--?help")) {
+                commandLine.printHelp();
+                System.exit(0);
+            } else if (args[0].equals("--server") || args[0].equals("-j")) {
+                CreateServer.startServer();
+            }
         }
 
         // analyse command line arguments and assign values to program fields
