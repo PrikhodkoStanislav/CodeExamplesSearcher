@@ -9,6 +9,9 @@ public class CommandLineSearcher {
     private static CommandLineSearcher instanceOf;
     private final Options options;
 
+    /**
+     * Fill command line with option
+     * */
     private CommandLineSearcher() {
         Option help = Option.builder("help")
                 .longOpt("help")
@@ -57,6 +60,9 @@ public class CommandLineSearcher {
         return parser.parse(options, args);
     }
 
+    /**
+     * Print help to the console
+     * */
     public void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp(150, "search -options <function> [<path>] [<result_format>]",
