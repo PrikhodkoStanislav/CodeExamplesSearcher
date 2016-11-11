@@ -70,7 +70,7 @@ public class MainSearcher {
                     cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
                 throw new ParseException("You must enter only one option!");
 
-            String functionName = args[1];
+            String functionName = args[args.length - 3];
             String path = "";
             if (args.length > 2) {
                 if (args[args.length - 1].matches("html|txt")) {
