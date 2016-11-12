@@ -32,6 +32,9 @@ public class MainSearcher {
     private static String functionName = "";
     private static String path = "";
 
+    private static boolean searchOnSites = true;
+    private static boolean searchInProject = true;
+
     /**
      * Search code examples for Sublime server
      * @param funcName name of function
@@ -68,14 +71,6 @@ public class MainSearcher {
             } else if (args.length == 1){
                 parseSingleArgument(args[0]);
             } else {
-                CommandLine cmd = commandLine.parseArguments(args);
-                if (cmd.hasOption("online") && cmd.hasOption("offline") ||
-                        cmd.hasOption("all") && cmd.hasOption("online") ||
-                        cmd.hasOption("all") && cmd.hasOption("offline") ||
-                        cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline")) {
-                    throw new ParseException("You must enter only one option!");
-                }
-
                 //parse cmd arguments
                 parseCmdArguments(args);
 
@@ -83,36 +78,24 @@ public class MainSearcher {
                 Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
                 List<CodeExample> results = new ArrayList<>();
 
-                // check options and load searchers for any option
-                if (hasSearchOptions(cmd)) {
-                    System.out.println("Start searching ...");
-                    //todo search data in DB: if data was not found that find data on sites
-                    if (cmd.hasOption("online")) {
-                        results.addAll(searchers[0].search(functionName));
-                    } else if (cmd.hasOption("offline")) {
-                        results.addAll(searchers[1].search(functionName));
-                    } else if (cmd.hasOption("all")) {
-                        for (Searcher searcher : searchers) {
-                            results.addAll(searcher.search(functionName));
-                        }
-                    }
-
-                    // find results in DB
+                System.out.println("Start searching ...");
+                if (searchOnSites) {
                     List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
                     if (dbExamples == null || dbExamples.size() == 0) {
-                        for (CodeExample codeExample : results) {
-                            DATABASE.save(codeExample);
-                        }
+                        results.addAll(searchers[0].search(functionName));
+                        results.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
+                                codeExample.getSource().contains("cppreference")).forEach(DATABASE::save);
                     } else {
                         updateDB(results);
+                        results = dbExamples;
                     }
-                    dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
-
-                    System.out.println("End searching ...");
-                    processResults(dbExamples);
-                } else {
-                    throw new ParseException("Enter one of three search options: -a, -s or -w");
                 }
+                if (searchInProject) {
+                    results.addAll(searchers[1].search(functionName));
+                }
+
+                System.out.println("End searching ...");
+                processResults(results);
             }
         } catch (ParseException e) {
             System.out.println(e.getMessage());
@@ -129,6 +112,25 @@ public class MainSearcher {
     private static void parseCmdArguments(String[] args) throws ParseException {
         if (!args[0].startsWith("-")) {
             throw new ParseException("First parameter must be an option!");
+        }
+
+        CommandLine cmd = commandLine.parseArguments(args);
+
+        if (cmd.hasOption("online") && cmd.hasOption("offline") ||
+                cmd.hasOption("all") && cmd.hasOption("online") ||
+                cmd.hasOption("all") && cmd.hasOption("offline") ||
+                cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline")) {
+            throw new ParseException("You must enter only one option!");
+        }
+
+        if (hasSearchOptions(cmd)) {
+            if (cmd.hasOption("online")) {
+                searchInProject = false;
+            } else if (cmd.hasOption("offline")) {
+                searchOnSites = false;
+            }
+        } else {
+            throw new ParseException("Enter one of three search options: -a, -s or -w");
         }
 
         if (args.length > 2) {
@@ -284,8 +286,8 @@ public class MainSearcher {
                 CodeExample example = ce.get(0);
                 if (example == null) {
                     DATABASE.save(codeExample);
-                } else if (codeExample.getCodeExample().split(" ").length <
-                        example.getCodeExample().split(" ").length) {
+                } else if (codeExample.getModificationDate() <
+                        example.getModificationDate()) {
                     example.setCodeExample(codeExample.getCodeExample());
                     DATABASE.save(example);
                 }
