@@ -48,10 +48,6 @@ public class CodeExampleDA {
         return instance;
     }
 
-    public PrimaryIndex<Long, CodeExample> getPrimaryIndex() {
-        return primaryIndex;
-    }
-
     public void save(CodeExample entity) {
         Transaction tx = dbConfig.startTransaction();
         try {

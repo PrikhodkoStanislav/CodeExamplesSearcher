@@ -124,6 +124,7 @@ public class MainSearcher {
             } else {
                 if (hasSearchOptions(cmd)) {
                     System.out.println("Start searching ...");
+                    //todo search data in DB: if data was not found that find data on sites
                     if (cmd.hasOption("online")) {
                         results.addAll(searchers[0].search(functionName));
                     } else if (cmd.hasOption("offline")) {
@@ -266,7 +267,7 @@ public class MainSearcher {
                 } else if (codeExample.getCodeExample().split(" ").length <
                         example.getCodeExample().split(" ").length) {
                     example.setCodeExample(codeExample.getCodeExample());
-                    DATABASE.getPrimaryIndex().put(example);
+                    DATABASE.save(example);
                 }
             } else {
                 DATABASE.save(codeExample);
