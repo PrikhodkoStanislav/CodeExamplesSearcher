@@ -36,7 +36,7 @@ public class CommandLineSearcher {
                 .desc("Search code examples both on web sites and in a project")
                 .build();
 
-        Option server = Option.builder("j")
+        Option server = Option.builder("server")
                 .longOpt("server")
                 .desc("Load Jetty server")
                 .build();

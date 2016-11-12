@@ -29,7 +29,6 @@ public class MainSearcher {
     private static CommandLineSearcher commandLine = CommandLineSearcher.getInstanceOf();
 
     private static String format = "";
-    private static boolean server = false;
     private static String functionName = "";
 
     /**
@@ -125,7 +124,6 @@ public class MainSearcher {
                     }
 
                     if (cmd.hasOption("server")) {
-                        server = true;
                     }
 
                     // find results in DB
@@ -167,7 +165,6 @@ public class MainSearcher {
             System.exit(0);
         } else if (arg.equals("--server") || arg.equals("-j")) {
             CreateServer.startServer();
-            server = true;
         }
     }
 
