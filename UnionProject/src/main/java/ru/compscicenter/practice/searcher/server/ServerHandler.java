@@ -33,6 +33,8 @@ public class ServerHandler extends AbstractHandler {
             }
         }
         else if (uri.equals("/get_example")) {
+            int length = result.length();
+            response.setContentLength(length);
             response.getWriter().println(result);
         }
     }
