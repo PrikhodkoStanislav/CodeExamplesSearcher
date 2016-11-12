@@ -149,10 +149,19 @@ public class SelfProjectSearcher implements Searcher {
                 searchInDirectory(functionName, f.getPath());
             }
         } else {
-            if (!pathToFile.endsWith("html") && !pathToFile.endsWith("jdb") && !pathToFile.endsWith("txt")) {
+            if (isSourceFileForLanguage("C", pathToFile)) {
                 searchInFile(functionName, pathToFile);
             }
         }
+    }
+
+    private boolean isSourceFileForLanguage(String language, String pathToFile) {
+        if (language.matches("C|c"))
+            return pathToFile.endsWith("c");
+        else if (language.matches("C\\+\\+|c\\+\\+"))
+            return pathToFile.endsWith("cpp");
+        else
+            return language.matches("java|JAVA|Java") && pathToFile.endsWith("java");
     }
 
     public List<CodeExample> search(String functionName) {
