@@ -22,6 +22,7 @@ public class CodeExample implements Serializable {
     private String function;
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private String source;
+    private long modificationDate;
 
     public long getId() {
         return id;
@@ -57,6 +58,14 @@ public class CodeExample implements Serializable {
 
     public void setCodeExample(String codeExample) {
         this.codeExample = codeExample;
+    }
+
+    public long getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(long modificationDate) {
+        this.modificationDate = modificationDate;
     }
 
     public void setId(long id) {

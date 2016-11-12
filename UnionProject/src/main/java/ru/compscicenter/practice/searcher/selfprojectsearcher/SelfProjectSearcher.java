@@ -39,6 +39,7 @@ public class SelfProjectSearcher implements Searcher {
 
         try {
             FileReader fileReader = new FileReader(pathToFile);
+            File file = new File(pathToFile);
             BufferedReader in = new BufferedReader(fileReader);
             String str;
             int strNumber = 0;
@@ -86,10 +87,12 @@ public class SelfProjectSearcher implements Searcher {
                     codeExample.setSource(pathToFile + " : " + strNumber);
                     codeExample.setFunction(functionName);
                     codeExample.setCodeExample(sb.toString());
+                    codeExample.setModificationDate(file.lastModified());
                     logger.info("Code example parameters: " +
                             "programming lang=" + codeExample.getLanguage() + " " +
                             ", function=" + codeExample.getFunction() + " " +
-                            ", source=" + codeExample.getSource());
+                            ", source=" + codeExample.getSource() + " " +
+                            ", modificationDate" + codeExample.getModificationDate());
                     list.add(codeExample);
                     continue;
                 }

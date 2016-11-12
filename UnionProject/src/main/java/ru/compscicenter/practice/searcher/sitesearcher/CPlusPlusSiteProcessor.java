@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,10 +49,12 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             ce.setSource(url);
             ce.setFunction(getQuery());
             ce.setCodeExample(codeExample);
+            ce.setModificationDate(new Date().getTime());
             logger.info("Code example parameters: " +
                     "programming lang=" + ce.getLanguage() + " " +
                     ", function=" + ce.getFunction() + " " +
-                    ", source=" + ce.getSource());
+                    ", source=" + ce.getSource() + " " +
+                    ", modificationDate" + ce.getModificationDate());
             examples.add(ce);
         }
         return examples;
