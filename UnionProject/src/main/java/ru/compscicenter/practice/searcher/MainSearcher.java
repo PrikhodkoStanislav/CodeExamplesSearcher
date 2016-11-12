@@ -30,6 +30,7 @@ public class MainSearcher {
 
     private static String format = "";
     private static String functionName = "";
+    private static String path = "";
 
     /**
      * Search code examples for Sublime server
@@ -37,7 +38,7 @@ public class MainSearcher {
      * @return html-string with code examples
      * */
     public static String searchExamples(String funcName) throws IOException, ParseException {
-        String path = "./";
+        path = "./";
         format = "html";
         functionName = funcName;
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
@@ -67,43 +68,16 @@ public class MainSearcher {
             } else if (args.length == 1){
                 parseSingleArgument(args[0]);
             } else {
-                // analyse command line arguments and assign values to program fields
                 CommandLine cmd = commandLine.parseArguments(args);
-
                 if (cmd.hasOption("online") && cmd.hasOption("offline") ||
                         cmd.hasOption("all") && cmd.hasOption("online") ||
                         cmd.hasOption("all") && cmd.hasOption("offline") ||
-                        cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
+                        cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline")) {
                     throw new ParseException("You must enter only one option!");
-
-                String path = "";
-                if (args.length > 2) {
-                    if (args[args.length - 1].matches("html|txt")) {
-                        format = args[args.length - 1].toLowerCase();
-                        if (args[args.length - 2].startsWith("./") ||
-                                args[args.length - 2].startsWith("/") ||
-                                args[args.length - 2].startsWith("C:\\") ||
-                                args[args.length - 2].startsWith("D:\\")) {
-                            functionName = args[args.length - 3];
-                            path = args[args.length - 2];
-                        } else {
-                            functionName = args[args.length - 2];
-                        }
-                    } else if (args[args.length - 1].startsWith("./") ||
-                            args[args.length - 1].startsWith("/") ||
-                            args[args.length - 1].startsWith("C:\\") ||
-                            args[args.length - 1].startsWith("D:\\")) {
-                        functionName = args[args.length - 2];
-                        path = args[args.length - 1];
-                    } else {
-                        functionName = args[args.length - 1];
-                    }
-                    check(format);
-                } else if (args.length == 2) {
-                    functionName = args[args.length - 1];
-                } else if (args.length <= 1) {
-                    throw new ParseException("Option has required arguments!");
                 }
+
+                //parse cmd arguments
+                parseCmdArguments(args);
 
                 // prepare searchers and list for results
                 Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
@@ -121,9 +95,6 @@ public class MainSearcher {
                         for (Searcher searcher : searchers) {
                             results.addAll(searcher.search(functionName));
                         }
-                    }
-
-                    if (cmd.hasOption("server")) {
                     }
 
                     // find results in DB
@@ -152,12 +123,56 @@ public class MainSearcher {
     }
 
     /**
+     * Parse cmd arguments and assign values to program fields
+     * @param args input arguments
+     * */
+    private static void parseCmdArguments(String[] args) throws ParseException {
+        if (!args[0].startsWith("-")) {
+            throw new ParseException("First parameter must be an option!");
+        }
+
+        if (args.length > 2) {
+            if (args[args.length - 1].matches("html|txt")) {
+                format = args[args.length - 1].toLowerCase();
+                if (args[args.length - 2].startsWith("./") ||
+                        args[args.length - 2].startsWith("/") ||
+                        args[args.length - 2].startsWith("C:\\") ||
+                        args[args.length - 2].startsWith("D:\\")) {
+                    functionName = args[args.length - 3];
+                    path = args[args.length - 2];
+                } else {
+                    functionName = args[args.length - 2];
+                }
+            } else if (args[args.length - 1].startsWith("./") ||
+                    args[args.length - 1].startsWith("/") ||
+                    args[args.length - 1].startsWith("C:\\") ||
+                    args[args.length - 1].startsWith("D:\\")) {
+                functionName = args[args.length - 2];
+                path = args[args.length - 1];
+            } else {
+                functionName = args[args.length - 1];
+            }
+            check(format);
+        } else if (args.length == 2) {
+            functionName = args[args.length - 1];
+        }
+    }
+
+    /**
      * Parse first argument and do action depend on option, otherwise throw ParseException
      * @param arg option
      * */
     private static void parseSingleArgument(String arg) throws ParseException {
         if (!arg.startsWith("-")) {
-            throw new ParseException("First argument must be option!");
+            throw new ParseException("First parameter must be an option!");
+        }
+
+        if (arg.matches("-(a|s|w)") || arg.matches("--(all|online|offline)")) {
+            throw new ParseException("Option has required arguments!");
+        }
+
+        if (!arg.matches("--?(help|server)")) {
+            throw new ParseException("This option is not supported!");
         }
 
         if (arg.matches("--?help")) {
