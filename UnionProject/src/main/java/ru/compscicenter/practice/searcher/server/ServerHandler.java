@@ -16,7 +16,7 @@ import ru.compscicenter.practice.searcher.MainSearcher;
  * Created by Станислав on 08.11.2016.
  */
 public class ServerHandler extends AbstractHandler {
-    private String result = "<h1>Welcome to the Code Examples Sercher Server!</h1>";
+    private String result = "<h1>Welcome to the Code Examples Searcher Server!</h1>";
 
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {

@@ -13,4 +13,6 @@ Result format can be:
     no type     print results on the screen
 
 To use server jetty you should execute all files from folder "UnionProject/plugin for Sublime"
-to the directory /{username}/AppData/Roaming/Sublime Text 3/Packages/User.
+to the directory "/{username}/AppData/Roaming/Sublime Text 3/Packages/User".
+
+Sublime HotKey: "Ctrl+s+d" on the current line.
