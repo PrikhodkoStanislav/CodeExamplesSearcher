@@ -48,6 +48,10 @@ public class CodeExampleDA {
         return instance;
     }
 
+    public PrimaryIndex<Long, CodeExample> getPrimaryIndex() {
+        return primaryIndex;
+    }
+
     public void save(CodeExample entity) {
         Transaction tx = dbConfig.startTransaction();
         try {
@@ -193,28 +197,6 @@ public class CodeExampleDA {
         } catch (DatabaseException e) {
             logger.error("Sorry, something wrong!", e);
             primaryIndex.delete(id);
-        }
-    }
-
-    public void updateDB(List<CodeExample> examples) {
-        for (CodeExample codeExample : examples) {
-            List<CodeExample> ce = loadByLanguageFunctionAndSource(
-                    codeExample.getLanguage(),
-                    codeExample.getFunction(),
-                    codeExample.getSource());
-
-            if (ce != null && ce.size() != 0) {
-                CodeExample example = ce.get(0);
-                if (example == null) {
-                    save(codeExample);
-                } else if (codeExample.getCodeExample().split(" ").length <
-                        example.getCodeExample().split(" ").length) {
-                    example.setCodeExample(codeExample.getCodeExample());
-                    primaryIndex.put(example);
-                }
-            } else {
-                save(codeExample);
-            }
         }
     }
 }

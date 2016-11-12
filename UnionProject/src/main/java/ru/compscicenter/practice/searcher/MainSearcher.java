@@ -115,7 +115,7 @@ public class MainSearcher {
 
             // prepare searchers and list for results
             Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
-            List<CodeExample> l1 = new ArrayList<>();
+            List<CodeExample> results = new ArrayList<>();
 
             // check options and load searchers for anu option
             if (cmd.hasOption("help")) {
@@ -125,12 +125,12 @@ public class MainSearcher {
                 if (hasSearchOptions(cmd)) {
                     System.out.println("Start searching ...");
                     if (cmd.hasOption("online")) {
-                        l1.addAll(searchers[0].search(functionName));
+                        results.addAll(searchers[0].search(functionName));
                     } else if (cmd.hasOption("offline")) {
-                        l1.addAll(searchers[1].search(functionName));
+                        results.addAll(searchers[1].search(functionName));
                     } else if (cmd.hasOption("all")) {
                         for (Searcher searcher : searchers) {
-                            l1.addAll(searcher.search(functionName));
+                            results.addAll(searcher.search(functionName));
                         }
                     }
 
@@ -141,11 +141,11 @@ public class MainSearcher {
                     // find results in DB
                     List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
                     if (dbExamples == null || dbExamples.size() == 0) {
-                        for (CodeExample codeExample : l1) {
+                        for (CodeExample codeExample : results) {
                             DATABASE.save(codeExample);
                         }
                     } else {
-                        DATABASE.updateDB(l1);
+                        updateDB(results);
                     }
                     dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
 
@@ -246,6 +246,31 @@ public class MainSearcher {
 
         } else {
             System.out.println("No such example found!");
+        }
+    }
+
+    /**
+     * Update database with code examples
+     * */
+    public static void updateDB(List<CodeExample> examples) {
+        for (CodeExample codeExample : examples) {
+            List<CodeExample> ce = DATABASE.loadByLanguageFunctionAndSource(
+                    codeExample.getLanguage(),
+                    codeExample.getFunction(),
+                    codeExample.getSource());
+
+            if (ce != null && ce.size() != 0) {
+                CodeExample example = ce.get(0);
+                if (example == null) {
+                    DATABASE.save(codeExample);
+                } else if (codeExample.getCodeExample().split(" ").length <
+                        example.getCodeExample().split(" ").length) {
+                    example.setCodeExample(codeExample.getCodeExample());
+                    DATABASE.getPrimaryIndex().put(example);
+                }
+            } else {
+                DATABASE.save(codeExample);
+            }
         }
     }
 }
