@@ -60,68 +60,57 @@ public class MainSearcher {
     public static void main(String[] args) {
         logger.setLevel(Level.ERROR);
 
-        // check that arguments exists and print help
-        if (args.length <= 0) {
-            System.out.println("There are no command for program!");
-            System.exit(0);
-        } else if (args.length == 1){
-            if (args[0].matches("--?help")) {
-                commandLine.printHelp();
-                System.exit(0);
-            } else if (args[0].equals("--server") || args[0].equals("-j")) {
-                CreateServer.startServer();
-                server = true;
-            }
-        }
-
-        // analyse command line arguments and assign values to program fields
         try {
-            CommandLine cmd = commandLine.parseArguments(args);
-
-            if (cmd.hasOption("online") && cmd.hasOption("offline") ||
-                    cmd.hasOption("all") && cmd.hasOption("online") ||
-                    cmd.hasOption("all") && cmd.hasOption("offline") ||
-                    cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
-                throw new ParseException("You must enter only one option!");
-
-            String path = "";
-            if (args.length > 2) {
-                if (args[args.length - 1].matches("html|txt")) {
-                    format = args[args.length - 1].toLowerCase();
-                    if (args[args.length - 2].startsWith("./") ||
-                            args[args.length - 2].startsWith("/") ||
-                            args[args.length - 2].startsWith("C:\\") ||
-                            args[args.length - 2].startsWith("D:\\")) {
-                        functionName = args[args.length - 3];
-                        path = args[args.length - 2];
-                    } else {
-                        functionName = args[args.length - 2];
-                    }
-                } else if (args[args.length - 1].startsWith("./") ||
-                        args[args.length - 1].startsWith("/") ||
-                        args[args.length - 1].startsWith("C:\\") ||
-                        args[args.length - 1].startsWith("D:\\")) {
-                    functionName = args[args.length - 2];
-                    path = args[args.length - 1];
-                } else {
-                    functionName = args[args.length - 1];
-                }
-                check(format);
-            } else if (args.length == 2) {
-                functionName = args[args.length - 1];
-            } else if (args.length <= 1) {
-                throw new ParseException("Option has required arguments!");
-            }
-
-            // prepare searchers and list for results
-            Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
-            List<CodeExample> results = new ArrayList<>();
-
-            // check options and load searchers for anu option
-            if (cmd.hasOption("help")) {
-                if (cmd.getOptions().length <= 1)
-                    commandLine.printHelp();
+            // check that arguments exists and print help
+            if (args.length <= 0) {
+                System.out.println("There are no command for program!");
+                System.exit(0);
+            } else if (args.length == 1){
+                parseSingleArgument(args[0]);
             } else {
+                // analyse command line arguments and assign values to program fields
+                CommandLine cmd = commandLine.parseArguments(args);
+
+                if (cmd.hasOption("online") && cmd.hasOption("offline") ||
+                        cmd.hasOption("all") && cmd.hasOption("online") ||
+                        cmd.hasOption("all") && cmd.hasOption("offline") ||
+                        cmd.hasOption("all") && cmd.hasOption("online") && cmd.hasOption("offline"))
+                    throw new ParseException("You must enter only one option!");
+
+                String path = "";
+                if (args.length > 2) {
+                    if (args[args.length - 1].matches("html|txt")) {
+                        format = args[args.length - 1].toLowerCase();
+                        if (args[args.length - 2].startsWith("./") ||
+                                args[args.length - 2].startsWith("/") ||
+                                args[args.length - 2].startsWith("C:\\") ||
+                                args[args.length - 2].startsWith("D:\\")) {
+                            functionName = args[args.length - 3];
+                            path = args[args.length - 2];
+                        } else {
+                            functionName = args[args.length - 2];
+                        }
+                    } else if (args[args.length - 1].startsWith("./") ||
+                            args[args.length - 1].startsWith("/") ||
+                            args[args.length - 1].startsWith("C:\\") ||
+                            args[args.length - 1].startsWith("D:\\")) {
+                        functionName = args[args.length - 2];
+                        path = args[args.length - 1];
+                    } else {
+                        functionName = args[args.length - 1];
+                    }
+                    check(format);
+                } else if (args.length == 2) {
+                    functionName = args[args.length - 1];
+                } else if (args.length <= 1) {
+                    throw new ParseException("Option has required arguments!");
+                }
+
+                // prepare searchers and list for results
+                Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
+                List<CodeExample> results = new ArrayList<>();
+
+                // check options and load searchers for any option
                 if (hasSearchOptions(cmd)) {
                     System.out.println("Start searching ...");
                     //todo search data in DB: if data was not found that find data on sites
@@ -161,6 +150,24 @@ public class MainSearcher {
             commandLine.printHelp();
         } catch (IOException e) {
             logger.error("Sorry, something wrong!", e);
+        }
+    }
+
+    /**
+     * Parse first argument and do action depend on option, otherwise throw ParseException
+     * @param arg option
+     * */
+    private static void parseSingleArgument(String arg) throws ParseException {
+        if (!arg.startsWith("-")) {
+            throw new ParseException("First argument must be option!");
+        }
+
+        if (arg.matches("--?help")) {
+            commandLine.printHelp();
+            System.exit(0);
+        } else if (arg.equals("--server") || arg.equals("-j")) {
+            CreateServer.startServer();
+            server = true;
         }
     }
 
@@ -252,6 +259,7 @@ public class MainSearcher {
 
     /**
      * Update database with code examples
+     * @param examples list with code examples
      * */
     public static void updateDB(List<CodeExample> examples) {
         for (CodeExample codeExample : examples) {
