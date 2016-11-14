@@ -173,7 +173,7 @@ public class MainSearcher {
             throw new ParseException("Option has required arguments!");
         }
 
-        if (!arg.matches("--?(help|server)")) {
+        if (!arg.matches("--?(help|server)") && !arg.matches("-j")) {
             throw new ParseException("This option is not supported!");
         }
 
