@@ -20,7 +20,8 @@ public class CreateServer {
             server.start();
             server.join();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Sorry, something wrong!", e);
+//            e.printStackTrace();
         }
     }
 }

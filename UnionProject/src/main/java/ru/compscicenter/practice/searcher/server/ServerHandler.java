@@ -36,7 +36,8 @@ public class ServerHandler extends AbstractHandler {
             try {
                 result = MainSearcher.searchExamples(funcName);
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error("Sorry, something wrong!", e);
+//                e.printStackTrace();
             }
         }
         else if (uri.equals("/get_example")) {
