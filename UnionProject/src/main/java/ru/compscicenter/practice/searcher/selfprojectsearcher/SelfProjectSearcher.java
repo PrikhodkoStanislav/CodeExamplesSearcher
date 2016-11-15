@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,12 +59,61 @@ public class SelfProjectSearcher implements Searcher {
             FileReader fileReader = new FileReader(pathToFile);
             File file = new File(pathToFile);
             BufferedReader in = new BufferedReader(fileReader);
-            String str;
+            String str = "";
             int strNumber = 0;
-            List<String> buffer = new LinkedList<>();
+            List<String> buffer = new ArrayList<>();
+
+            Stack<Character> stack = new Stack<>();
 
             while ((str = in.readLine()) != null) {
                 strNumber++;
+                char[] chars = str.toCharArray();
+                for (char c : chars) {
+                    if (c == '{') {
+                        stack.add(c);
+                    } else if (c == '}') {
+                        stack.pop();
+                    }
+                }
+
+                if (str.contains(" " + functionName + "(")) {
+                    StringBuilder sb = new StringBuilder();
+                    for(String s : buffer) {
+                        sb.append(s);
+                        sb.append(newLine);
+                    }
+
+                    buffer.clear();
+
+                    sb.append(str);
+                    sb.append(newLine);
+                    while ((str = in.readLine()) != null) {
+                        strNumber++;
+                        if (stack.empty()) {
+                            break;
+                        }
+                        sb.append(str);
+                        sb.append(newLine);
+                    }
+                    sb.append(newLine);
+
+                    CodeExample codeExample = new CodeExample();
+                    codeExample.setLanguage("C");
+                    codeExample.setSource(pathToFile + " : " + strNumber);
+                    codeExample.setFunction(functionName);
+                    codeExample.setCodeExample(sb.toString());
+                    codeExample.setModificationDate(file.lastModified());
+                    logger.info("Code example parameters: " +
+                            "programming lang=" + codeExample.getLanguage() + " " +
+                            ", function=" + codeExample.getFunction() + " " +
+                            ", source=" + codeExample.getSource() + " " +
+                            ", modificationDate" + codeExample.getModificationDate());
+                    list.add(codeExample);
+
+                } else {
+                    buffer.add(str);
+                }
+
 //                Matcher matcherForFunctionName = patternForFunctionName.matcher(str);
 
 //                if (matcherForFunctionName.matches()) {
@@ -167,7 +217,7 @@ public class SelfProjectSearcher implements Searcher {
             BufferedReader in = new BufferedReader(fileReader);
             String str = "";
             int strNumber = 0;
-            List<String> buffer = new LinkedList<>();
+            List<String> buffer = new ArrayList<>();
 
             while ((str = in.readLine()) != null) {
                 strNumber++;
@@ -187,8 +237,8 @@ public class SelfProjectSearcher implements Searcher {
                     buffer.clear();
 
                     sb.append(str);
-//                    sb.append(newLine);
-                    sb.append(newLineWithNumber(strNumber));
+                    sb.append(newLine);
+//                    sb.append(newLineWithNumber(strNumber));
 
                     str = in.readLine();
                     strNumber++;
@@ -290,10 +340,8 @@ public class SelfProjectSearcher implements Searcher {
             for (File f : filesInDirectory) {
                 searchInDirectory(functionName, f.getPath());
             }
-        } else {
-            if (isSourceFileForLanguage("C", pathToFile)) {
+        } else if (isSourceFileForLanguage("C", pathToFile)) {
                 searchInFile(functionName, pathToFile);
-            }
         }
     }
 
