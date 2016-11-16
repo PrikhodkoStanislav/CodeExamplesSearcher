@@ -52,6 +52,19 @@ public class SelfProjectSearcher implements Searcher {
         return ((Integer) strNumber).toString() + str;
     }
 
+    private long numberBrackets(String str) {
+        long result = 0;
+        char[] chars = str.toCharArray();
+        for (char c : chars) {
+            if (c == '{') {
+                result++;
+            } else if (c == '}') {
+                result--;
+            }
+        }
+        return result;
+    }
+
     private void searchInFileAllFunction(String functionName, String pathToFile) {
         logger.setLevel(Level.INFO);
 
@@ -63,18 +76,12 @@ public class SelfProjectSearcher implements Searcher {
             int strNumber = 0;
             List<String> buffer = new ArrayList<>();
 
-            Stack<Character> stack = new Stack<>();
+            long countBrackets = 0;
 
             while ((str = in.readLine()) != null) {
                 strNumber++;
-                char[] chars = str.toCharArray();
-                for (char c : chars) {
-                    if (c == '{') {
-                        stack.add(c);
-                    } else if (c == '}') {
-                        stack.pop();
-                    }
-                }
+
+                countBrackets += numberBrackets(str);
 
                 if (str.contains(" " + functionName + "(")) {
                     StringBuilder sb = new StringBuilder();
@@ -87,11 +94,9 @@ public class SelfProjectSearcher implements Searcher {
 
                     sb.append(str);
                     sb.append(newLine);
-                    while ((str = in.readLine()) != null) {
+                    while ((countBrackets != 0) && (str = in.readLine()) != null) {
                         strNumber++;
-                        if (stack.empty()) {
-                            break;
-                        }
+                        countBrackets += numberBrackets(str);
                         sb.append(str);
                         sb.append(newLine);
                     }
@@ -113,88 +118,6 @@ public class SelfProjectSearcher implements Searcher {
                 } else {
                     buffer.add(str);
                 }
-
-//                Matcher matcherForFunctionName = patternForFunctionName.matcher(str);
-
-//                if (matcherForFunctionName.matches()) {
-//                    StringBuilder sb = new StringBuilder();
-//                    for(String s : buffer) {
-//                        sb.append(s);
-//                        sb.append(newLine);
-//                    }
-//
-//                    buffer.clear();
-//
-//                    sb.append(str);
-//                    sb.append(newLine);
-//                    str = in.readLine();
-//
-//                    while ((str != null)) {
-//                        Matcher matcherForOpenCloseBracket = patternForOpenCloseBracket.matcher(str);
-//                        if (matcherForOpenCloseBracket.matches()) {
-//                            sb.append(str);
-//                            sb.append(newLine);
-//                            str = in.readLine();
-//                            continue;
-//                        }
-//                        Matcher matcherForCloseBracket = patternForCloseBracket.matcher(str);
-//                        if (matcherForCloseBracket.matches()) {
-//                            sb.append(str);
-//                            sb.append(newLine);
-//                            break;
-//                        }
-//                        sb.append(str);
-//                        sb.append(newLine);
-//                        str = in.readLine();
-//                    }
-//
-//                    sb.append(newLine);
-//                    CodeExample codeExample = new CodeExample();
-//                    codeExample.setLanguage("C");
-//                    codeExample.setSource(pathToFile + " : " + strNumber);
-//                    codeExample.setFunction(functionName);
-//                    codeExample.setCodeExample(sb.toString());
-//                    codeExample.setModificationDate(file.lastModified());
-//                    logger.info("Code example parameters: " +
-//                            "programming lang=" + codeExample.getLanguage() + " " +
-//                            ", function=" + codeExample.getFunction() + " " +
-//                            ", source=" + codeExample.getSource() + " " +
-//                            ", modificationDate" + codeExample.getModificationDate());
-//                    list.add(codeExample);
-//                    continue;
-//                }
-//
-//                Matcher matcherForOpenCloseBracket = patternForOpenCloseBracket.matcher(str);
-//
-//                if (matcherForOpenCloseBracket.matches()) {
-//                    buffer.add(str);
-//                    continue;
-//                }
-//
-//                Matcher matcherForCloseOpenBracket = patternForCloseOpenBracket.matcher(str);
-//
-//                if (matcherForCloseOpenBracket.matches()) {
-//                    buffer.clear();
-//                    buffer.add(str);
-//                    continue;
-//                }
-//
-//                Matcher matcherForOpenBracket = patternForOpenBracket.matcher(str);
-//
-//                if (matcherForOpenBracket.matches()) {
-//                    buffer.clear();
-//                    buffer.add(str);
-//                    continue;
-//                }
-//
-//                Matcher matcherForCloseBracket = patternForCloseBracket.matcher(str);
-//
-//                if (matcherForCloseBracket.matches()) {
-//                    buffer.clear();
-//                    continue;
-//                }
-//
-//                buffer.add(str);
             }
         }
         catch (IOException e) {
@@ -341,7 +264,8 @@ public class SelfProjectSearcher implements Searcher {
                 searchInDirectory(functionName, f.getPath());
             }
         } else if (isSourceFileForLanguage("C", pathToFile)) {
-                searchInFile(functionName, pathToFile);
+//            searchInFile(functionName, pathToFile);
+            searchInFileAllFunction(functionName, pathToFile);
         }
     }
 
