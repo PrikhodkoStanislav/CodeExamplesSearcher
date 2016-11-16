@@ -264,8 +264,8 @@ public class SelfProjectSearcher implements Searcher {
                 searchInDirectory(functionName, f.getPath());
             }
         } else if (isSourceFileForLanguage("C", pathToFile)) {
-//            searchInFile(functionName, pathToFile);
-            searchInFileAllFunction(functionName, pathToFile);
+            searchInFile(functionName, pathToFile);
+//            searchInFileAllFunction(functionName, pathToFile);
         }
     }
 
