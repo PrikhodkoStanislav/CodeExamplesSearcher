@@ -60,51 +60,6 @@ public class MainSearcher {
         return htmlWithResult(l1);
     }
 
-    public static void main(String[] args) {
-        logger.setLevel(Level.ERROR);
-
-        try {
-            // check that arguments exists and print help
-            if (args.length <= 0) {
-                System.out.println("There are no command for program!");
-                System.exit(0);
-            } else if (args.length == 1){
-                parseSingleArgument(args[0]);
-            } else {
-                //parse cmd arguments
-                parseCmdArguments(args);
-
-                // prepare searchers and list for results
-                Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
-                List<CodeExample> results = new ArrayList<>();
-
-                System.out.println("Start searching ...");
-                if (searchOnSites) {
-                    List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
-                    if (dbExamples == null || dbExamples.size() == 0) {
-                        results.addAll(searchers[0].search(functionName));
-                        results.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
-                                codeExample.getSource().contains("cppreference")).forEach(DATABASE::save);
-                    } else {
-                        updateDB(results);
-                        results = dbExamples;
-                    }
-                }
-                if (searchInProject) {
-                    results.addAll(searchers[1].search(functionName));
-                }
-
-                System.out.println("End searching ...");
-                processResults(results);
-            }
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            commandLine.printHelp();
-        } catch (IOException e) {
-            logger.error("Sorry, something wrong!", e);
-        }
-    }
-
     /**
      * Parse cmd arguments and assign values to program fields
      * @param args input arguments
@@ -294,6 +249,56 @@ public class MainSearcher {
             } else {
                 DATABASE.save(codeExample);
             }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        //TODO set timer
+        //Timer timer = new Timer();
+        // timer.schedule(new UpdateDBTask(), 24 * 3600 * 1000);
+
+        logger.setLevel(Level.ERROR);
+
+        try {
+            // check that arguments exists and print help
+            if (args.length <= 0) {
+                System.out.println("There are no command for program!");
+                System.exit(0);
+            } else if (args.length == 1){
+                parseSingleArgument(args[0]);
+            } else {
+                //parse cmd arguments
+                parseCmdArguments(args);
+
+                // prepare searchers and list for results
+                Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
+                List<CodeExample> results = new ArrayList<>();
+
+                System.out.println("Start searching ...");
+                if (searchOnSites) {
+                    List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
+                    if (dbExamples == null || dbExamples.size() == 0) {
+                        results.addAll(searchers[0].search(functionName));
+                        results.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
+                                codeExample.getSource().contains("cppreference")).forEach(DATABASE::save);
+                    } else {
+                        updateDB(results);
+                        results = dbExamples;
+                    }
+                }
+                if (searchInProject) {
+                    results.addAll(searchers[1].search(functionName));
+                }
+
+                System.out.println("End searching ...");
+                processResults(results);
+            }
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            commandLine.printHelp();
+        } catch (IOException e) {
+            logger.error("Sorry, something wrong!", e);
         }
     }
 }
