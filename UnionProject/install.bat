@@ -1,0 +1,1 @@
+xcopy /s .\plugin_for_sublime C:\Users\%USERNAME%\AppData\Roaming\Sublime_Text_3\Packages\User\
