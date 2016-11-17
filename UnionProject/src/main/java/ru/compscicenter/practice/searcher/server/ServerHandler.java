@@ -33,8 +33,11 @@ public class ServerHandler extends AbstractHandler {
         String uri = request.getRequestURI();
         if (uri.equals("/set_example")) {
             String funcName = request.getParameter("func");
+            String pathFromSublime = request.getParameter("path");
+            int line = Integer.parseInt(request.getParameter("line"));
+            String pathForSearch = "./";
             try {
-                result = MainSearcher.searchExamples(funcName);
+                result = MainSearcher.searchExamples(funcName, pathForSearch, pathFromSublime, line);
             } catch (ParseException e) {
                 logger.error("Sorry, something wrong!", e);
 //                e.printStackTrace();

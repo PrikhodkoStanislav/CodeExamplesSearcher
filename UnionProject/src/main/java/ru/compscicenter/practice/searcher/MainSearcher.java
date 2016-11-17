@@ -38,13 +38,16 @@ public class MainSearcher {
     /**
      * Search code examples for Sublime server
      * @param funcName name of function
+     * @param pathForSearch path to the directory with files for search
+     * @param pathFromSublime path to the open file in sublime
+     * @param line number line where cursor in sublime
      * @return html-string with code examples
      * */
-    public static String searchExamples(String funcName) throws IOException, ParseException {
-        path = "./";
+    public static String searchExamples(String funcName, String pathForSearch, String pathFromSublime, int line)
+            throws IOException, ParseException {
         format = "html";
         functionName = funcName;
-        Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(path)};
+        Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch)};
         List<CodeExample> l1 = new ArrayList<>();
         l1.addAll(searchers[0].search(funcName));
         l1.addAll(searchers[1].search(funcName));
