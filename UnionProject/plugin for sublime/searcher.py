@@ -24,5 +24,7 @@ class SearchCommand(sublime_plugin.TextCommand):
 					funcName = buf
 					break
 			buf += c
-		url = "http://localhost:8080/set_example?func=%s" % funcName
+		path = self.view.file_name()
+		url = "http://localhost:8080/set_example?func=%s,path=%s" % (funcName, path)
+		print(url)
 		requests.get(url)
