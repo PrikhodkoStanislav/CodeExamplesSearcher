@@ -28,3 +28,4 @@ class SearchCommand(sublime_plugin.TextCommand):
 		url = "http://localhost:8080/set_example?func=%s,path=%s,line=%s" % (funcName, path, cursor + 1)
 		print(url)
 		requests.get(url)
+		
