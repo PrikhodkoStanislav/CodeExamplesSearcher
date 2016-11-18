@@ -48,21 +48,19 @@ public class MainSearcher {
         format = "html";
         functionName = funcName;
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch)};
-        List<CodeExample> results = new ArrayList<>();
-
-        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
-        if (dbExamples == null || dbExamples.size() == 0) {
-            results.addAll(searchers[0].search(functionName));
-            results.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
-                    codeExample.getSource().contains("cppreference")).forEach(DATABASE::save);
-        } else {
-            updateDB(results);
-            results = dbExamples;
-        }
-
-        //l1.addAll(searchers[0].search(funcName));
-        results.addAll(searchers[1].search(functionName));
-        return htmlWithResult(results);
+        List<CodeExample> l1 = new ArrayList<>();
+        l1.addAll(searchers[0].search(funcName));
+        l1.addAll(searchers[1].search(funcName));
+//        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
+//        if (dbExamples == null || dbExamples.size() == 0) {
+//            for (CodeExample codeExample : l1) {
+//                DATABASE.save(codeExample);
+//            }
+//        } else {
+//            DATABASE.updateDB(l1);
+//            dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
+//        }
+        return htmlWithResult(l1);
     }
 
     /**

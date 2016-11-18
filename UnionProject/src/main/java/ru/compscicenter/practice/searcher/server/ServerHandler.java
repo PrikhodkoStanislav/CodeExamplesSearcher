@@ -37,7 +37,7 @@ public class ServerHandler extends AbstractHandler {
             int line = Integer.parseInt(request.getParameter("line"));
             String pathForSearch = "./";
             try {
-                result = MainSearcher.searchExamples(funcName, pathForSearch, pathFromSublime, line);
+                result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line);
             } catch (ParseException e) {
                 logger.error("Sorry, something wrong!", e);
 //                e.printStackTrace();
