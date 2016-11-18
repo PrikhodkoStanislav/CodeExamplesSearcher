@@ -49,17 +49,18 @@ public class MainSearcher {
         functionName = funcName;
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch)};
         List<CodeExample> l1 = new ArrayList<>();
-        l1.addAll(searchers[0].search(funcName));
+
+        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
+        if (dbExamples == null || dbExamples.size() == 0) {
+            l1.addAll(searchers[0].search(funcName));
+            l1.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
+                    codeExample.getSource().contains("cppreference")).forEach(DATABASE::save);
+        } else {
+            updateDB(l1);
+            l1 = dbExamples;
+        }
+
         l1.addAll(searchers[1].search(funcName));
-//        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
-//        if (dbExamples == null || dbExamples.size() == 0) {
-//            for (CodeExample codeExample : l1) {
-//                DATABASE.save(codeExample);
-//            }
-//        } else {
-//            DATABASE.updateDB(l1);
-//            dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
-//        }
         return htmlWithResult(l1);
     }
 
@@ -178,7 +179,7 @@ public class MainSearcher {
             AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
             examples = duplicateRemover.removeDuplicates();
-            result = projectCodeFormatter.createResultFile(functionName, examples, format);
+            result = projectCodeFormatter.createResultFile(functionName, examples, format, null);
         }
         return result;
     }
@@ -196,7 +197,7 @@ public class MainSearcher {
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
             examples = duplicateRemover.removeDuplicates();
 
-            String fileText = projectCodeFormatter.createResultFile(functionName, examples, format);
+            String fileText = projectCodeFormatter.createResultFile(functionName, examples, format, null);
 
             String path = "result" + File.separator + "examples";
             if (!format.isEmpty()) {

@@ -301,11 +301,11 @@ public class SiteSearcherTest {
                 testCorrectURL(cppProcessor, "std::sizeof"));
     }
 
-    @Test
+    /*@Test
     public void testCppRefTestSizeOf() {
         assertEquals("http://en.cppreference.com/w/cpp/language/sizeof",
                 testCorrectURL(cppReferenceProcessor, "std::sizeof"));
-    }
+    }*/
 
     public String testCorrectURL(SiteProcessor processor, String query) {
         return processor.generateRequestURL(query);
