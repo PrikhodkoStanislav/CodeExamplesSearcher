@@ -35,9 +35,10 @@ public class ProjectCodeFormatter {
      * @param format file extension
      * @return string for the result file
      * */
-    public String createResultFile(String functionName, List<CodeExample> examples, String format) {
+    public String createResultFile(String functionName, List<CodeExample> examples,
+                                   String format, List<CodeExample> codeFromSublime) {
         if ("html".equals(format))
-            return createHtml(functionName, examples);
+            return createHtml(functionName, examples, codeFromSublime);
         else
             return createTxt(functionName, examples);
     }
@@ -48,7 +49,8 @@ public class ProjectCodeFormatter {
      * @param examples list with search results
      * @return html-string
      * */
-    public String createHtml(String functionName, List<CodeExample> examples) {
+    public String createHtml(String functionName, List<CodeExample> examples,
+                             List<CodeExample> codeFromSublime) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
         sb.append("<head>");
@@ -101,6 +103,14 @@ public class ProjectCodeFormatter {
             .append("<th>").append("SOURCE").append("</th>")
             .append("<th>").append("CODE EXAMPLE").append("</th>")
             .append("</tr>");
+        if (codeFromSublime != null) {
+            for (CodeExample code : codeFromSublime) {
+                sb.append("<tr>")
+                        .append("<td>").append(code.getSource()).append("</td>")
+                        .append("<td><pre>").append(code.getCodeExample()).append("</pre></td>")
+                        .append("</tr>");
+            }
+        }
         for (CodeExample example : examples) {
             sb.append("<tr>")
                 .append("<td>").append(example.getSource()).append("</td>")

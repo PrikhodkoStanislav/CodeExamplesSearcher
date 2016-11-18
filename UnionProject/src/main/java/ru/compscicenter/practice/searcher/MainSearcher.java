@@ -31,6 +31,7 @@ public class MainSearcher {
     private static String format = "";
     private static String functionName = "";
     private static String path = "";
+    private static List<CodeExample> codeFromSublime = new ArrayList<>();
 
     private static boolean searchOnSites = true;
     private static boolean searchInProject = true;
@@ -43,14 +44,18 @@ public class MainSearcher {
      * @param line number line where cursor in sublime
      * @return html-string with code examples
      * */
-    public static String searchExamples(String funcName, String pathForSearch, String pathFromSublime, int line)
+    public static String searchExamplesForClient(String funcName, String pathForSearch,
+                                                 String pathFromSublime, int line)
             throws IOException, ParseException {
         format = "html";
         functionName = funcName;
-        Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch)};
+        Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch),
+                new SelfProjectSearcher(pathFromSublime)};
         List<CodeExample> l1 = new ArrayList<>();
         l1.addAll(searchers[0].search(funcName));
         l1.addAll(searchers[1].search(funcName));
+
+        codeFromSublime.addAll(searchers[2].search(funcName));
 //        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
 //        if (dbExamples == null || dbExamples.size() == 0) {
 //            for (CodeExample codeExample : l1) {
@@ -171,14 +176,15 @@ public class MainSearcher {
      * */
     private static String htmlWithResult(List<CodeExample> examples) throws ParseException, IOException {
         String result = "";
+        ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
+        projectCodeFormatter.beautifyCode(codeFromSublime);
         if (examples != null) {
-            ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
             projectCodeFormatter.beautifyCode(examples);
 
             AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
             examples = duplicateRemover.removeDuplicates();
-            result = projectCodeFormatter.createResultFile(functionName, examples, format);
+            result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime);
         }
         return result;
     }
@@ -196,7 +202,7 @@ public class MainSearcher {
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
             examples = duplicateRemover.removeDuplicates();
 
-            String fileText = projectCodeFormatter.createResultFile(functionName, examples, format);
+            String fileText = projectCodeFormatter.createResultFile(functionName, examples, format, null);
 
             String path = "result" + File.separator + "examples";
             if (!format.isEmpty()) {
