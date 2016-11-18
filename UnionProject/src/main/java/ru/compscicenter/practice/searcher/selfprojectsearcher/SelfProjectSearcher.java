@@ -83,7 +83,7 @@ public class SelfProjectSearcher implements Searcher {
 
                 countBrackets += numberBrackets(str);
 
-                if (str.contains(" " + functionName + "(")) {
+                if (str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(")) {
                     StringBuilder sb = new StringBuilder();
                     for(String s : buffer) {
                         sb.append(s);
