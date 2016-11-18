@@ -31,7 +31,7 @@ public class MainSearcher {
     private static String format = "";
     private static String functionName = "";
     private static String path = "";
-    private static List<CodeExample> codeFromSublime = new ArrayList<>();
+    private static List<CodeExample> codeFromSublime = null;
 
     private static boolean searchOnSites = true;
     private static boolean searchInProject = true;
@@ -64,6 +64,7 @@ public class MainSearcher {
         }
 
         l1.addAll(searchers[1].search(funcName));
+        codeFromSublime = new ArrayList<>();
         codeFromSublime.addAll(searchers[2].search(funcName));
         return htmlWithResult(l1);
     }
@@ -176,17 +177,17 @@ public class MainSearcher {
      * */
     private static String htmlWithResult(List<CodeExample> examples) throws ParseException, IOException {
         String result = "";
-        if (examples != null) {
-            ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
+        ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
+        if (codeFromSublime != null) {
             projectCodeFormatter.beautifyCode(codeFromSublime);
-            if (examples != null) {
-                projectCodeFormatter.beautifyCode(examples);
+        }
+        if (examples != null) {
+            projectCodeFormatter.beautifyCode(examples);
 
-                AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
-                CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
-                examples = duplicateRemover.removeDuplicates();
-                result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime);
-            }
+            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
+            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
+            examples = duplicateRemover.removeDuplicates();
+            result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime);
         }
         return result;
     }
