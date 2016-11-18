@@ -295,6 +295,18 @@ public class SiteSearcherTest {
                 testCorrectURL(cppProcessor, "std::bsearch_s"));
     }
 
+    @Test
+    public void testCppTestSizeOf() {
+        assertEquals("http://www.cplusplus.com/reference/cstdlib/bsearch/",
+                testCorrectURL(cppProcessor, "std::sizeof"));
+    }
+
+    /*@Test
+    public void testCppRefTestSizeOf() {
+        assertEquals("http://en.cppreference.com/w/cpp/language/sizeof",
+                testCorrectURL(cppReferenceProcessor, "std::sizeof"));
+    }*/
+
     public String testCorrectURL(SiteProcessor processor, String query) {
         return processor.generateRequestURL(query);
     }

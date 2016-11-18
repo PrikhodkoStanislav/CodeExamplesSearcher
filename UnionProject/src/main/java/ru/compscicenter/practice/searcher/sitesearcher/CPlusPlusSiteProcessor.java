@@ -54,7 +54,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
                     "programming lang=" + ce.getLanguage() + " " +
                     ", function=" + ce.getFunction() + " " +
                     ", source=" + ce.getSource() + " " +
-                    ", modificationDate" + ce.getModificationDate());
+                    ", modificationDate=" + ce.getModificationDate());
             examples.add(ce);
         }
         return examples;

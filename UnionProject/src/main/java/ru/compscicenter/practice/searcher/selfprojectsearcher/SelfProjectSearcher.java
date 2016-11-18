@@ -83,7 +83,8 @@ public class SelfProjectSearcher implements Searcher {
 
                 countBrackets += numberBrackets(str);
 
-                if (str.contains(" " + functionName + "(")) {
+                if (str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
+                        str.contains("(" + functionName + "(")) {
                     StringBuilder sb = new StringBuilder();
                     for(String s : buffer) {
                         sb.append(s);
@@ -112,7 +113,7 @@ public class SelfProjectSearcher implements Searcher {
                             "programming lang=" + codeExample.getLanguage() + " " +
                             ", function=" + codeExample.getFunction() + " " +
                             ", source=" + codeExample.getSource() + " " +
-                            ", modificationDate" + codeExample.getModificationDate());
+                            ", modificationDate=" + codeExample.getModificationDate());
                     list.add(codeExample);
 
                 } else {
@@ -128,7 +129,7 @@ public class SelfProjectSearcher implements Searcher {
     private void searchInFile(String functionName, String pathToFile) {
         logger.setLevel(Level.INFO);
 
-        Pattern patternForFunctionName = Pattern.compile(".*(\\s)(" + functionName + ")(\\().+");
+        Pattern patternForFunctionName = Pattern.compile(".*([\\s\\(=])(" + functionName + ")(\\().+");
         Pattern patternForOpenBracket = Pattern.compile(".*\\{.*");
         Pattern patternForCloseBracket = Pattern.compile(".*\\}.*");
         Pattern patternForOpenCloseBracket = Pattern.compile(".*\\{.*\\}.*");
@@ -274,6 +275,8 @@ public class SelfProjectSearcher implements Searcher {
             return pathToFile.endsWith("c");
         else if (language.matches("C\\+\\+|c\\+\\+"))
             return pathToFile.endsWith("cpp");
+        else if (language.matches("(P|p)ython"))
+            return pathToFile.endsWith("py");
         else
             return language.matches("java|JAVA|Java") && pathToFile.endsWith("java");
     }

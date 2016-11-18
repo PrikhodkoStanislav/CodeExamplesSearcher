@@ -52,19 +52,19 @@ public class MainSearcher {
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch),
                 new SelfProjectSearcher(pathFromSublime)};
         List<CodeExample> l1 = new ArrayList<>();
-        l1.addAll(searchers[0].search(funcName));
-        l1.addAll(searchers[1].search(funcName));
 
+        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
+        if (dbExamples == null || dbExamples.size() == 0) {
+            l1.addAll(searchers[0].search(funcName));
+            l1.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
+                    codeExample.getSource().contains("cppreference")).forEach(DATABASE::save);
+        } else {
+            updateDB(l1);
+            l1 = dbExamples;
+        }
+
+        l1.addAll(searchers[1].search(funcName));
         codeFromSublime.addAll(searchers[2].search(funcName));
-//        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
-//        if (dbExamples == null || dbExamples.size() == 0) {
-//            for (CodeExample codeExample : l1) {
-//                DATABASE.save(codeExample);
-//            }
-//        } else {
-//            DATABASE.updateDB(l1);
-//            dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
-//        }
         return htmlWithResult(l1);
     }
 
@@ -176,15 +176,17 @@ public class MainSearcher {
      * */
     private static String htmlWithResult(List<CodeExample> examples) throws ParseException, IOException {
         String result = "";
-        ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
-        projectCodeFormatter.beautifyCode(codeFromSublime);
         if (examples != null) {
-            projectCodeFormatter.beautifyCode(examples);
+            ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
+            projectCodeFormatter.beautifyCode(codeFromSublime);
+            if (examples != null) {
+                projectCodeFormatter.beautifyCode(examples);
 
-            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
-            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
-            examples = duplicateRemover.removeDuplicates();
-            result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime);
+                AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
+                CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
+                examples = duplicateRemover.removeDuplicates();
+                result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime);
+            }
         }
         return result;
     }
