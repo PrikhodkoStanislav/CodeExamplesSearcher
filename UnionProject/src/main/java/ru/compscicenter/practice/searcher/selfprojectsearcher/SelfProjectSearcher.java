@@ -274,6 +274,8 @@ public class SelfProjectSearcher implements Searcher {
             return pathToFile.endsWith("c");
         else if (language.matches("C\\+\\+|c\\+\\+"))
             return pathToFile.endsWith("cpp");
+        else if (language.matches("(P|p)ython"))
+            return pathToFile.endsWith("py");
         else
             return language.matches("java|JAVA|Java") && pathToFile.endsWith("java");
     }
