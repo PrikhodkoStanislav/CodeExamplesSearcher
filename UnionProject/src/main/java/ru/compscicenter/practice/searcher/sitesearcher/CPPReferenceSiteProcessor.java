@@ -68,7 +68,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     "programming lang=" + ce.getLanguage() + " " +
                     ", function=" + ce.getFunction() + " " +
                     ", source=" + ce.getSource() + " " +
-                    ", modificationDate" + ce.getModificationDate());
+                    ", modificationDate=" + ce.getModificationDate());
             examples.add(ce);
         }
         return examples;
@@ -86,7 +86,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             fullMethodName = query.split(" ");
             if (fullMethodName.length == 1) {
                 fullMethodName[0] = fullMethodName[0].replaceAll("_s$", "");
-                if (isMathFunction(fullMethodName[0]))
+                if ("sizeof".equals(fullMethodName[0]))
+                    return CPPREFERENCE_URL + "cpp/language/" + fullMethodName[0];
+                else if (isMathFunction(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/numeric/math/" + fullMethodName[0];
                 else if (isCAlgorithmFunction(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/algorithm/" + fullMethodName[0];
@@ -125,7 +127,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
 
     private String buildURL(String methodName, String structureName) {
         methodName = methodName.replaceAll("_s$", "");
-        if (isMathFunction(methodName)) {
+        if ("sizeof".equals(methodName))
+            return CPPREFERENCE_URL + "cpp/language/" + methodName;
+        else if (isMathFunction(methodName)) {
             return CPPREFERENCE_URL + "c/numeric/math/" + methodName;
         } else if (isCAssert(methodName)) {
             return CPPREFERENCE_URL + "c/error/" + methodName;

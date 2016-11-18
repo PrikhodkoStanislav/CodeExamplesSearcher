@@ -112,7 +112,7 @@ public class SelfProjectSearcher implements Searcher {
                             "programming lang=" + codeExample.getLanguage() + " " +
                             ", function=" + codeExample.getFunction() + " " +
                             ", source=" + codeExample.getSource() + " " +
-                            ", modificationDate" + codeExample.getModificationDate());
+                            ", modificationDate=" + codeExample.getModificationDate());
                     list.add(codeExample);
 
                 } else {
