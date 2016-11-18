@@ -34,7 +34,8 @@ public class ServerHandler extends AbstractHandler {
         if (uri.equals("/set_example")) {
             String funcName = request.getParameter("func");
             String pathFromSublime = request.getParameter("path");
-            int line = Integer.parseInt(request.getParameter("line"));
+            String lineStr = request.getParameter("line");
+            int line = Integer.parseInt(lineStr);
             String pathForSearch = "./";
             try {
                 result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line);
