@@ -83,7 +83,8 @@ public class SelfProjectSearcher implements Searcher {
 
                 countBrackets += numberBrackets(str);
 
-                if (str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(")) {
+                if (str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
+                        str.contains("(" + functionName + "(")) {
                     StringBuilder sb = new StringBuilder();
                     for(String s : buffer) {
                         sb.append(s);
@@ -128,7 +129,7 @@ public class SelfProjectSearcher implements Searcher {
     private void searchInFile(String functionName, String pathToFile) {
         logger.setLevel(Level.INFO);
 
-        Pattern patternForFunctionName = Pattern.compile(".*(\\s)(" + functionName + ")(\\().+");
+        Pattern patternForFunctionName = Pattern.compile(".*([\\s\\(=])(" + functionName + ")(\\().+");
         Pattern patternForOpenBracket = Pattern.compile(".*\\{.*");
         Pattern patternForCloseBracket = Pattern.compile(".*\\}.*");
         Pattern patternForOpenCloseBracket = Pattern.compile(".*\\{.*\\}.*");
