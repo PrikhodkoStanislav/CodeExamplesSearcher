@@ -15,5 +15,6 @@ Result format can be:
 
 To use server jetty you should execute all files from folder "UnionProject/plugin for Sublime"
 to the directory "/{username}/AppData/Roaming/Sublime Text 3/Packages/User".
+You can use install.bat on Windows platform.
 
 Sublime HotKey: "Ctrl+s+d" on the current line.
