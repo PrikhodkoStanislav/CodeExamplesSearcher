@@ -109,10 +109,13 @@ public class ProjectCodeFormatter {
                 .append("</tr>");
         if (codeFromSublime != null) {
             for (CodeExample code : codeFromSublime) {
+                String source = code.getSource();
+                int index = source.contains("\\") ? source.lastIndexOf("\\") : source.lastIndexOf("/");
+                source = source.replaceAll("\\\\", "/");
                 sb.append("<tr>")
                     .append("<td>")
-                    .append("<a href=\"" + "file:///" + code.getSource() + "\">")
-                        .append(code.getSource().substring(code.getSource().lastIndexOf("\\") + 1))
+                    .append("<a href=\"" + "file:///" + source + "\">")
+                        .append(source.substring(index + 1))
                     .append("</a>")
                     .append("</td>")
                     .append("<td><pre>").append(code.getCodeExample()).append("</pre></td>")
@@ -126,10 +129,13 @@ public class ProjectCodeFormatter {
                 .append("<th>").append("CODE EXAMPLE").append("</th>")
                 .append("</tr>");
         for (CodeExample example : examples) {
+            String source = example.getSource();
+            int index = source.contains("\\") ? source.lastIndexOf("\\") : source.lastIndexOf("/");
+            source = source.replaceAll("\\\\", "/");
             sb.append("<tr>")
                     .append("<td>")
-                    .append("<a href=\"" + "file:///" + example.getSource() + "\">")
-                    .append(example.getSource())
+                    .append("<a href=\"" + "file:///" + source + "\">")
+                    .append(source.substring(index + 1))
                     .append("</a>")
                     .append("</td>")
                 .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
