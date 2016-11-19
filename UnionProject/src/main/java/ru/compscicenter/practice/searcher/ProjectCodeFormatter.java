@@ -129,7 +129,7 @@ public class ProjectCodeFormatter {
             sb.append("<tr>")
                     .append("<td>")
                     .append("<a href=\"" + "file:///" + example.getSource() + "\">")
-                    .append(example.getSource().substring(example.getSource().lastIndexOf("\\")))
+                    .append(example.getSource())
                     .append("</a>")
                     .append("</td>")
                 .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
