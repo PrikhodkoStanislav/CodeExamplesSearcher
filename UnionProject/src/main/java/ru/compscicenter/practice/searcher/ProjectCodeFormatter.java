@@ -110,7 +110,11 @@ public class ProjectCodeFormatter {
         if (codeFromSublime != null) {
             for (CodeExample code : codeFromSublime) {
                 sb.append("<tr>")
-                        .append("<td>").append(code.getSource()).append("</td>")
+                        .append("<td>")
+                        .append("<a href=\"" + "file:///" + code.getSource() + "\">")
+                            .append(code.getSource().substring(code.getSource().lastIndexOf("\\")))
+                        .append("</a>")
+                        .append("</td>")
                         .append("<td><pre>").append(code.getCodeExample()).append("</pre></td>")
                         .append("</tr>");
             }
@@ -123,7 +127,11 @@ public class ProjectCodeFormatter {
                 .append("</tr>");
         for (CodeExample example : examples) {
             sb.append("<tr>")
-                .append("<td>").append(example.getSource()).append("</td>")
+                    .append("<td>")
+                    .append("<a href=\"" + "file:///" + example.getSource() + "\">")
+                    .append(example.getSource())
+                    .append("</a>")
+                    .append("</td>")
                 .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
                 .append("</tr>");
         }
