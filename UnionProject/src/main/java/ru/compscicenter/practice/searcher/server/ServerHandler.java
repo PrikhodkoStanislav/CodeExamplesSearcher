@@ -50,13 +50,14 @@ public class ServerHandler extends AbstractHandler {
             String funcName = request.getParameter("func");
             String pathFromSublime = request.getParameter("path");
             String lineStr = request.getParameter("line");
+            String string = request.getParameter("string");
             int line = Integer.parseInt(lineStr);
             String pathForSearch = prefs.get("path", "./");
             long defaultTimeStamp = 10000;
             long timeStamp = prefs.getLong("timeStamp", defaultTimeStamp);
             setPreferences(funcName, pathForSearch, "html", timeStamp);
             try {
-                result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line);
+                result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line, string);
             } catch (ParseException e) {
                 logger.error("Sorry, something wrong!", e);
 //                e.printStackTrace();

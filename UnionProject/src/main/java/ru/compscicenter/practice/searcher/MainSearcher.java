@@ -32,6 +32,7 @@ public class MainSearcher {
     private static String functionName = "";
     private static String path = "";
     private static List<CodeExample> codeFromSublime = null;
+    private static String stringFromRequest = "";
 
     private static boolean searchOnSites = true;
     private static boolean searchInProject = true;
@@ -45,10 +46,11 @@ public class MainSearcher {
      * @return html-string with code examples
      * */
     public static String searchExamplesForClient(String funcName, String pathForSearch,
-                                                 String pathFromSublime, int line)
+                                                 String pathFromSublime, int line, String string)
             throws IOException, ParseException {
         format = "html";
         functionName = funcName;
+        stringFromRequest = string;
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch),
                 new SelfProjectSearcher(pathFromSublime)};
         List<CodeExample> l1 = new ArrayList<>();
@@ -194,7 +196,8 @@ public class MainSearcher {
             AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
             examples = duplicateRemover.removeDuplicates();
-            result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime);
+            result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime,
+                    stringFromRequest);
         }
         return result;
     }
@@ -212,7 +215,7 @@ public class MainSearcher {
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
             examples = duplicateRemover.removeDuplicates();
 
-            String fileText = projectCodeFormatter.createResultFile(functionName, examples, format, null);
+            String fileText = projectCodeFormatter.createResultFile(functionName, examples, format, null, "");
 
             String path = "result" + File.separator + "examples";
             if (!format.isEmpty()) {

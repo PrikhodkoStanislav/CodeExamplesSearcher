@@ -36,9 +36,9 @@ public class ProjectCodeFormatter {
      * @return string for the result file
      * */
     public String createResultFile(String functionName, List<CodeExample> examples,
-                                   String format, List<CodeExample> codeFromSublime) {
+                                   String format, List<CodeExample> codeFromSublime, String string) {
         if ("html".equals(format))
-            return createHtml(functionName, examples, codeFromSublime);
+            return createHtml(functionName, examples, codeFromSublime, string);
         else
             return createTxt(functionName, examples);
     }
@@ -50,7 +50,7 @@ public class ProjectCodeFormatter {
      * @return html-string
      * */
     public String createHtml(String functionName, List<CodeExample> examples,
-                             List<CodeExample> codeFromSublime) {
+                             List<CodeExample> codeFromSublime, String string) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
         sb.append("<head>");
@@ -98,6 +98,9 @@ public class ProjectCodeFormatter {
                 .append("</h3>");
         sb.append("<p><b>Last report date:</b> ").append(reportDate).append("</p>");
         sb.append("<a href=\"http://localhost:8080/settings\">Settings for searcher</a>");
+        sb.append("<p><b>String:</b> ");
+        sb.append(string);
+        sb.append("</p>");
         sb.append("<body>");
         sb.append("<table>");
         sb.append("<tr>")
@@ -186,6 +189,8 @@ public class ProjectCodeFormatter {
      * */
     public String toPrettyCode(String code) {
         logger.setLevel(Level.ERROR);
+
+        System.out.println(code);
 
         TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
 
