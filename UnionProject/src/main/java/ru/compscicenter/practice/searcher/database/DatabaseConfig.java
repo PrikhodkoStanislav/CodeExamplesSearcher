@@ -6,6 +6,8 @@ import com.sleepycat.je.Transaction;
 import com.sleepycat.persist.EntityStore;
 import com.sleepycat.persist.StoreConfig;
 import com.sleepycat.persist.evolve.IncompatibleClassException;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +19,8 @@ public class DatabaseConfig {
     private static DatabaseConfig ourInstance;
     private final static String configPath = "." + File.separator + "JEDB";
     private static File envDir = new File(configPath);
+
+    private final static Logger logger = Logger.getLogger(CodeExampleDA.class);
 
     private Environment envmnt;
     private EntityStore store;
@@ -32,6 +36,8 @@ public class DatabaseConfig {
     }
 
     private DatabaseConfig() {
+        logger.setLevel(Level.INFO);
+
         EnvironmentConfig envConfig = new EnvironmentConfig();
         StoreConfig storeConfig = new StoreConfig();
 
@@ -54,6 +60,8 @@ public class DatabaseConfig {
             store = new EntityStore(envmnt, "codeexamples", storeConfig);
         } catch (IncompatibleClassException e) {
             //todo: реализовать преобразования данных.
+            System.out.println(e.getMessage());
+            logger.error("Sorry, something wrong!", e);
         }
     }
 
