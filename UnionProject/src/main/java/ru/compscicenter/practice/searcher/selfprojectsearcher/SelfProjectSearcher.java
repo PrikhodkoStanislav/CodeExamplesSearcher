@@ -87,6 +87,7 @@ public class SelfProjectSearcher implements Searcher {
 
                 if (str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
                         str.contains("(" + functionName + "(")) {
+
                     StringBuilder sb = new StringBuilder();
                     for(String s : buffer) {
                         sb.append(s);
@@ -104,11 +105,12 @@ public class SelfProjectSearcher implements Searcher {
                         sb.append(str);
                         sb.append(newLine);
                     }
-                    sb.append(newLine);
+//                    sb.append(newLine);
 
                     CodeExample codeExample = new CodeExample();
                     codeExample.setLanguage("C");
                     codeExample.setSource(pathToFile + " : " + lineWithFunction);
+                    codeExample.setLineWithFunction(lineWithFunction);
                     codeExample.setFunction(functionName);
                     codeExample.setCodeExample(sb.toString());
                     codeExample.setModificationDate(file.lastModified());
@@ -205,7 +207,7 @@ public class SelfProjectSearcher implements Searcher {
 //                        str = strWithNumber(str, strNumber);
                     }
 
-                    sb.append(newLine);
+//                    sb.append(newLine);
 //                    sb.append(newLineWithNumber(strNumber));
 
 
