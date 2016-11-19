@@ -73,7 +73,9 @@ public class SelfProjectSearcher implements Searcher {
             File file = new File(pathToFile);
             BufferedReader in = new BufferedReader(fileReader);
             String str = "";
-            int strNumber = 0;
+            long strNumber = 0;
+            long lineWithFunction = 0;
+
             List<String> buffer = new ArrayList<>();
 
             long countBrackets = 0;
@@ -95,6 +97,7 @@ public class SelfProjectSearcher implements Searcher {
 
                     sb.append(str);
                     sb.append(newLine);
+                    lineWithFunction = strNumber;
                     while ((countBrackets != 0) && (str = in.readLine()) != null) {
                         strNumber++;
                         countBrackets += numberBrackets(str);
@@ -105,7 +108,7 @@ public class SelfProjectSearcher implements Searcher {
 
                     CodeExample codeExample = new CodeExample();
                     codeExample.setLanguage("C");
-                    codeExample.setSource(pathToFile + " : " + strNumber);
+                    codeExample.setSource(pathToFile + " : " + lineWithFunction);
                     codeExample.setFunction(functionName);
                     codeExample.setCodeExample(sb.toString());
                     codeExample.setModificationDate(file.lastModified());
@@ -140,7 +143,9 @@ public class SelfProjectSearcher implements Searcher {
             File file = new File(pathToFile);
             BufferedReader in = new BufferedReader(fileReader);
             String str = "";
-            int strNumber = 0;
+            long strNumber = 0;
+
+            long lineWithFunction = 0;
             List<String> buffer = new ArrayList<>();
 
             while ((str = in.readLine()) != null) {
@@ -162,10 +167,13 @@ public class SelfProjectSearcher implements Searcher {
 
                     sb.append(str);
                     sb.append(newLine);
+                    lineWithFunction = strNumber;
+
 //                    sb.append(newLineWithNumber(strNumber));
 
                     str = in.readLine();
                     strNumber++;
+
 //                    str = strWithNumber(str, strNumber);
 
                     while ((str != null)) {
@@ -177,6 +185,7 @@ public class SelfProjectSearcher implements Searcher {
 
                             str = in.readLine();
                             strNumber++;
+
 //                            str = strWithNumber(str, strNumber);
                             continue;
                         }
@@ -192,15 +201,17 @@ public class SelfProjectSearcher implements Searcher {
 //                        sb.append(newLineWithNumber(strNumber));
                         str = in.readLine();
                         strNumber++;
+
 //                        str = strWithNumber(str, strNumber);
                     }
 
                     sb.append(newLine);
 //                    sb.append(newLineWithNumber(strNumber));
 
+
                     CodeExample codeExample = new CodeExample();
                     codeExample.setLanguage("C");
-                    codeExample.setSource(pathToFile + " : " + strNumber);
+                    codeExample.setSource(pathToFile + " : " + lineWithFunction);
                     codeExample.setFunction(functionName);
                     codeExample.setCodeExample(sb.toString());
                     codeExample.setModificationDate(file.lastModified());

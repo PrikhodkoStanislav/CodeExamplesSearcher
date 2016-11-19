@@ -100,9 +100,9 @@ public class ProjectCodeFormatter {
         sb.append("<body>");
         sb.append("<table>");
         sb.append("<tr>")
-            .append("<th>").append("SOURCE").append("</th>")
-            .append("<th>").append("CODE EXAMPLE").append("</th>")
-            .append("</tr>");
+                .append("<th>").append("YOUR SOURCE").append("</th>")
+                .append("<th>").append("CODE EXAMPLE FROM YOUR ACTIVE FILE").append("</th>")
+                .append("</tr>");
         if (codeFromSublime != null) {
             for (CodeExample code : codeFromSublime) {
                 sb.append("<tr>")
@@ -111,6 +111,12 @@ public class ProjectCodeFormatter {
                         .append("</tr>");
             }
         }
+        sb.append("</table>");
+        sb.append("<table>");
+        sb.append("<tr>")
+                .append("<th>").append("SOURCE").append("</th>")
+                .append("<th>").append("CODE EXAMPLE").append("</th>")
+                .append("</tr>");
         for (CodeExample example : examples) {
             sb.append("<tr>")
                 .append("<td>").append(example.getSource()).append("</td>")
