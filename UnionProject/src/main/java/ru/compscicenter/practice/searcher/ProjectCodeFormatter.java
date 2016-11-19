@@ -137,14 +137,15 @@ public class ProjectCodeFormatter {
             sb.append("<tr>")
                     .append("<td>")
                     .append("<a href=\"" +
-                            (!source.startsWith("http") ? "file:///" : "")
-                            + source.substring(0, end + 2) + "\">")
+                            (source.startsWith("http") ? source :
+                                    "file:///" +
+                                            source.substring(0, end + 2)) + "\">")
                     .append(!source.startsWith("http") ?
                             source.substring(index + 1) : source)
                     .append("</a>")
                     .append("</td>")
-                .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
-                .append("</tr>");
+                    .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
+                    .append("</tr>");
         }
         sb.append("</table>")
             .append("</body>")
