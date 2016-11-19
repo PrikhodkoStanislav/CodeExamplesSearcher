@@ -19,65 +19,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     /**
      * URL to http://en.cppreference.com/w/
      */
-    private static final String CPPREFERENCE_URL = "http://en.cppreference.com/w/";
-    private static final String language = "C";
-
-    @Override
-    public List<CodeExample> findAndProcessCodeExamples(final String result) {
-        logger.setLevel(Level.INFO);
-
-        List<CodeExample> examples = new ArrayList<>();
-
-        Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
-        Matcher matcher = p.matcher(result);
-        String codeExample;
-        while (matcher.find()) {
-            codeExample = matcher.group(3);
-            codeExample = codeExample
-                .replaceAll(
-                        "<(/)?(span|a)(\\s((class=\"[a-z]{2}\\d+\")|(href=\"https?://[a-zA-Z\\.]([_a-zA-Z\\./])*\")))?>"
-                        , ""
-                );
-
-            codeExample = codeExample.replaceAll("&#40;", "(");
-            codeExample = codeExample.replaceAll("&#41;", ")");
-            codeExample = codeExample.replaceAll("&#91;", "[");
-            codeExample = codeExample.replaceAll("&#93;", "]");
-            codeExample = codeExample.replaceAll("&#123;", "{");
-            codeExample = codeExample.replaceAll("&#125;", "}");
-            codeExample = codeExample.replaceAll("&#160;", " ");
-            codeExample = codeExample.replaceAll("&quot;", "\"");
-            codeExample = codeExample.replaceAll("&amp;", "&");
-            codeExample = codeExample.replaceAll("\\s+", " ");
-
-            codeExample = codeExample.replaceAll("\\*/", "\\*\\/\n");
-            codeExample = codeExample.replaceAll("#", "\n#");
-
-            int intMain = codeExample.indexOf("int main");
-            codeExample =  intMain > 0 ? (codeExample.substring(0, intMain) +
-                    "\n" + codeExample.substring(intMain)) : codeExample;
-
-            String url = generateRequestURL(getQuery());
-            CodeExample ce = new CodeExample();
-            ce.setLanguage(language);
-            ce.setSource(url);
-            ce.setFunction(getQuery());
-            ce.setCodeExample(codeExample);
-            ce.setModificationDate(new Date().getTime());
-            logger.info("Code example parameters: " +
-                    "programming lang=" + ce.getLanguage() + " " +
-                    ", function=" + ce.getFunction() + " " +
-                    ", source=" + ce.getSource() + " " +
-                    ", modificationDate=" + ce.getModificationDate());
-            examples.add(ce);
-        }
-        return examples;
-    }
-
-    @Override
-    public String getSiteName() {
-        return CPPREFERENCE_URL.substring(0, CPPREFERENCE_URL.length() - 2);
-    }
+    private final static String CPPREFERENCE_URL = "http://en.cppreference.com/w/";
 
     @Override
     public String generateRequestURL(final String query) {
@@ -238,5 +180,62 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             || "unordered_set".equals(s) || "unordered_multiset".equals(s)
             || "map".equals(s) || "multimap".equals(s)
             || "unordered_map".equals(s) || "unordered_multimap".equals(s);
+    }
+
+    @Override
+    public List<CodeExample> findAndProcessCodeExamples(final String result) {
+        logger.setLevel(Level.INFO);
+
+        List<CodeExample> examples = new ArrayList<>();
+
+        Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
+        Matcher matcher = p.matcher(result);
+        String codeExample;
+        while (matcher.find()) {
+            codeExample = matcher.group(3);
+            codeExample = codeExample
+                    .replaceAll(
+                            "<(/)?(span|a)(\\s((class=\"[a-z]{2}\\d+\")|(href=\"https?://[a-zA-Z\\.]([_a-zA-Z\\./])*\")))?>"
+                            , ""
+                    );
+
+            codeExample = codeExample.replaceAll("&#40;", "(");
+            codeExample = codeExample.replaceAll("&#41;", ")");
+            codeExample = codeExample.replaceAll("&#91;", "[");
+            codeExample = codeExample.replaceAll("&#93;", "]");
+            codeExample = codeExample.replaceAll("&#123;", "{");
+            codeExample = codeExample.replaceAll("&#125;", "}");
+            codeExample = codeExample.replaceAll("&#160;", " ");
+            codeExample = codeExample.replaceAll("&quot;", "\"");
+            codeExample = codeExample.replaceAll("&amp;", "&");
+            codeExample = codeExample.replaceAll("\\s+", " ");
+
+            codeExample = codeExample.replaceAll("\\*/", "\\*\\/\n");
+            codeExample = codeExample.replaceAll("#", "\n#");
+
+            int intMain = codeExample.indexOf("int main");
+            codeExample =  intMain > 0 ? (codeExample.substring(0, intMain) +
+                    "\n" + codeExample.substring(intMain)) : codeExample;
+
+            String url = generateRequestURL(getQuery());
+            CodeExample ce = new CodeExample();
+            ce.setLanguage(getLanguage());
+            ce.setSource(url);
+            ce.setFunction(getQuery());
+            ce.setCodeExample(codeExample);
+            ce.setModificationDate(new Date().getTime());
+            logger.info("Code example parameters: " +
+                    "programming lang=" + ce.getLanguage() + " " +
+                    ", function=" + ce.getFunction() + " " +
+                    ", source=" + ce.getSource() + " " +
+                    ", modificationDate=" + ce.getModificationDate());
+            examples.add(ce);
+        }
+        return examples;
+    }
+
+    @Override
+    public String getSiteName() {
+        return CPPREFERENCE_URL.substring(0, CPPREFERENCE_URL.length() - 2);
     }
 }

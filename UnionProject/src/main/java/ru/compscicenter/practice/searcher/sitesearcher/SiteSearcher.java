@@ -18,10 +18,13 @@ public class SiteSearcher implements Searcher {
     public List<CodeExample> search(String methodNameQuery) {
         logger.setLevel(Level.ERROR);
 
-        SiteProcessor[] processors = {new CPlusPlusSiteProcessor(), new CPPReferenceSiteProcessor()};
+        SiteProcessor[] processors = {new CPlusPlusSiteProcessor()
+                , new CPPReferenceSiteProcessor()};
+                //, new SearchCodeProcessor()};
 
         for (SiteProcessor processor : processors) {
             processor.setQuery(methodNameQuery);
+            processor.setLanguage("C");
             processor.start();
         }
 

@@ -19,51 +19,7 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
     /**
      * URL to http://www.cplusplus.com/reference/
      */
-    private static final String CPLUSPLUS_URL = "http://www.cplusplus.com/reference/";
-    private static final String language = "C";
-
-    @Override
-    public List<CodeExample> findAndProcessCodeExamples(final String result) {
-        logger.setLevel(Level.INFO);
-
-        List<CodeExample> examples = new ArrayList<>();
-
-        Pattern p = Pattern.compile("Example.*<code>((<cite>.*)?(<dfn>.*)?<var>.*})</code>");
-        Matcher matcher = p.matcher(result);
-        String codeExample;
-        while (matcher.find()) {
-            codeExample = matcher.group(1);
-            codeExample = codeExample.replaceAll("<(/)?(cite|dfn|var|span|kbd)>", "");
-            codeExample = codeExample.replaceAll("\\s+", " ");
-
-            codeExample = codeExample.replaceAll("\\*/", "\\*\\/\n");
-            codeExample = codeExample.replaceAll("#", "\n#");
-
-            int intMain = codeExample.indexOf("int main");
-            codeExample =  intMain > 0 ? (codeExample.substring(0, intMain) +
-                    "\n" + codeExample.substring(intMain)) : codeExample;
-
-            String url = generateRequestURL(getQuery());
-            CodeExample ce = new CodeExample();
-            ce.setLanguage(language);
-            ce.setSource(url);
-            ce.setFunction(getQuery());
-            ce.setCodeExample(codeExample);
-            ce.setModificationDate(new Date().getTime());
-            logger.info("Code example parameters: " +
-                    "programming lang=" + ce.getLanguage() + " " +
-                    ", function=" + ce.getFunction() + " " +
-                    ", source=" + ce.getSource() + " " +
-                    ", modificationDate=" + ce.getModificationDate());
-            examples.add(ce);
-        }
-        return examples;
-    }
-
-    @Override
-    public String getSiteName() {
-        return CPLUSPLUS_URL.substring(0, CPLUSPLUS_URL.length() - 10);
-    }
+    private final static String CPLUSPLUS_URL = "http://www.cplusplus.com/reference/";
 
     public String generateRequestURL(final String query) {
         String[] fullMethodName = query.split("::");
@@ -231,5 +187,48 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
 
     private boolean isVectorContainer(String s) {
         return "vector".equals(s) || "vector-bool".equals(s);
+    }
+
+    @Override
+    public List<CodeExample> findAndProcessCodeExamples(final String result) {
+        logger.setLevel(Level.INFO);
+
+        List<CodeExample> examples = new ArrayList<>();
+
+        Pattern p = Pattern.compile("Example.*<code>((<cite>.*)?(<dfn>.*)?<var>.*})</code>");
+        Matcher matcher = p.matcher(result);
+        String codeExample;
+        while (matcher.find()) {
+            codeExample = matcher.group(1);
+            codeExample = codeExample.replaceAll("<(/)?(cite|dfn|var|span|kbd)>", "");
+            codeExample = codeExample.replaceAll("\\s+", " ");
+
+            codeExample = codeExample.replaceAll("\\*/", "\\*\\/\n");
+            codeExample = codeExample.replaceAll("#", "\n#");
+
+            int intMain = codeExample.indexOf("int main");
+            codeExample =  intMain > 0 ? (codeExample.substring(0, intMain) +
+                    "\n" + codeExample.substring(intMain)) : codeExample;
+
+            String url = generateRequestURL(getQuery());
+            CodeExample ce = new CodeExample();
+            ce.setLanguage(getLanguage());
+            ce.setSource(url);
+            ce.setFunction(getQuery());
+            ce.setCodeExample(codeExample);
+            ce.setModificationDate(new Date().getTime());
+            logger.info("Code example parameters: " +
+                    "programming lang=" + ce.getLanguage() + " " +
+                    ", function=" + ce.getFunction() + " " +
+                    ", source=" + ce.getSource() + " " +
+                    ", modificationDate=" + ce.getModificationDate());
+            examples.add(ce);
+        }
+        return examples;
+    }
+
+    @Override
+    public String getSiteName() {
+        return CPLUSPLUS_URL.substring(0, CPLUSPLUS_URL.length() - 10);
     }
 }

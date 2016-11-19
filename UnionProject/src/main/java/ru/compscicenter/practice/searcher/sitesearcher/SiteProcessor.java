@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by user on 28.09.2016!
@@ -18,6 +19,7 @@ import java.util.List;
 public abstract class SiteProcessor extends Thread {
     private final static Logger logger = Logger.getLogger(SiteProcessor.class);
 
+    private String language;
     private String query;
     private List<CodeExample> answers;
 
@@ -74,33 +76,32 @@ public abstract class SiteProcessor extends Thread {
     public String sendGet(String url) throws IOException {
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        Map<String, List<String>> headers = con.getHeaderFields();
 
-        // optional default is GET
-        con.setRequestMethod("GET");
-
-        //add request header
-        String USER_AGENT = "Mozilla/5.0";
-        con.setRequestProperty("User-Agent", USER_AGENT);
-
-        int responseCode = con.getResponseCode();
-
-        if (logger.isInfoEnabled()) {
-            logger.info("Sending 'GET' request to URL : " + url + " Response Code : " + responseCode);
+        for (String header : headers.get(null)) {
+            if (header.contains(" 302 ") || header.contains(" 301 ")) {
+                url = headers.get("Location").get(0);
+                obj = new URL(url);
+                con = (HttpURLConnection) obj.openConnection();
+                headers = con.getHeaderFields();
+            }
         }
-        if (responseCode == 404)
+
+        if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            con.disconnect();
+            return response.toString();
+        } else {
             return "Page Not Found";
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
         }
-        in.close();
-        con.disconnect();
-        return response.toString();
     }
 
     public String getQuery() {
@@ -109,6 +110,14 @@ public abstract class SiteProcessor extends Thread {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     protected boolean isMathFunction(String s) {
