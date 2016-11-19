@@ -111,11 +111,11 @@ public class ProjectCodeFormatter {
             for (CodeExample code : codeFromSublime) {
                 String source = code.getSource();
                 int start = source.contains("\\") ? source.lastIndexOf("\\") : source.lastIndexOf("/");
-                int end = source.lastIndexOf(".c");
+                int end = source.lastIndexOf(".c ");
                 source = source.replaceAll("\\\\", "/");
                 sb.append("<tr>")
                     .append("<td>")
-                    .append("<a href=\"" + "file:///" + source.substring(0, end + 1) + "\">")
+                    .append("<a href=\"" + "file:///" + source.substring(0, end + 2) + "\">")
                         .append(source.substring(start + 1))
                     .append("</a>")
                     .append("</td>")
@@ -132,13 +132,13 @@ public class ProjectCodeFormatter {
         for (CodeExample example : examples) {
             String source = example.getSource();
             int index = source.contains("\\") ? source.lastIndexOf("\\") : source.lastIndexOf("/");
-            int end = source.lastIndexOf(".c");
+            int end = source.lastIndexOf(".c ");
             source = source.replaceAll("\\\\", "/");
             sb.append("<tr>")
                     .append("<td>")
                     .append("<a href=\"" +
                             (!source.startsWith("http") ? "file:///" : "")
-                            + source.substring(0, end + 1) + "\">")
+                            + source.substring(0, end + 2) + "\">")
                     .append(index != source.length() - 1 ?
                             source.substring(index + 1) : source)
                     .append("</a>")
