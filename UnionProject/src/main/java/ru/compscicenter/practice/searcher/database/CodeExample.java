@@ -22,6 +22,7 @@ public class CodeExample implements Serializable {
     private String function;
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private String source;
+
     private long modificationDate;
     private long lineWithFunction;
 

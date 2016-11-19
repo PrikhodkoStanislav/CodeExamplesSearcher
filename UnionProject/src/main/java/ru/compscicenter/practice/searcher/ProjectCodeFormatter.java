@@ -97,6 +97,7 @@ public class ProjectCodeFormatter {
                 .append("</span>")
                 .append("</h3>");
         sb.append("<p><b>Last report date:</b> ").append(reportDate).append("</p>");
+        sb.append("<a href=\"http://localhost:8080/settings\">Settings for searcher</a>");
         sb.append("<body>");
         sb.append("<table>");
         sb.append("<tr>")

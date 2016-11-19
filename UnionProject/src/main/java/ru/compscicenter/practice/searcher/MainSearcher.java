@@ -69,6 +69,7 @@ public class MainSearcher {
         for (CodeExample ce : cesFromActiveProject) {
             if (ce.getLineWithFunction() == line) {
                 codeFromSublime.add(ce);
+                break;
             }
         }
         return htmlWithResult(l1);
