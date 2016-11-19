@@ -24,7 +24,7 @@ public class CodeExample implements Serializable {
     private String source;
 
     private long modificationDate;
-//    private long lineWithFunction;
+    private long lineWithFunction;
 
     public long getId() {
         return id;
@@ -74,12 +74,12 @@ public class CodeExample implements Serializable {
         this.modificationDate = modificationDate;
     }
 
-//    public long getLineWithFunction() {
-//        return lineWithFunction;
-//    }
+    public long getLineWithFunction() {
+        return lineWithFunction;
+    }
 
-//    public void setLineWithFunction(long lineWithFunction) {
-//        this.lineWithFunction = lineWithFunction;
-//    }
+    public void setLineWithFunction(long lineWithFunction) {
+        this.lineWithFunction = lineWithFunction;
+    }
 
 }
