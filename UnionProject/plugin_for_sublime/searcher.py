@@ -15,7 +15,7 @@ class SearchCommand(sublime_plugin.TextCommand):
 		funcName = ""
 		buf = ""
 		for c in string:
-			if (c == ' ') or (c == '\t') or (c == '=') or (c == '+') or (c == '-') or (c == '*') or (c == '/'):
+			if (c == ' ') or (c == '\t') or (c == '=') or (c == '+') or (c == '-') or (c == '*') or (c == '/') or (c == '&') or (c == '|') or (c == '('):
 				buf = ""
 				continue
 			if c == '(':
