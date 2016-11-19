@@ -110,12 +110,13 @@ public class ProjectCodeFormatter {
         if (codeFromSublime != null) {
             for (CodeExample code : codeFromSublime) {
                 String source = code.getSource();
-                int index = source.contains("\\") ? source.lastIndexOf("\\") : source.lastIndexOf("/");
+                int start = source.contains("\\") ? source.lastIndexOf("\\") : source.lastIndexOf("/");
+                int end = source.lastIndexOf(".c :");
                 source = source.replaceAll("\\\\", "/");
                 sb.append("<tr>")
                     .append("<td>")
-                    .append("<a href=\"" + "file:///" + source + "\">")
-                        .append(source.substring(index + 1))
+                    .append("<a href=\"" + "file:///" + source.substring(0, end + 2) + "\">")
+                        .append(source.substring(start + 1))
                     .append("</a>")
                     .append("</td>")
                     .append("<td><pre>").append(code.getCodeExample()).append("</pre></td>")
@@ -131,16 +132,20 @@ public class ProjectCodeFormatter {
         for (CodeExample example : examples) {
             String source = example.getSource();
             int index = source.contains("\\") ? source.lastIndexOf("\\") : source.lastIndexOf("/");
+            int end = source.lastIndexOf(".c :");
             source = source.replaceAll("\\\\", "/");
             sb.append("<tr>")
                     .append("<td>")
-                    .append("<a href=\"" + "file:///" + source + "\">")
-                    .append(index != source.length() - 1 ?
+                    .append("<a href=\"" +
+                            (source.startsWith("http") ? source :
+                                    "file:///" +
+                                            source.substring(0, end + 2)) + "\">")
+                    .append(!source.startsWith("http") ?
                             source.substring(index + 1) : source)
                     .append("</a>")
                     .append("</td>")
-                .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
-                .append("</tr>");
+                    .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
+                    .append("</tr>");
         }
         sb.append("</table>")
             .append("</body>")
