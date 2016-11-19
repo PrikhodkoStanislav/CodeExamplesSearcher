@@ -135,7 +135,8 @@ public class ProjectCodeFormatter {
             sb.append("<tr>")
                     .append("<td>")
                     .append("<a href=\"" + "file:///" + source + "\">")
-                    .append(source.substring(index + 1))
+                    .append(index != source.length() - 1 ?
+                            source.substring(index + 1) : source)
                     .append("</a>")
                     .append("</td>")
                 .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
