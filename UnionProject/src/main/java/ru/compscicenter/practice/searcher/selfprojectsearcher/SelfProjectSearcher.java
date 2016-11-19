@@ -109,7 +109,7 @@ public class SelfProjectSearcher implements Searcher {
 
                     CodeExample codeExample = new CodeExample();
                     codeExample.setLanguage("C");
-                    codeExample.setSource(pathToFile + " : " + lineWithFunction);
+                    codeExample.setSource(file.getAbsolutePath() + " : " + lineWithFunction);
                     codeExample.setLineWithFunction(lineWithFunction);
                     codeExample.setFunction(functionName);
                     codeExample.setCodeExample(sb.toString());
