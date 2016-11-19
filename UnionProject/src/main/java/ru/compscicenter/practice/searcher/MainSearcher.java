@@ -65,7 +65,12 @@ public class MainSearcher {
 
         l1.addAll(searchers[1].search(funcName));
         codeFromSublime = new ArrayList<>();
-        codeFromSublime.addAll(searchers[2].search(funcName));
+        List<CodeExample> cesFromActiveProject = searchers[2].search(funcName);
+        for (CodeExample ce : cesFromActiveProject) {
+            if (ce.getLineWithFunction() == line) {
+                codeFromSublime.add(ce);
+            }
+        }
         return htmlWithResult(l1);
     }
 

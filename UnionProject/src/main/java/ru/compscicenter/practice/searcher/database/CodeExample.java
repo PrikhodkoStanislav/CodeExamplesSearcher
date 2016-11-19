@@ -23,9 +23,14 @@ public class CodeExample implements Serializable {
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private String source;
     private long modificationDate;
+    private long lineWithFunction;
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getLanguage() {
@@ -68,7 +73,12 @@ public class CodeExample implements Serializable {
         this.modificationDate = modificationDate;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public long getLineWithFunction() {
+        return lineWithFunction;
     }
+
+    public void setLineWithFunction(long lineWithFunction) {
+        this.lineWithFunction = lineWithFunction;
+    }
+
 }
