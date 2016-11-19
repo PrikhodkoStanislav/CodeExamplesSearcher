@@ -1,6 +1,6 @@
 [
 { 
-	"keys": ["ctrl+s", "ctrl+d"],
+	"keys": ["ctrl+f5"],
 	"command": "search"
 }
 ]
