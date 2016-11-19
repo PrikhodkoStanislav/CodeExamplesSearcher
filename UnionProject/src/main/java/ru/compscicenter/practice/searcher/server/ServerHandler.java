@@ -4,8 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.prefs.Preferences;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Level;
@@ -23,6 +22,20 @@ public class ServerHandler extends AbstractHandler {
 
     private String result = "<h1>Welcome to the Code Examples Searcher Server!</h1>";
 
+    private Preferences prefs = Preferences.userRoot().node("settings");
+
+    public void setPreferences(String funcName, String path, String format, long timeStamp) {
+        String ID1 = "functionName";
+        String ID2 = "path";
+        String ID3 = "format";
+        String ID4 = "timeStamp";
+
+        prefs.put(ID1, funcName);
+        prefs.put(ID2, path);
+        prefs.put(ID3, format);
+        prefs.putLong(ID4, timeStamp);
+    }
+
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         logger.setLevel(Level.INFO);
@@ -36,7 +49,10 @@ public class ServerHandler extends AbstractHandler {
             String pathFromSublime = request.getParameter("path");
             String lineStr = request.getParameter("line");
             int line = Integer.parseInt(lineStr);
-            String pathForSearch = "./";
+            String pathForSearch = prefs.get("path", "./");
+            long defaultTimeStamp = 10000;
+            long timeStamp = prefs.getLong("timeStamp", defaultTimeStamp);
+            setPreferences(funcName, pathForSearch, "html", timeStamp);
             try {
                 result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line);
             } catch (ParseException e) {
