@@ -20,7 +20,9 @@ import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearche
 public class ServerHandler extends AbstractHandler {
     private final static Logger logger = Logger.getLogger(SelfProjectSearcher.class);
 
-    private String result = "<h1>Welcome to the Code Examples Searcher Server!</h1>";
+    private String result = "<h1>Welcome to the Code Examples Searcher Server!</h1>" + "<a href=\\\"http://localhost:8080/settings\\\">Settings for searcher</a>";
+
+    private String settingsResult = "";
 
     private Preferences prefs = Preferences.userRoot().node("settings");
 
@@ -59,11 +61,14 @@ public class ServerHandler extends AbstractHandler {
                 logger.error("Sorry, something wrong!", e);
 //                e.printStackTrace();
             }
-        }
-        else if (uri.equals("/get_example")) {
-            int length = result.length();
-            response.setContentLength(length);
+        } else if (uri.equals("/get_example")) {
+            long length = result.length();
+            response.setContentLengthLong(length);
             response.getWriter().println(result);
+        } else if (uri.equals("/settings")) {
+            long length = settingsResult.length();
+            response.setContentLengthLong(length);
+            response.getWriter().println(settingsResult);
         }
     }
 }
