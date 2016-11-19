@@ -205,16 +205,18 @@ public class ProjectCodeFormatter {
     public String toPrettyCode(String code) {
         logger.setLevel(Level.ERROR);
 
-        System.out.println(code);
-
-        TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
+//        System.out.println(code);
 
         IDocument document = new Document(code);
+
         try {
+            TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
             edit.apply(document);
-        } catch (MalformedTreeException | BadLocationException e) {
+        }
+        catch (Exception e) {
             logger.error("Sorry, something wrong!", e);
         }
+        
         return document.get();
     }
 }
