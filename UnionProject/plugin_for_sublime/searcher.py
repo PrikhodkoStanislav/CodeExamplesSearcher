@@ -15,10 +15,10 @@ class SearchCommand(sublime_plugin.TextCommand):
 		funcName = ""
 		buf = ""
 		for c in string:
-			if (c == ' ') or (c == '\t') or (c == '=') or (c == '+') or (c == '-') or (c == '*') or (c == '/') or (c == '&') or (c == '|') or (c == '('):
+			if (c == ' ') or (c == '\t') or (c == '=') or (c == '+') or (c == '-') or (c == '*') or (c == '/') or (c == '&') or (c == '|'):
 				buf = ""
 				continue
-			if c == '(':
+			if (c == '('):
 				if (buf == "if") or (buf == "for") or (buf == "while"):
 					buf = ""
 					continue
@@ -27,8 +27,8 @@ class SearchCommand(sublime_plugin.TextCommand):
 					break
 			buf += c
 		path = self.view.file_name()
-		lineNumber = cursor + 1
-		url = "http://localhost:8080/set_example?func=%s&path=%s&line=%s" % (funcName, path, lineNumber)
+		lineNumber = (cursor + 1)
+		url = "http://localhost:8080/set_example?func=%s&path=%s&line=%s&string=%s" % (funcName, path, lineNumber, string)
 		print(url)
 		requests.get(url)
 		
