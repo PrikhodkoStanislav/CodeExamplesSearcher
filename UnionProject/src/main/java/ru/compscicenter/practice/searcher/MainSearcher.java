@@ -72,6 +72,7 @@ public class MainSearcher {
 //                break;
 //            }
         }
+        codeFromSublime.addAll(cesFromActiveProject);
         return htmlWithResult(l1);
     }
 
