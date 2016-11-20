@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * Created by user on 19.11.2016!
  */
 public class SearchCodeProcessor extends SiteProcessor {
-    private final static Logger logger = Logger.getLogger(CPPReferenceSiteProcessor.class);
+    private final static Logger logger = Logger.getLogger(SearchCodeProcessor.class);
 
     /**
      * URL to http://searchcode.com/api/
@@ -54,17 +54,18 @@ public class SearchCodeProcessor extends SiteProcessor {
                     codeExample = matcher.group(1);
                     codeExample = codeExample
                             .replaceAll(
-                                    "<(/)?(span|a)(\\s((class=\"[a-z]+\")|(name=\"l-\\d+\")))?>"
+                                    "<(/)?(a|div|span)(\\s((class=\"[a-z]+\")|(name=\"l-\\d+\")))?>"
                                     , ""
                             );
+                    codeExample = codeExample.replaceAll("</?pre>", "");
                     codeExample = codeExample.replaceAll("\\s+", " ");
 
                     codeExample = codeExample.replaceAll("\\*/", "\\*\\/\n");
                     codeExample = codeExample.replaceAll("#", "\n#");
 
-                    /*int intMain = codeExample.indexOf("int main");
+                    int intMain = codeExample.indexOf("int main");
                     codeExample =  intMain > 0 ? (codeExample.substring(0, intMain) +
-                            "\n" + codeExample.substring(intMain)) : codeExample;*/
+                            "\n" + codeExample.substring(intMain)) : codeExample;
 
                     CodeExample ce = new CodeExample();
                     ce.setLanguage(getLanguage());

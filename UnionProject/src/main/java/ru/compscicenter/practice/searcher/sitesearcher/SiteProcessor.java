@@ -78,6 +78,9 @@ public abstract class SiteProcessor extends Thread {
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         Map<String, List<String>> headers = con.getHeaderFields();
 
+        logger.info("Sending HTTP-request to url: " + url +
+                " with response code: " + con.getResponseCode());
+
         for (String header : headers.get(null)) {
             if (header.contains(" 302 ") || header.contains(" 301 ")) {
                 url = headers.get("Location").get(0);

@@ -4,10 +4,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.cdt.core.ToolFactory;
 import org.eclipse.cdt.core.formatter.CodeFormatter;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
@@ -114,8 +112,10 @@ public class ProjectCodeFormatter {
                 source = source.replaceAll("\\\\", "/");
                 sb.append("<tr>")
                     .append("<td>")
-                    .append("<a href=\"" + "file:///" + source.substring(0, end + 2) + "\">")
-                    .append(source).append("</a>")
+                        .append("<a href=\"" + "file:///")
+                        .append(source.substring(0, end + 2)).append("\">")
+                        .append(source)
+                        .append("</a>")
                     .append("</td>")
                     .append("<td><pre>").append(code.getCodeExample()).append("</pre></td>")
                     .append("</tr>");
@@ -133,12 +133,12 @@ public class ProjectCodeFormatter {
             source = source.replaceAll("\\\\", "/");
             sb.append("<tr>")
                     .append("<td>")
-                    .append("<a href=\"" +
-                            (source.startsWith("http") ? source :
+                        .append("<a href=\"")
+                            .append(source.startsWith("http") ? source :
                                     "file:///" +
-                                            source.substring(0, end + 2)) + "\">")
-                    .append(source)
-                    .append("</a>")
+                                            source.substring(0, end + 2)).append("\">")
+                            .append(source)
+                        .append("</a>")
                     .append("</td>")
                     .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
                     .append("</tr>");

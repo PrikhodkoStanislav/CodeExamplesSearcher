@@ -9,7 +9,7 @@ import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearche
  * Created by Станислав on 09.11.2016.
  */
 public class CreateServer {
-    private final static Logger logger = Logger.getLogger(SelfProjectSearcher.class);
+    private final static Logger logger = Logger.getLogger(CreateServer.class);
 
     public static void startServer() {
         logger.setLevel(Level.INFO);

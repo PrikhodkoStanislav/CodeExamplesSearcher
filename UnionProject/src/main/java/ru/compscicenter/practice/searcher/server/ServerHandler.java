@@ -18,7 +18,7 @@ import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearche
  * Created by Станислав on 08.11.2016.
  */
 public class ServerHandler extends AbstractHandler {
-    private final static Logger logger = Logger.getLogger(SelfProjectSearcher.class);
+    private final static Logger logger = Logger.getLogger(ServerHandler.class);
 
     private String result = "<h1>Welcome to the Code Examples Searcher Server!</h1>" + "<a href=\\\"http://localhost:8080/settings\\\">Settings for searcher</a>";
 

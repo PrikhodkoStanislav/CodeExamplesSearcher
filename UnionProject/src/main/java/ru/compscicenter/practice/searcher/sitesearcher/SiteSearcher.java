@@ -19,8 +19,8 @@ public class SiteSearcher implements Searcher {
         logger.setLevel(Level.ERROR);
 
         SiteProcessor[] processors = {new CPlusPlusSiteProcessor()
-                , new CPPReferenceSiteProcessor()};
-                //, new SearchCodeProcessor()};
+                , new CPPReferenceSiteProcessor()
+                , new SearchCodeProcessor()};
 
         for (SiteProcessor processor : processors) {
             processor.setQuery(methodNameQuery);

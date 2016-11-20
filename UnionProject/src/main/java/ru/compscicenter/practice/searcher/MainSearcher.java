@@ -303,7 +303,7 @@ public class MainSearcher {
                     if (dbExamples == null || dbExamples.size() == 0) {
                         results.addAll(searchers[0].search(functionName));
                         results.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
-                                codeExample.getSource().contains("cppreference")).forEach(DATABASE::save);
+                                codeExample.getSource().contains("cppreference") || codeExample.getSource().contains("searchcode")).forEach(DATABASE::save);
                     } else {
                         updateDB(results);
                         results = dbExamples;
