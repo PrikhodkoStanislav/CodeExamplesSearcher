@@ -55,15 +55,7 @@ public class MainSearcher {
                 new SelfProjectSearcher(pathFromSublime)};
         List<CodeExample> l1 = new ArrayList<>();
 
-        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", funcName);
-        if (dbExamples == null || dbExamples.size() == 0) {
-            l1.addAll(searchers[0].search(funcName));
-            l1.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
-                    codeExample.getSource().contains("cppreference")).forEach(DATABASE::save);
-        } else {
-            updateDB(l1);
-            l1 = dbExamples;
-        }
+        tryToCodeExamplesFromDB(searchers[0], l1);
 
         l1.addAll(searchers[1].search(funcName));
         codeFromSublime = new ArrayList<>();
@@ -274,6 +266,22 @@ public class MainSearcher {
         }
     }
 
+    private static List<CodeExample> tryToCodeExamplesFromDB(Searcher searcher, List<CodeExample> results) {
+        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
+        if (dbExamples == null || dbExamples.size() == 0) {
+            results.addAll(searcher.search(functionName));
+            results.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
+                    codeExample.getSource().contains("cppreference") ||
+                    codeExample.getSource().contains("searchcode") ||
+                    codeExample.getSource().contains("stackoverflow")
+            ).forEach(DATABASE::save);
+        } else {
+            updateDB(results);
+            results = dbExamples;
+        }
+        return results;
+    }
+
     public static void main(String[] args) {
 
         //TODO set timer
@@ -299,15 +307,7 @@ public class MainSearcher {
 
                 System.out.println("Start searching ...");
                 if (searchOnSites) {
-                    List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
-                    if (dbExamples == null || dbExamples.size() == 0) {
-                        results.addAll(searchers[0].search(functionName));
-                        results.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
-                                codeExample.getSource().contains("cppreference") || codeExample.getSource().contains("searchcode")).forEach(DATABASE::save);
-                    } else {
-                        updateDB(results);
-                        results = dbExamples;
-                    }
+                    results = tryToCodeExamplesFromDB(searchers[0], results);
                 }
                 if (searchInProject) {
                     results.addAll(searchers[1].search(functionName));
