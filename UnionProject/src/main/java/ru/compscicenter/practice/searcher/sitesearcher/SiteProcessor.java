@@ -93,11 +93,11 @@ public abstract class SiteProcessor extends Thread {
         if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream(), "UTF-8"));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
 
+            StringBuilder response = new StringBuilder();
+            String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+                response.append(inputLine).append("\n");
             }
             in.close();
             con.disconnect();

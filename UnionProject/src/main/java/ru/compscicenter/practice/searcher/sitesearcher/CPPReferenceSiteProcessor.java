@@ -186,6 +186,18 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     public List<CodeExample> findAndProcessCodeExamples(final String result) {
         logger.setLevel(Level.INFO);
 
+        //TODO clean received HTML from tags and extra text
+        /*String result1 = result
+                .replaceAll(
+                        "<(/)?(span|a|div|dl|dd|ul|li)(\\s+((class=\"[a-zA-z-\\s0-9]+\")|(href=\"https?://[a-zA-Z\\.]([_a-zA-Z\\./])*\")))?>"
+                        , ""
+                );
+        result1 = result1.replaceAll("<(h[1-5]|code|p|title)>.*</(h[1-5]|code|p|title)>", "");
+        result1 = result1.replaceAll("<(link|meta).*//*>", "");
+        result1 = result1.replaceAll("<(li|script|div|style)(\\s+(id|div|class|src|type)=\".*\")?>.*\\n*(</(li|script|div|style)>)?", "");
+        result1 = result1.replaceAll("<!--\\s.+\\s-->", "");
+        result1 = result1.replaceAll("([\\n\\r]+|\\s{9,})", "\n");*/
+
         List<CodeExample> examples = new ArrayList<>();
 
         Pattern p = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
