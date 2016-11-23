@@ -266,6 +266,8 @@ public class MainSearcher {
         }
     }
 
+    //if no result at site (stackoverflow, cppreference) -> that search results at site
+
     private static List<CodeExample> tryToCodeExamplesFromDB(Searcher searcher, List<CodeExample> results) {
         List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
         if (dbExamples == null || dbExamples.size() == 0) {

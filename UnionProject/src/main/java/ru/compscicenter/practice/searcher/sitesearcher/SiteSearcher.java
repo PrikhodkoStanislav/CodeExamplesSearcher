@@ -18,7 +18,8 @@ public class SiteSearcher implements Searcher {
     public List<CodeExample> search(String methodNameQuery) {
         logger.setLevel(Level.ERROR);
 
-        SiteProcessor[] processors = {new CPlusPlusSiteProcessor()
+        SiteProcessor[] processors = { //new StackOverflowSiteProcessor()};
+                new CPlusPlusSiteProcessor()
                 , new CPPReferenceSiteProcessor()
                 , new SearchCodeProcessor()};
 
