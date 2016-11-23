@@ -20,7 +20,9 @@ import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearche
 public class ServerHandler extends AbstractHandler {
     private final static Logger logger = Logger.getLogger(ServerHandler.class);
 
-    private String result = "<h1>Welcome to the Code Examples Searcher Server!</h1>" + "<a href=\\\"http://localhost:8080/settings\\\">Settings for searcher</a>";
+    private String result = "<h1>Welcome to the Code Examples Searcher Server!</h1>"
+            + "<p>Try to search examples from Sublime.</p>"
+            + "<a href=\"http://localhost:8080/settings\">Settings for searcher</a>";
 
     private String settingsResult = "";
 
@@ -60,9 +62,8 @@ public class ServerHandler extends AbstractHandler {
                 result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line, string);
             } catch (ParseException e) {
                 logger.error("Sorry, something wrong!", e);
-//                e.printStackTrace();
             }
-        } else if (uri.equals("/get_example")) {
+        } else if (uri.equals("/get_examples")) {
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
@@ -70,6 +71,13 @@ public class ServerHandler extends AbstractHandler {
             long length = settingsResult.length();
             response.setContentLengthLong(length);
             response.getWriter().println(settingsResult);
+        } else if (uri.equals("/")) {
+            String result = "<h1>Welcome!</h1>";
+            result += "<p>You should go to the page to get examples.</p>";
+            result += "<a href=\"http://localhost:8080/get_examples\">Page with examples.</a>";
+            long length = result.length();
+            response.setContentLengthLong(length);
+            response.getWriter().println(result);
         }
     }
 }
