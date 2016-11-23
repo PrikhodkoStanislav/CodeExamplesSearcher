@@ -7,6 +7,7 @@ import org.eclipse.cdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
+import ru.compscicenter.practice.searcher.codeformatter.HandwrittenCodeFormatter;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.text.SimpleDateFormat;
@@ -20,6 +21,9 @@ public class ProjectCodeFormatter {
     private final static Logger logger = Logger.getLogger(ProjectCodeFormatter.class);
 
     private CodeFormatter codeFormatter;
+
+    private HandwrittenCodeFormatter handwrittenCodeFormatter;
+
     private String reportDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
 
     public ProjectCodeFormatter() {
