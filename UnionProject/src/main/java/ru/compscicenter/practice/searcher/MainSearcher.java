@@ -277,11 +277,38 @@ public class MainSearcher {
                     codeExample.getSource().contains("searchcode") ||
                     codeExample.getSource().contains("stackoverflow")
             ).forEach(DATABASE::save);
-        } else {
-            updateDB(results);
-            results = dbExamples;
         }
+        //todo ARCHITECTIRE of dite searcher filters
+        /*if (existsResultsOfSite(dbExamples, "cplusplus")) {
+            //filterByCppSite
+        }
+        if (existsResultsOfSite(dbExamples, "cppreference")) {
+            //filterByCppRefSite
+        }
+        if (existsResultsOfSite(dbExamples, "searchcode")) {
+            //filterBySearchcode
+        }
+        if (existsResultsOfSite(dbExamples, "stackoverflow")) {
+            //filterByStackoverflow
+        }*/
+        updateDB(results);
+        results = dbExamples;
         return results;
+    }
+
+    /**
+     * Check any result from website
+     * @param dbExamples code examples from database
+     * @param siteName website
+     * @return true if database examples contains at least one result from website, otherwise false
+     * */
+    private static boolean existsResultsOfSite(List<CodeExample> dbExamples, String siteName) {
+        for (CodeExample dbExample : dbExamples) {
+            if (dbExample.getSource().contains(siteName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) {
