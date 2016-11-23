@@ -24,7 +24,9 @@ public class ServerHandler extends AbstractHandler {
             + "<p>Try to search examples from Sublime.</p>"
             + "<a href=\"http://localhost:8080/settings\">Settings for searcher</a>";
 
-    private String settingsResult = "";
+    private String settingsResult = "<h1>Input settings:</h1>"
+            + "<input type=\"text\" name=\"path\" value=\"\" size=\"30\">"
+            + "<a href=\"http://localhost:8080/get_examples\">Page with examples</a>";
 
     private Preferences prefs = Preferences.userRoot().node("settings");
 
@@ -74,7 +76,7 @@ public class ServerHandler extends AbstractHandler {
         } else if (uri.equals("/")) {
             String result = "<h1>Welcome!</h1>";
             result += "<p>You should go to the page to get examples.</p>";
-            result += "<a href=\"http://localhost:8080/get_examples\">Page with examples.</a>";
+            result += "<a href=\"http://localhost:8080/get_examples\">Page with examples</a>";
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
