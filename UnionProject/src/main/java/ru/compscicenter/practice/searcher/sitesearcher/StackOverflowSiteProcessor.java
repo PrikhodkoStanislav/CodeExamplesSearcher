@@ -28,7 +28,7 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
     public String generateRequestURL(String query) {
         return STACKOVERFLOW_URL + "q=" + query +
                 "&title=" + getLanguage() +
-                "order=desc" +
+                "&order=desc" +
                 "&sort=activity" +
                 "&accepted=True" +
                 "&answers=5" +

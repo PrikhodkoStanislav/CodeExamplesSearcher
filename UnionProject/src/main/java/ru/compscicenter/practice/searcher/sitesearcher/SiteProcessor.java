@@ -92,7 +92,7 @@ public abstract class SiteProcessor extends Thread {
 
         if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
+                    new InputStreamReader(con.getInputStream(), "UTF-8"));
             String inputLine;
             StringBuilder response = new StringBuilder();
 
