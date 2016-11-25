@@ -289,10 +289,13 @@ public class MainSearcher {
                 searcher.getFilter().put("stackoverflow", true);
             }*/
         }
-        results = findResultsOnSites(searcher);
 
-        updateDB(results);
-        results = dbExamples;
+        results = findResultsOnSites(searcher);
+        for (CodeExample result : results) {
+            DATABASE.save(result);
+        }
+        if (dbExamples != null && dbExamples.size() != 0)
+            results.addAll(dbExamples);
         return results;
     }
 
