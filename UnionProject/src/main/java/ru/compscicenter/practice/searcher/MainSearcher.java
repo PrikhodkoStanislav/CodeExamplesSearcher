@@ -55,7 +55,7 @@ public class MainSearcher {
                 new SelfProjectSearcher(pathFromSublime)};
         List<CodeExample> l1 = new ArrayList<>();
 
-        tryToCodeExamplesFromDB(searchers[0], l1);
+        l1 = tryToCodeExamplesFromDB(searchers[0], l1);
 
         l1.addAll(searchers[1].search(funcName));
         codeFromSublime = new ArrayList<>();
