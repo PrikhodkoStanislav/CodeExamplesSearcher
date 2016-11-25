@@ -22,8 +22,6 @@ public class ProjectCodeFormatter {
 
     private CodeFormatter codeFormatter;
 
-    private HandwrittenCodeFormatter handwrittenCodeFormatter;
-
     private String reportDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
 
     public ProjectCodeFormatter() {
@@ -212,7 +210,7 @@ public class ProjectCodeFormatter {
 
 //        System.out.println(code);
 
-        String result = handwrittenCodeFormatter.format(code);
+        String result = HandwrittenCodeFormatter.format(code);
 
         System.out.println(result);
 
