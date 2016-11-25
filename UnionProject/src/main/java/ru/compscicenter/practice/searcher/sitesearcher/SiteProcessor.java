@@ -30,7 +30,7 @@ public abstract class SiteProcessor extends Thread {
         String request = generateRequestURL(getQuery());
         if (request != null && !"".equals(request)) {
             try {
-                String webContent = sendGet(request);
+                String webContent = sendGet(request.trim());
                 if (webContent.contains("Page Not Found")) {
                     answers = new ArrayList<>();
                     CodeExample ce = new CodeExample();
