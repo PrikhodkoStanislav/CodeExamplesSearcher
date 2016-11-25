@@ -273,7 +273,7 @@ public class MainSearcher {
         if (dbExamples == null || dbExamples.size() == 0) {
             searcher.getFilter().put("cplusplus", true);
             searcher.getFilter().put("cppreference", true);
-            searcher.getFilter().put("searchcode", true);
+//            searcher.getFilter().put("searchcode", true);
             //searcher.getFilter().put("stackoverflow", true);
         } else {
             if (!existsResultsOfSite(dbExamples, "cplusplus")) {
@@ -282,9 +282,9 @@ public class MainSearcher {
             if (!existsResultsOfSite(dbExamples, "cppreference")) {
                 searcher.getFilter().put("cppreference", true);
             }
-            if (!existsResultsOfSite(dbExamples, "searchcode")) {
-                searcher.getFilter().put("searchcode", true);
-            }
+//            if (!existsResultsOfSite(dbExamples, "searchcode")) {
+//                searcher.getFilter().put("searchcode", true);
+//            }
             /*if (!existsResultsOfSite(dbExamples, "stackoverflow")) {
                 searcher.getFilter().put("stackoverflow", true);
             }*/
