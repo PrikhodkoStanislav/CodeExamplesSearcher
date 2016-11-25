@@ -97,7 +97,7 @@ public abstract class SiteProcessor extends Thread {
             StringBuilder response = new StringBuilder();
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine).append("\n");
+                response.append(inputLine);//.append("\n");
             }
             in.close();
             con.disconnect();
