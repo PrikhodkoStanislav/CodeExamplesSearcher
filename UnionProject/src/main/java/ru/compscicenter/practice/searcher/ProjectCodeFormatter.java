@@ -210,9 +210,10 @@ public class ProjectCodeFormatter {
 
 //        System.out.println(code);
 
-        String result = HandwrittenCodeFormatter.format(code);
-
-        System.out.println(result);
+        // For speed!
+//        String result = HandwrittenCodeFormatter.format(code);
+//
+//        System.out.println(result);
 
         IDocument document = new Document(code);
 

@@ -55,12 +55,18 @@ public class ServerHandler extends AbstractHandler {
         logger.setLevel(Level.INFO);
 
         final String defaultPath = "./";
+        // Directpry with lib.
+//        final String defaultPath = "../libcurl/curl-master/lib/";
         final long defaultTimeout = 10000;
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
         String uri = request.getRequestURI();
+
+        // Set default when server start.
+        // Temporarily.
+        setPreferences(defaultPath, defaultTimeout);
         if (uri.equals("/set_example")) {
             String funcName = request.getParameter("func");
             String pathFromSublime = request.getParameter("path");

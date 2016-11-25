@@ -83,7 +83,7 @@ public class SelfProjectSearcher implements Searcher {
                 countBrackets += numberBrackets(str);
 
                 if (str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
-                        str.contains("(" + functionName + "(")) {
+                        str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) {
 
                     StringBuilder sb = new StringBuilder();
                     for(String s : buffer) {
@@ -118,9 +118,14 @@ public class SelfProjectSearcher implements Searcher {
                             ", modificationDate=" + codeExample.getModificationDate());
                     list.add(codeExample);
 
-                } else {
-                    buffer.add(str);
+                } else if (countBrackets == 0) {
+                    buffer.clear();
                 }
+                // Always have string before construction with correct sequence of brackets.
+                buffer.add(str);
+//                } else {
+//                    buffer.add(str);
+//                }
             }
         }
         catch (IOException e) {
