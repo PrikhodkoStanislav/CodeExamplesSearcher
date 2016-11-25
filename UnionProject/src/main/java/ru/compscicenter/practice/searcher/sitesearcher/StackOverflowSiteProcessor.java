@@ -6,9 +6,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,8 +94,7 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
             if (matcher.find()) {
                 answer = matcher.group(1);
 
-                if (answer.contains(getQuery() + "(") ||
-                        item.get("is_accepted").asBoolean() && answer.contains(getQuery() + "(")) {
+                if (answer.contains(getQuery() + "(")) {
                     codeExample.setCodeExample(answer);
                 }
             } else {
