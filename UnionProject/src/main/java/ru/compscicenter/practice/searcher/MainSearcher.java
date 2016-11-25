@@ -271,29 +271,39 @@ public class MainSearcher {
     private static List<CodeExample> tryToCodeExamplesFromDB(Searcher searcher, List<CodeExample> results) {
         List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
         if (dbExamples == null || dbExamples.size() == 0) {
-            results.addAll(searcher.search(functionName));
-            results.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
-                    codeExample.getSource().contains("cppreference") ||
-                    codeExample.getSource().contains("searchcode") ||
-                    codeExample.getSource().contains("stackoverflow")
-            ).forEach(DATABASE::save);
+            searcher.getFilter().put("cplusplus", true);
+            searcher.getFilter().put("cppreference", true);
+            searcher.getFilter().put("searchcode", true);
+            //searcher.getFilter().put("stackoverflow", true);
         } else {
-            //todo ARCHITECTIRE of dite searcher filters
-            /*if (existsResultsOfSite(dbExamples, "cplusplus")) {
-                //filterByCppSite
+            if (!existsResultsOfSite(dbExamples, "cplusplus")) {
+                searcher.getFilter().put("cplusplus", true);
             }
-            if (existsResultsOfSite(dbExamples, "cppreference")) {
-                //filterByCppRefSite
+            if (!existsResultsOfSite(dbExamples, "cppreference")) {
+                searcher.getFilter().put("cppreference", true);
             }
-            if (existsResultsOfSite(dbExamples, "searchcode")) {
-                //filterBySearchcode
+            if (!existsResultsOfSite(dbExamples, "searchcode")) {
+                searcher.getFilter().put("searchcode", true);
             }
-            if (existsResultsOfSite(dbExamples, "stackoverflow")) {
-                //filterByStackoverflow
+            /*if (!existsResultsOfSite(dbExamples, "stackoverflow")) {
+                searcher.getFilter().put("stackoverflow", true);
             }*/
         }
+        results = findResultsOnSites(searcher);
+
         updateDB(results);
         results = dbExamples;
+        return results;
+    }
+
+    private static List<CodeExample> findResultsOnSites(Searcher searcher) {
+        List<CodeExample> results = new ArrayList<>();
+        results.addAll(searcher.search(functionName));
+        results.stream().filter(codeExample -> codeExample.getSource().contains("cplusplus") ||
+                codeExample.getSource().contains("cppreference") ||
+                codeExample.getSource().contains("searchcode") ||
+                codeExample.getSource().contains("stackoverflow")
+        ).forEach(DATABASE::save);
         return results;
     }
 

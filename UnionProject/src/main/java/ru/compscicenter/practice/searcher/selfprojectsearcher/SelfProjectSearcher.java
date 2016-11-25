@@ -6,10 +6,7 @@ import ru.compscicenter.practice.searcher.Searcher;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -298,5 +295,10 @@ public class SelfProjectSearcher implements Searcher {
     public List<CodeExample> search(String functionName) {
         searchInDirectory(functionName, startPath);
         return list;
+    }
+
+    @Override
+    public Map<String, Boolean> getFilter() {
+        return null;
     }
 }
