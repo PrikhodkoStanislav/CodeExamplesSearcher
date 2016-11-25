@@ -8,18 +8,17 @@ public class HandwrittenCodeFormatter {
         String result = "";
         int offset = 1;
         char[] chars = sourceString.toCharArray();
-        int index = 0;
-        while (index < chars.length) {
-            char c = chars[index];
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
             result += c;
             if (c == '{') {
                 offset *= 4;
-                for (int i = 0; i < offset; i++) {
+                for (int j = 0; j < offset; j++) {
                     result += ' ';
                 }
             } else if (c == '}') {
                 offset /= 4;
-                for (int i = 0; i < offset; i++) {
+                for (int j = 0; j < offset; j++) {
                     result += ' ';
                 }
             }
