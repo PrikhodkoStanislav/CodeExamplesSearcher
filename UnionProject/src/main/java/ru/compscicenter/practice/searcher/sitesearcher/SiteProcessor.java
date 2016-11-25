@@ -76,6 +76,11 @@ public abstract class SiteProcessor extends Thread {
     public String sendGet(String url) throws IOException {
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        if (url.contains("api")) {
+            con.setRequestProperty("Accept", "application/json");
+        }
+
         Map<String, List<String>> headers = con.getHeaderFields();
 
         logger.info("Sending HTTP-request to url: " + url +

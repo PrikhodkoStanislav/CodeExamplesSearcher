@@ -277,20 +277,21 @@ public class MainSearcher {
                     codeExample.getSource().contains("searchcode") ||
                     codeExample.getSource().contains("stackoverflow")
             ).forEach(DATABASE::save);
+        } else {
+            //todo ARCHITECTIRE of dite searcher filters
+            /*if (existsResultsOfSite(dbExamples, "cplusplus")) {
+                //filterByCppSite
+            }
+            if (existsResultsOfSite(dbExamples, "cppreference")) {
+                //filterByCppRefSite
+            }
+            if (existsResultsOfSite(dbExamples, "searchcode")) {
+                //filterBySearchcode
+            }
+            if (existsResultsOfSite(dbExamples, "stackoverflow")) {
+                //filterByStackoverflow
+            }*/
         }
-        //todo ARCHITECTIRE of dite searcher filters
-        /*if (existsResultsOfSite(dbExamples, "cplusplus")) {
-            //filterByCppSite
-        }
-        if (existsResultsOfSite(dbExamples, "cppreference")) {
-            //filterByCppRefSite
-        }
-        if (existsResultsOfSite(dbExamples, "searchcode")) {
-            //filterBySearchcode
-        }
-        if (existsResultsOfSite(dbExamples, "stackoverflow")) {
-            //filterByStackoverflow
-        }*/
         updateDB(results);
         results = dbExamples;
         return results;
