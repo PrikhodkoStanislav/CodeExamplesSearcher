@@ -61,26 +61,10 @@ public abstract class SiteProcessor extends Thread {
     }
 
     /**
-     * Generate Request URL
-     * @param query - user's query
-     * @return url
+     * Set HTTP-query to the site and get HTML or JSON content
+     * @param url we-address of the search site
+     * @return web-site content if response code in (200, 201), otherwise failed message
      * */
-    public abstract String generateRequestURL(final String query);
-
-    /**
-     * Find and process search results (remove extra tags and spans)
-     * and then make code examples pretty
-     * @param result - finding html page
-     * */
-    public abstract List<CodeExample> findAndProcessCodeExamples(final String result);
-
-    /**
-     * Find and process search results (remove extra tags and spans)
-     * and then make code examples pretty
-     * @return name of site
-     * */
-    public abstract String getSiteName();
-
     public String sendGet(String url) throws IOException {
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -123,6 +107,27 @@ public abstract class SiteProcessor extends Thread {
             return "Page Not Found";
         }
     }
+
+    /**
+     * Generate Request URL
+     * @param query - user's query
+     * @return url
+     * */
+    public abstract String generateRequestURL(final String query);
+
+    /**
+     * Find and process search results (remove extra tags and spans)
+     * and then make code examples pretty
+     * @param result - finding html page
+     * */
+    public abstract List<CodeExample> findAndProcessCodeExamples(final String result);
+
+    /**
+     * Find and process search results (remove extra tags and spans)
+     * and then make code examples pretty
+     * @return name of site
+     * */
+    public abstract String getSiteName();
 
     public String getQuery() {
         return query;

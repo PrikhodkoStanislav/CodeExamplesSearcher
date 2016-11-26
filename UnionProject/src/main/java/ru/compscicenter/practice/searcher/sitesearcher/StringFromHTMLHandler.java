@@ -1,7 +1,8 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
-import jdk.internal.org.xml.sax.SAXException;
-import jdk.internal.org.xml.sax.helpers.DefaultHandler;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Created by user on 26.11.2016!
@@ -15,6 +16,8 @@ public class StringFromHTMLHandler extends DefaultHandler {
     }
 
     public String getCleanedString() {
-        return sb.toString();
+        String result = sb.toString();
+        sb = new StringBuilder();
+        return result;
     }
 }
