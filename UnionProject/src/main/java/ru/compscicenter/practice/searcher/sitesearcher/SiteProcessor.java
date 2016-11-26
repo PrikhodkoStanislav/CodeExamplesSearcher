@@ -77,10 +77,6 @@ public abstract class SiteProcessor extends Thread {
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-        if (url.contains("api")) {
-            con.setRequestProperty("Accept", "application/json");
-        }
-
         Map<String, List<String>> headers = con.getHeaderFields();
 
         logger.info("Sending HTTP-request to url: " + url +
@@ -97,8 +93,6 @@ public abstract class SiteProcessor extends Thread {
 
         if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
             BufferedReader in;
-
-            Reader reader = null;
             if ("gzip".equals(con.getContentEncoding())) {
                 in = new BufferedReader(new InputStreamReader(new GZIPInputStream(con.getInputStream())));
             }
