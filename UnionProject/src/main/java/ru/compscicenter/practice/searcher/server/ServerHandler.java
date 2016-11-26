@@ -23,22 +23,26 @@ public class ServerHandler extends AbstractHandler {
             + "<p>Try to search examples from Sublime.</p>"
             + "<a href=\"http://localhost:8080/settings\">Settings for searcher</a>";
 
-    private String settingsResult = "<h1>Input settings:</h1>"
+    private String settingsResult = ""
+            + "<form action=\"update_settings\">"
+            + "<h1>Input settings:</h1>"
             + "<p>Input path to the directory for search:</p>"
             + "<p><input type=\"text\" id=\"path\" name=\"path\" value=\"%1$s\" size=\"50\"></p>"
             + "<p>Input timout for database updating:</p>"
             + "<p><input type=\"number\" id=\"timeout\" name=\"timeout\" value=\"%2$d\" min=\"0\"" +
             "max=\"5000000000\" step=\"1\"></p>"
-            + "<p><input type=\"button\" id=\"button\" onclick=\"f_click();\"" +
-            "value=\"Submit\"></p>"
-            + "<script>"
-            + "function f_click() {"
-            + "document.getElementById(\"path\").value;"
-            + "document.getElementById(\"timeout\").value;"
-            + "document.getElementById(\"timeout\").value = 10000;"
-            + "}"
-            + "</script>"
-            + "<a href=\"http://localhost:8080/get_examples\">Page with examples</a>";
+            + "<p><input type=\"submit\" value = \"Submit\"></p>"
+//            + "<p><input type=\"button\" id=\"button\" onclick=\"f_click();\"" +
+//            "value=\"Submit\"></p>"
+//            + "<script>"
+//            + "function f_click() {"
+////            + "document.getElementById(\"path\").value;"
+////            + "document.getElementById(\"timeout\").value;"
+////            + "document.getElementById(\"timeout\").value = 10000;"
+//            + "}"
+//            + "</script>"
+            + "<a href=\"http://localhost:8080/get_examples\">Page with examples</a>"
+            + "</form>";
 
     private Preferences prefs = Preferences.userRoot().node("settings");
 
@@ -66,7 +70,7 @@ public class ServerHandler extends AbstractHandler {
 
         // Set default when server start.
         // Temporarily.
-        setPreferences(defaultPath, defaultTimeout);
+//        setPreferences(defaultPath, defaultTimeout);
         if (uri.equals("/set_example")) {
             String funcName = request.getParameter("func");
             String pathFromSublime = request.getParameter("path");
@@ -100,6 +104,11 @@ public class ServerHandler extends AbstractHandler {
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
+        } else if (uri.equals("/update_settings")) {
+            String path = request.getParameter("path");
+            String timeoutStr = request.getParameter("timeout");
+            long timeout = Long.parseLong(timeoutStr);
+            setPreferences(path, timeout);
         }
     }
 }
