@@ -271,23 +271,23 @@ public class MainSearcher {
     private static List<CodeExample> tryToCodeExamplesFromDB(Searcher searcher, List<CodeExample> results) {
         List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
         if (dbExamples == null || dbExamples.size() == 0) {
-//            searcher.getFilter().put("cplusplus", true);
-//            searcher.getFilter().put("cppreference", true);
+            searcher.getFilter().put("cplusplus", true);
+            searcher.getFilter().put("cppreference", true);
 //            searcher.getFilter().put("searchcode", true);
-            searcher.getFilter().put("stackoverflow", true);
+//            searcher.getFilter().put("stackoverflow", true);
         } else {
-//            if (!existsResultsOfSite(dbExamples, "cplusplus")) {
-//                searcher.getFilter().put("cplusplus", true);
-//            }
-//            if (!existsResultsOfSite(dbExamples, "cppreference")) {
-//                searcher.getFilter().put("cppreference", true);
-//            }
+            if (!existsResultsOfSite(dbExamples, "cplusplus")) {
+                searcher.getFilter().put("cplusplus", true);
+            }
+            if (!existsResultsOfSite(dbExamples, "cppreference")) {
+                searcher.getFilter().put("cppreference", true);
+            }
 //            if (!existsResultsOfSite(dbExamples, "searchcode")) {
 //                searcher.getFilter().put("searchcode", true);
 //            }
-            if (!existsResultsOfSite(dbExamples, "stackoverflow")) {
-                searcher.getFilter().put("stackoverflow", true);
-            }
+//            if (!existsResultsOfSite(dbExamples, "stackoverflow")) {
+//                searcher.getFilter().put("stackoverflow", true);
+//            }
         }
 
         if (searcher.getFilter().size() >= 1)

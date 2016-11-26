@@ -30,7 +30,6 @@ public abstract class SiteProcessor extends Thread {
         if (request != null && !"".equals(request)) {
             try {
                 String webContent = sendGet(request.trim());
-                System.out.println(webContent);
                 if (webContent.contains("Page Not Found")) {
                     answers = new ArrayList<>();
                     CodeExample ce = new CodeExample();
@@ -105,19 +104,6 @@ public abstract class SiteProcessor extends Thread {
             else {
                 in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             }
-
-            /*= new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), "UTF-8"));*/
-
-            /*InputStream is = con.getInputStream();
-            FileOutputStream fos = new FileOutputStream("temp.txt");
-
-            int b;
-            while ((b = is.read()) != -1) {
-                fos.write(b);
-                fos.flush();
-            }
-            fos.close();*/
 
             StringBuilder response = new StringBuilder();
             String inputLine;

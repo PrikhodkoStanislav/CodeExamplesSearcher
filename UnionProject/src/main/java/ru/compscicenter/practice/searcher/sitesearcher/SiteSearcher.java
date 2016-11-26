@@ -17,6 +17,14 @@ public class SiteSearcher implements Searcher {
     private final static Logger logger = Logger.getLogger(SiteSearcher.class);
 
     public Map<String, Boolean> processorFilter = new HashMap<>();
+    public Map<String, SiteProcessor> siteProcessors = new HashMap<>();
+
+    public SiteSearcher() {
+        siteProcessors.put("cplusplus", new CPlusPlusSiteProcessor());
+        siteProcessors.put("cppreference", new CPPReferenceSiteProcessor());
+        siteProcessors.put("searchcode", new SearchCodeProcessor());
+        siteProcessors.put("stackoverflow", new StackOverflowSiteProcessor());
+    }
 
     @Override
     public List<CodeExample> search(String methodNameQuery) {
@@ -66,22 +74,7 @@ public class SiteSearcher implements Searcher {
     }
 
     private SiteProcessor addSiteProcessorByName(String key) {
-        SiteProcessor processor;
-        switch (key) {
-            case "cplusplus":
-                processor = new CPlusPlusSiteProcessor();
-                break;
-            case "cppreference":
-                processor = new CPPReferenceSiteProcessor();
-                break;
-            case "searchcode":
-                processor = new SearchCodeProcessor();
-                break;
-            default:
-                processor = new StackOverflowSiteProcessor();
-                break;
-        }
-        return processor;
+        return siteProcessors.get(key);
     }
 
     @Override
