@@ -4,14 +4,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Created by user on 28.09.2016!
@@ -31,6 +30,7 @@ public abstract class SiteProcessor extends Thread {
         if (request != null && !"".equals(request)) {
             try {
                 String webContent = sendGet(request.trim());
+                System.out.println(webContent);
                 if (webContent.contains("Page Not Found")) {
                     answers = new ArrayList<>();
                     CodeExample ce = new CodeExample();
@@ -96,8 +96,28 @@ public abstract class SiteProcessor extends Thread {
         }
 
         if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), "UTF-8"));
+            BufferedReader in;
+
+            Reader reader = null;
+            if ("gzip".equals(con.getContentEncoding())) {
+                in = new BufferedReader(new InputStreamReader(new GZIPInputStream(con.getInputStream())));
+            }
+            else {
+                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            }
+
+            /*= new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), "UTF-8"));*/
+
+            /*InputStream is = con.getInputStream();
+            FileOutputStream fos = new FileOutputStream("temp.txt");
+
+            int b;
+            while ((b = is.read()) != -1) {
+                fos.write(b);
+                fos.flush();
+            }
+            fos.close();*/
 
             StringBuilder response = new StringBuilder();
             String inputLine;
@@ -106,6 +126,7 @@ public abstract class SiteProcessor extends Thread {
             }
             in.close();
             con.disconnect();
+
             return response.toString();
         } else {
             return "Page Not Found";
