@@ -4,6 +4,8 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
+import java.io.*;
+import java.util.*;
 
 public class FormatterTestC {
 
@@ -31,8 +33,18 @@ public class FormatterTestC {
         return formattedSource;
     }
 
-    public static void main(String args[]) {
-        String code = "int main() { int a; return 0; }";
+    public static void main(String args[]) throws Exception {
+        //String code = "int main() { int a; return 0; }";
+        InputStream is = new FileInputStream(args[0]);
+        BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+        String line = buf.readLine();
+        StringBuilder sb = new StringBuilder();
+        while(line != null){
+            sb.append(line).append("\n");
+            line = buf.readLine();
+        }
+        String code = sb.toString();
+        System.out.println(code);
         FormatterTestC cd = new FormatterTestC();
         System.out.println(cd.format(code));
     }
