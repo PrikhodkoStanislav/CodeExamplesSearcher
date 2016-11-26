@@ -100,13 +100,15 @@ public abstract class SiteProcessor extends Thread {
         }
 
         if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            InputStream is;
             BufferedReader in;
             if ("gzip".equals(con.getContentEncoding())) {
-                in = new BufferedReader(new InputStreamReader(new GZIPInputStream(con.getInputStream())));
+                is = new GZIPInputStream(con.getInputStream());
             }
             else {
-                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                is = con.getInputStream();
             }
+            in = new BufferedReader(new InputStreamReader(is));
 
             StringBuilder response = new StringBuilder();
             String inputLine;
