@@ -93,6 +93,7 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
             String answer = item.get("body").asText();
             matcher = p.matcher(answer);
             if (matcher.find()) {
+                //TODO correct code extraction
                 answer = matcher.group();
                 codeExample.setCodeExample(answer);
             } else {
@@ -108,7 +109,7 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
                     ", modificationDate=" + codeExample.getModificationDate());
 
             if (!"No code example found in this answer!".equals(codeExample.getCodeExample()))
-            temp.add(codeExample);
+                temp.add(codeExample);
         }
         return temp;
     }

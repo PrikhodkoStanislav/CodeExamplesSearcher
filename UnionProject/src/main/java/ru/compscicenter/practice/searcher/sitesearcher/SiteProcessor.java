@@ -4,6 +4,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -44,12 +46,13 @@ public abstract class SiteProcessor extends Thread {
                     answers.add(ce);
                 } else {
                     //todo clean from all tags var No.2
-                    //SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-                    //saxParserFactory.setValidating(false);
-                    //SAXParser saxParser = saxParserFactory.newSAXParser();
-                    //StringFromHTMLHandler handler = new StringFromHTMLHandler();
-                    //saxParser.parse(new File(result), handler);
-                    answers = findAndProcessCodeExamples(webContent);
+                    /*if (!request.contains("api"))
+                        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+                        StringFromHTMLHandler handler = new StringFromHTMLHandler();
+                        saxParserFactory.setValidating(false);
+                        SAXParser saxParser = saxParserFactory.newSAXParser();
+                        saxParser.parse(webContent, handler);*/
+                    answers = findAndProcessCodeExamples(webContent/*handler.getCleanedString()*/);
                 }
             } catch (Exception e) {
                 logger.error("Sorry, something wrong!", e);
