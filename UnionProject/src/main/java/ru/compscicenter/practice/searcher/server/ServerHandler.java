@@ -24,7 +24,7 @@ public class ServerHandler extends AbstractHandler {
             + "<a href=\"http://localhost:8080/settings\">Settings for searcher</a>";
 
     private String settingsResult = ""
-            + "<form action=\"update_settings\">"
+            + "<form action=\"settings/update_settings\">"
             + "<h1>Input settings:</h1>"
             + "<p>Input path to the directory for search:</p>"
             + "<p><input type=\"text\" id=\"path\" name=\"path\" value=\"%1$s\" size=\"50\"></p>"
@@ -41,8 +41,8 @@ public class ServerHandler extends AbstractHandler {
 ////            + "document.getElementById(\"timeout\").value = 10000;"
 //            + "}"
 //            + "</script>"
-            + "<a href=\"http://localhost:8080/get_examples\">Page with examples</a>"
-            + "</form>";
+            + "</form>"
+            + "<a href=\"http://localhost:8080/get_examples\">Page with examples</a>";
 
     private Preferences prefs = Preferences.userRoot().node("settings");
 
@@ -88,12 +88,19 @@ public class ServerHandler extends AbstractHandler {
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
-        } else if (uri.equals("/settings")) {
-            String pathForSearch = prefs.get("path", defaultPath);
-            long timeout = prefs.getLong("timeout", defaultTimeout);
-            String result = String.format(settingsResult, pathForSearch, timeout);
-//            setPreferences(pathForSearch, timeout);
-
+        } else if (uri.contains("/settings")) {
+            String path = defaultPath;
+            long timeout = defaultTimeout;
+            if (uri.equals("/settings/update_settings")) {
+                path = request.getParameter("path");
+                String timeoutStr = request.getParameter("timeout");
+                timeout = Long.parseLong(timeoutStr);
+                setPreferences(path, timeout);
+            } else if (uri.equals("/settings")) {
+                path = prefs.get("path", defaultPath);
+                timeout = prefs.getLong("timeout", defaultTimeout);
+            }
+            String result = String.format(settingsResult, path, timeout);
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
@@ -104,11 +111,6 @@ public class ServerHandler extends AbstractHandler {
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
-        } else if (uri.equals("/update_settings")) {
-            String path = request.getParameter("path");
-            String timeoutStr = request.getParameter("timeout");
-            long timeout = Long.parseLong(timeoutStr);
-            setPreferences(path, timeout);
         }
     }
 }
