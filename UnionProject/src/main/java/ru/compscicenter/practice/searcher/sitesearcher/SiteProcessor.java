@@ -44,6 +44,12 @@ public abstract class SiteProcessor extends Thread {
                             ", result="+ ce.getCodeExample());
                     answers.add(ce);
                 } else {
+                    //todo clean from all tags var No.2
+                    //SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+                    //saxParserFactory.setValidating(false);
+                    //SAXParser saxParser = saxParserFactory.newSAXParser();
+                    //StringFromHTMLHandler handler = new StringFromHTMLHandler();
+                    //saxParser.parse(new File(result), handler);
                     answers = findAndProcessCodeExamples(webContent);
                 }
             } catch (Exception e) {
