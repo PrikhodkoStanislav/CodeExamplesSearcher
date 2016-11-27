@@ -10,8 +10,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.StringReader;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by user on 22.11.2016!
@@ -111,26 +109,30 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
 
             saxParser.parse(new InputSource(new StringReader(body)), handler);
             body = handler.getCleanedString();
+            body = body.replaceAll("\n+", "\n");
 
-            String code = extractCode(body);
-            if (findMethodInCode(code)) {
-                codeExample.setCodeExample(code);
-            } else {
-                codeExample.setCodeExample("No code example found in this answer!");
-            }
+            List<String> code = extractCode(body);
+            for (String s : code) {
+                if (findMethodInCode(s)) {
+                    codeExample.setCodeExample(s);
+                } else {
+                    codeExample.setCodeExample("No code example found in this answer!");
+                }
 
-            codeExample.setModificationDate(new Date().getTime());
+                codeExample.setModificationDate(new Date().getTime());
 
-            if (!"No code example found in this answer!".equals(codeExample.getCodeExample())) {
-                temp.add(codeExample);
+                if (!"No code example found in this answer!".equals(codeExample.getCodeExample())) {
+                    temp.add(codeExample);
 
-                logger.info("Code example parameters: " +
-                        "programming lang=" + codeExample.getLanguage() + " " +
-                        ", function=" + codeExample.getFunction() + " " +
-                        ", source=" + codeExample.getSource() + " " +
-                        ", modificationDate=" + codeExample.getModificationDate());
+                    logger.info("Code example parameters: " +
+                            "programming lang=" + codeExample.getLanguage() + " " +
+                            ", function=" + codeExample.getFunction() + " " +
+                            ", source=" + codeExample.getSource() + " " +
+                            ", modificationDate=" + codeExample.getModificationDate());
+                }
             }
         }
+
         if (temp.size() == 0)
             return null;
         return temp;

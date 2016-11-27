@@ -285,9 +285,9 @@ public class MainSearcher {
 //            if (!existsResultsOfSite(dbExamples, "searchcode")) {
 //                searcher.getFilter().put("searchcode", true);
 //            }
-//            if (!existsResultsOfSite(dbExamples, "stackoverflow")) {
-//                searcher.getFilter().put("stackoverflow", true);
-//            }
+            if (!existsResultsOfSite(dbExamples, "stackoverflow")) {
+                searcher.getFilter().put("stackoverflow", true);
+            }
         }
 
         if (searcher.getFilter().size() >= 1)

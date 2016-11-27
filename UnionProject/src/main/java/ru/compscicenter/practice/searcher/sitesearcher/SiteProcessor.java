@@ -4,9 +4,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -55,7 +56,6 @@ public abstract class SiteProcessor extends Thread {
                         saxParserFactory.setValidating(false);
                         SAXParser saxParser = saxParserFactory.newSAXParser();
                         saxParser.parse(webContent, handler);*/
-                    p = Pattern.compile("[\\s\\t\\+\\-\\*\\/\\=\\(]" + getQuery() + "\\s?\\(");
                     answers = findAndProcessCodeExamples(webContent/*handler.getCleanedString()*/);
                 }
             } catch (Exception e) {
@@ -112,19 +112,51 @@ public abstract class SiteProcessor extends Thread {
         }
     }
 
-    protected String extractCode(String answer) {
-        StringBuilder sb = new StringBuilder();
+    /**
+     * Extract code from html-text
+     * @param answer html-text
+     * return code fragments
+     **/
+    protected List<String> extractCode(String answer) {
         String[] lines = answer.split("\n");
+        List<AnswerLine> answerLines = new ArrayList<>();
+        boolean isCode;
         for (String line : lines) {
-            if (line.endsWith(";") ||
+            isCode = line.endsWith(";") ||
                     line.endsWith("{") ||
-                    line.endsWith(")")) {
-                sb.append(line).append("\n");
+                    line.endsWith("}") ||
+                    line.endsWith("[") ||
+                    line.endsWith("]") ||
+                    line.endsWith("(") ||
+                    (line.endsWith(")") && !line.startsWith("(")) ||
+                    line.endsWith(">") ||
+                    line.endsWith("=");
+            answerLines.add(new AnswerLine(line, isCode));
+        }
+
+        List<String> codeFragments = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < answerLines.size(); i++) {
+            AnswerLine answerLine = answerLines.get(i);
+            if (answerLine.isCode && !answerLines.get(i-1).isCode) {
+                if (!"".equals(sb.toString())) {
+                    codeFragments.add(sb.toString());
+                    sb.replace(0, sb.length(), "");
+                }
+                sb.append(answerLine.line);
+            } else if (answerLine.isCode) {
+                sb.append(answerLine.line);
             }
         }
-        return sb.toString();
+        codeFragments.add(sb.toString());
+        return codeFragments;
     }
 
+    /**
+     * Try to find function name in code fragment
+     * @param code code fragment
+     * return true if function name is exists in code, otherwise false
+     **/
     protected boolean findMethodInCode(String code) {
         String[] lines = code.split("\n");
         for (String line : lines) {
@@ -163,6 +195,7 @@ public abstract class SiteProcessor extends Thread {
 
     public void setQuery(String query) {
         this.query = query;
+        p = Pattern.compile("[\\s\\t\\+\\-\\*\\/\\=\\(]" + query + "\\s?\\(");
     }
 
     public String getLanguage() {
@@ -173,6 +206,15 @@ public abstract class SiteProcessor extends Thread {
         this.language = language;
     }
 
+    public List<CodeExample> getAnswers() {
+        return answers;
+    }
+
+    /**
+     * These regular expressions belong to API for cppreference.com and cplusplus.com
+     * @param s function name
+     * return true if function name matches one of the regexp class, otherwise false
+     **/
     protected boolean isMathFunction(String s) {
         return s.matches("(a?(sin|cos|tan)h?|atan2|" +
                 "l?|l?(abs|mod|round|rint|max|min)|" +
@@ -246,7 +288,13 @@ public abstract class SiteProcessor extends Thread {
         return s.matches("(signal|raise)");
     }
 
-    public List<CodeExample> getAnswers() {
-        return answers;
+    private class AnswerLine {
+        private String line;
+        private boolean isCode;
+
+        public AnswerLine(String line, boolean isCode) {
+            this.line = line;
+            this.isCode = isCode;
+        }
     }
 }
