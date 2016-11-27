@@ -12,6 +12,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -23,6 +25,7 @@ public abstract class SiteProcessor extends Thread {
     private String language;
     private String query;
     private List<CodeExample> answers;
+    private Pattern p;
 
     @Override
     public void run() {
@@ -52,6 +55,7 @@ public abstract class SiteProcessor extends Thread {
                         saxParserFactory.setValidating(false);
                         SAXParser saxParser = saxParserFactory.newSAXParser();
                         saxParser.parse(webContent, handler);*/
+                    p = Pattern.compile("[\\s\\t\\+\\-\\*\\/\\=\\(]" + getQuery() + "\\s?\\(");
                     answers = findAndProcessCodeExamples(webContent/*handler.getCleanedString()*/);
                 }
             } catch (Exception e) {
@@ -106,6 +110,30 @@ public abstract class SiteProcessor extends Thread {
         } else {
             return "Page Not Found";
         }
+    }
+
+    protected String extractCode(String answer) {
+        StringBuilder sb = new StringBuilder();
+        String[] lines = answer.split("\n");
+        for (String line : lines) {
+            if (line.endsWith(";") ||
+                    line.endsWith("{") ||
+                    line.endsWith(")")) {
+                sb.append(line).append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    protected boolean findMethodInCode(String code) {
+        String[] lines = code.split("\n");
+        for (String line : lines) {
+            Matcher matcher = p.matcher(line);
+            if (matcher.find()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

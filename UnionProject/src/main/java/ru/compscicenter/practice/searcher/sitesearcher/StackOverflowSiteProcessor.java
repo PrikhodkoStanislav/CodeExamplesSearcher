@@ -25,7 +25,6 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
     private final static String STACKOVERFLOW_URL = "http://api.stackexchange.com/2.2/";
 
     private ObjectMapper mapper = new ObjectMapper();
-    private Pattern p;
 
     @Override
     public String generateRequestURL(String query) {
@@ -41,8 +40,6 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
 
     @Override
     public List<CodeExample> findAndProcessCodeExamples(String result) {
-        p = Pattern.compile("[\\s\\t\\+\\-\\*\\/\\=\\(]" + getQuery() + "\\s?\\(");
-
         List<CodeExample> examples = new ArrayList<>();
         try {
             JsonNode node = mapper.readValue(result, JsonNode.class);
@@ -137,30 +134,6 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
         if (temp.size() == 0)
             return null;
         return temp;
-    }
-
-    private boolean findMethodInCode(String code) {
-        String[] lines = code.split("\n");
-        for (String line : lines) {
-            Matcher matcher = p.matcher(line);
-            if (matcher.find()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String extractCode(String answer) {
-        StringBuilder sb = new StringBuilder();
-        String[] lines = answer.split("\n");
-        for (String line : lines) {
-            if (line.endsWith(";") ||
-                    line.endsWith("{") ||
-                    line.endsWith(")")) {
-                sb.append(line).append("\n");
-            }
-        }
-        return sb.toString();
     }
 
     private List<JsonNode> collectAnswers(JsonNode items) {
