@@ -15,7 +15,7 @@ public class StringFromHTMLHandler extends DefaultHandler {
         sb.append(chars, i, i1);
     }
 
-    public String getCleanedString() {
+    public String getCleanedFromTagsString() {
         String result = sb.toString();
         sb = new StringBuilder();
         return result;

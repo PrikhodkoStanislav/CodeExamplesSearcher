@@ -78,7 +78,6 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
         StringFromHTMLHandler handler = new StringFromHTMLHandler();
         SAXParser saxParser = saxParserFactory.newSAXParser();
 
-        List<CodeExample> temp = new ArrayList<>();
         int questionId = node.get("question_id").asInt();
         String url = STACKOVERFLOW_URL + "questions/" + questionId + "/answers?" +
                 "order=desc" +
@@ -97,40 +96,41 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
             length = answers.size();
         }
 
+        List<CodeExamplesWithSource> codeSourceList = new ArrayList<>();
         for (int i = 0; i < length; i++) {
             JsonNode answer = answers.get(i);
-            CodeExample codeExample = new CodeExample();
-            codeExample.setLanguage(getLanguage());
-            codeExample.setFunction(getQuery());
-            codeExample.setSource(node.get("link").asText());
 
+            String source = node.get("link").asText();
             String body = answer.get("body").asText();
             body = "<root>" + body + "</root>";
-
             saxParser.parse(new InputSource(new StringReader(body)), handler);
-            body = handler.getCleanedString();
+            body = handler.getCleanedFromTagsString();
             body = body.replaceAll("\n+", "\n");
 
-            List<String> code = extractCode(body);
-            for (String s : code) {
-                if (findMethodInCode(s)) {
-                    codeExample.setCodeExample(s);
-                } else {
-                    codeExample.setCodeExample("No code example found in this answer!");
-                }
+            codeSourceList.add(new CodeExamplesWithSource(source, body));
+        }
 
+        for (CodeExamplesWithSource codeWithSource : codeSourceList) {
+            codeWithSource.codeFragments = extractCode(codeWithSource.body);
+        }
+
+        List<CodeExample> temp = new ArrayList<>();
+        for (CodeExamplesWithSource codesWithSource : codeSourceList) {
+            codesWithSource.codeFragments.stream().filter(this::findMethodInCode).forEach(s -> {
+                CodeExample codeExample = new CodeExample();
+                codeExample.setLanguage(getLanguage());
+                codeExample.setFunction(getQuery());
+                codeExample.setSource(codesWithSource.source);
+                codeExample.setCodeExample(s);
                 codeExample.setModificationDate(new Date().getTime());
 
-                if (!"No code example found in this answer!".equals(codeExample.getCodeExample())) {
-                    temp.add(codeExample);
-
-                    logger.info("Code example parameters: " +
-                            "programming lang=" + codeExample.getLanguage() + " " +
-                            ", function=" + codeExample.getFunction() + " " +
-                            ", source=" + codeExample.getSource() + " " +
-                            ", modificationDate=" + codeExample.getModificationDate());
-                }
-            }
+                temp.add(codeExample);
+                logger.info("Code example parameters: " +
+                        "programming lang=" + codeExample.getLanguage() + " " +
+                        ", function=" + codeExample.getFunction() + " " +
+                        ", source=" + codeExample.getSource() + " " +
+                        ", modificationDate=" + codeExample.getModificationDate());
+            });
         }
 
         if (temp.size() == 0)
@@ -160,5 +160,16 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
     @Override
     public String getSiteName() {
         return "http://stackoverflow.com/";
+    }
+
+    private class CodeExamplesWithSource {
+        private String source;
+        private String body;
+        private List<String> codeFragments;
+
+        public CodeExamplesWithSource(String source, String body) {
+            this.source = source;
+            this.body = body;
+        }
     }
 }

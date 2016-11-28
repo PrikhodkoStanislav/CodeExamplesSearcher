@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -56,7 +57,7 @@ public abstract class SiteProcessor extends Thread {
                         saxParserFactory.setValidating(false);
                         SAXParser saxParser = saxParserFactory.newSAXParser();
                         saxParser.parse(webContent, handler);*/
-                    answers = findAndProcessCodeExamples(webContent/*handler.getCleanedString()*/);
+                    answers = findAndProcessCodeExamples(webContent/*handler.getCleanedFromTagsString()*/);
                 }
             } catch (Exception e) {
                 logger.error("Sorry, something wrong!", e);
@@ -119,20 +120,7 @@ public abstract class SiteProcessor extends Thread {
      **/
     protected List<String> extractCode(String answer) {
         String[] lines = answer.split("\n");
-        List<AnswerLine> answerLines = new ArrayList<>();
-        boolean isCode;
-        for (String line : lines) {
-            isCode = line.endsWith(";") ||
-                    line.endsWith("{") ||
-                    line.endsWith("}") ||
-                    line.endsWith("[") ||
-                    line.endsWith("]") ||
-                    line.endsWith("(") ||
-                    (line.endsWith(")") && !line.startsWith("(")) ||
-                    line.endsWith(">") ||
-                    line.endsWith("=");
-            answerLines.add(new AnswerLine(line, isCode));
-        }
+        List<AnswerLine> answerLines = markAnswersContent(lines);
 
         List<String> codeFragments = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
@@ -149,7 +137,39 @@ public abstract class SiteProcessor extends Thread {
             }
         }
         codeFragments.add(sb.toString());
+
+        Iterator<String> iterator = codeFragments.iterator();
+        while (iterator.hasNext()) {
+            String code = iterator.next();
+            if (code.length() <= 100) {
+                iterator.remove();
+            }
+        }
+
         return codeFragments;
+    }
+
+    /**
+     * Mark answer bodies into classes: "code", "no-code
+     * @param lines answer body converted into array
+     * return marked answers
+     **/
+    private List<AnswerLine> markAnswersContent(String[] lines) {
+        List<AnswerLine> answerLines = new ArrayList<>();
+        boolean isCode;
+        for (String line : lines) {
+            isCode = line.endsWith(";") ||
+                line.endsWith("{") ||
+                line.endsWith("}") ||
+                line.endsWith("[") ||
+                line.endsWith("]") ||
+                line.endsWith("(") ||
+                (line.endsWith(")") && !line.startsWith("(")) ||
+                line.endsWith(">") ||
+                line.endsWith("=");
+            answerLines.add(new AnswerLine(line, isCode));
+        }
+        return answerLines;
     }
 
     /**

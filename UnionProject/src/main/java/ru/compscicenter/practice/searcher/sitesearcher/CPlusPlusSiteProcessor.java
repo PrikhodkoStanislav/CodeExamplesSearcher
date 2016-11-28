@@ -195,12 +195,13 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
 
         List<CodeExample> examples = new ArrayList<>();
 
-        Pattern p = Pattern.compile("Example.*<code>((<cite>.*)?(<dfn>.*)?<var>.*})</code>");
-        Matcher matcher = p.matcher(result);
+        Pattern patternForCodeBlock = Pattern.compile("Example.*<code>((<cite>.*)?(<dfn>.*)?<var>.*})</code>");
+        Pattern patternForCodeCleaning = Pattern.compile("<(/)?(cite|dfn|var|span|kbd)>");
+        Matcher matcher = patternForCodeBlock.matcher(result);
         String codeExample;
         while (matcher.find()) {
             codeExample = matcher.group(1);
-            codeExample = codeExample.replaceAll("<(/)?(cite|dfn|var|span|kbd)>", "");
+            codeExample = codeExample.replaceAll(patternForCodeCleaning.pattern(), "");
             codeExample = codeExample.replaceAll("\\s+", " ");
 
             codeExample = codeExample.replaceAll("\\*/", "\\*\\/\n");

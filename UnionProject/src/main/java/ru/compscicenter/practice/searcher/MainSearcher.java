@@ -274,7 +274,7 @@ public class MainSearcher {
             searcher.getFilter().put("cplusplus", true);
             searcher.getFilter().put("cppreference", true);
 //            searcher.getFilter().put("searchcode", true);
-//            searcher.getFilter().put("stackoverflow", true);
+            searcher.getFilter().put("stackoverflow", true);
         } else {
             if (!existsResultsOfSite(dbExamples, "cplusplus")) {
                 searcher.getFilter().put("cplusplus", true);
