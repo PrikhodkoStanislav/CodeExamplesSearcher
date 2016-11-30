@@ -78,9 +78,9 @@ public class ServerHandler extends AbstractHandler {
                 try {
                     result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line, string);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    logger.error("Parse exception!", e);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("IO exception!", e);
                 }
             });
             thread1.start();
