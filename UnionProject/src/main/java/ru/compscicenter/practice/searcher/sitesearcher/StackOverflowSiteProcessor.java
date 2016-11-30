@@ -8,6 +8,7 @@ import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
 
@@ -52,11 +53,18 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
             }
 
             for (JsonNode tempNode : tempNodes) {
-                List<CodeExample> exs = processTempNode(tempNode);
+                List<CodeExample> exs;
+                try {
+                    exs = processTempNode(tempNode);
+                } catch (Exception e) {
+                    logger.error("Sorry, something wrong!", e);
+                    continue;
+                }
+
                 if (exs != null)
-                    examples.addAll(processTempNode(tempNode));
+                    examples.addAll(exs);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error("Sorry, something wrong!", e);
         }
         return examples;
