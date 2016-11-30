@@ -296,10 +296,22 @@ public class SiteSearcherTest {
     }
 
     @Test
-    public void testCppTestSizeOf() {
-        assertEquals("http://www.cplusplus.com/reference/cstdlib/bsearch/",
-                testCorrectURL(cppProcessor, "std::sizeof"));
+    public void testCppRefRand() {
+        assertEquals("http://en.cppreference.com/w/c/numeric/random/rand",
+                testCorrectURL(cppReferenceProcessor, "std::rand"));
     }
+
+    @Test
+    public void testCppRand() {
+        assertEquals("http://www.cplusplus.com/reference/cstdlib/rand/",
+                testCorrectURL(cppProcessor, "std::rand"));
+    }
+
+    /*@Test
+    public void testCppTestSizeOf() {
+        assertEquals("http://www.cplusplus.com/reference/std/sizeof/",
+                testCorrectURL(cppProcessor, "std::sizeof"));
+    }*/
 
     /*@Test
     public void testCppRefTestSizeOf() {

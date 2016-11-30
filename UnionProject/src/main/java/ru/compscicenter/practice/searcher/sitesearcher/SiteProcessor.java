@@ -166,7 +166,8 @@ public abstract class SiteProcessor extends Thread {
                 line.endsWith("(") ||
                 (line.endsWith(")") && !line.startsWith("(")) ||
                 line.endsWith(">") ||
-                line.endsWith("=");
+                line.endsWith("=") ||
+                line.contains("//");
             answerLines.add(new AnswerLine(line, isCode));
         }
         return answerLines;
@@ -274,7 +275,7 @@ public abstract class SiteProcessor extends Thread {
     }
 
     protected boolean isCStdLibFunction(String s) {
-        return s.matches("(ato(ll?|f|i)?|(str|wcs)to(u?ll?|f|l?d|(i|u)max))");
+        return s.matches("(ato(ll?|f|i)?|(str|wcs)to(u?ll?|f|l?d|(i|u)max)|s?rand)");
     }
 
     protected boolean isCTypeFunction(String s) {

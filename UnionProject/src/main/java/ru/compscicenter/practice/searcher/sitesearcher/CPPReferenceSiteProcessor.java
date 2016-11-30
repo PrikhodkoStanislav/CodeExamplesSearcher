@@ -69,9 +69,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
 
     private String buildURL(String methodName, String structureName) {
         methodName = methodName.replaceAll("_s$", "");
-        if ("sizeof".equals(methodName))
+        if ("sizeof".equals(methodName)) {
             return CPPREFERENCE_URL + "cpp/language/" + methodName;
-        else if (isMathFunction(methodName)) {
+        } else if (isMathFunction(methodName)) {
             return CPPREFERENCE_URL + "c/numeric/math/" + methodName;
         } else if (isCAssert(methodName)) {
             return CPPREFERENCE_URL + "c/error/" + methodName;
@@ -113,7 +113,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     }
 
     private String getStdLibUrl(String methodName) {
-        if (methodName.matches("ato(ll?|i)?"))
+        if (methodName.matches("s?rand"))
+            return CPPREFERENCE_URL + "c/numeric/random/rand";
+        else if (methodName.matches("ato(ll?|i)?"))
             return CPPREFERENCE_URL + "c/string/byte/atoi";
         else if (methodName.matches("atof"))
             return CPPREFERENCE_URL + "c/string/byte/atof";
