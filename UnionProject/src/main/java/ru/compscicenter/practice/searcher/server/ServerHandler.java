@@ -31,6 +31,9 @@ public class ServerHandler extends AbstractHandler {
             + "<p>Input timeout for database updating:</p>"
             + "<p><input type=\"number\" id=\"timeout\" name=\"timeout\" value=\"%2$d\" min=\"0\"" +
             "max=\"5000000000\" step=\"1\"></p>"
+            + "<p>Input maximum number of examples:</p>"
+            + "<p><input type=\"number\" id=\"maxExamplesNumber\" name=\"maxExamplesNumber\" value=\"%3$d\" min=\"0\"" +
+            "max=\"1000\" step=\"1\"></p>"
             + "<p><input type=\"submit\" value = \"Submit\"></p>"
 //            + "<p><input type=\"button\" id=\"button\" onclick=\"f_click();\"" +
 //            "value=\"Submit\"></p>"
@@ -46,12 +49,14 @@ public class ServerHandler extends AbstractHandler {
 
     private Preferences prefs = Preferences.userRoot().node("settings");
 
-    public void setPreferences(String path, long timeout) {
+    public void setPreferences(String path, long timeout, int maxExamplesNumber) {
         String ID1 = "path";
         String ID2 = "timeout";
+        String ID3 = "maxExamplesNumber";
 
         prefs.put(ID1, path);
         prefs.putLong(ID2, timeout);
+        prefs.putInt(ID3, maxExamplesNumber);
     }
 
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
@@ -60,6 +65,7 @@ public class ServerHandler extends AbstractHandler {
 
         final String defaultPath = "./";
         final long defaultTimeout = 10000;
+        final int defaultMaxExamplesNumber = 20;
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -74,6 +80,7 @@ public class ServerHandler extends AbstractHandler {
             int line = Integer.parseInt(lineStr);
             String pathForSearch = prefs.get("path", defaultPath);
             long timeout = prefs.getLong("timeout", defaultTimeout);
+            int maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
             Thread thread1 = new Thread(() -> {
                 try {
                     result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line, string);
@@ -91,16 +98,20 @@ public class ServerHandler extends AbstractHandler {
         } else if (uri.contains("/settings")) {
             String path = defaultPath;
             long timeout = defaultTimeout;
+            int maxExamplesNumber = defaultMaxExamplesNumber;
             if (uri.equals("/settings/update_settings")) {
                 path = request.getParameter("path");
                 String timeoutStr = request.getParameter("timeout");
                 timeout = Long.parseLong(timeoutStr);
-                setPreferences(path, timeout);
+                String maxExamplesNumberStr = request.getParameter("maxExamplesNumber");
+                maxExamplesNumber = Integer.parseInt(maxExamplesNumberStr);
+                setPreferences(path, timeout, maxExamplesNumber);
             } else if (uri.equals("/settings")) {
                 path = prefs.get("path", defaultPath);
                 timeout = prefs.getLong("timeout", defaultTimeout);
+                maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
             }
-            String result = String.format(settingsResult, path, timeout);
+            String result = String.format(settingsResult, path, timeout, maxExamplesNumber);
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
