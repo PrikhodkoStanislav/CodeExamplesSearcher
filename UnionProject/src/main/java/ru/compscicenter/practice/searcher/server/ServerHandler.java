@@ -24,11 +24,11 @@ public class ServerHandler extends AbstractHandler {
             + "<a href=\"http://localhost:8080/settings\">Settings for searcher</a>";
 
     private String settingsResult = ""
-            + "<form action=\"settings/update_settings\">"
+            + "<form action=\"http://localhost:8080/settings/update_settings\">"
             + "<h1>Input settings:</h1>"
             + "<p>Input path to the directory for search:</p>"
-            + "<p><input type=\"text\" id=\"path\" name=\"path\" value=\"%1$s\" size=\"50\"></p>"
-            + "<p>Input timout for database updating:</p>"
+            + "<p><input type=\"text\" id=\"path\" name=\"path\" value=\"%1$s\" size=\"100\"></p>"
+            + "<p>Input timeout for database updating:</p>"
             + "<p><input type=\"number\" id=\"timeout\" name=\"timeout\" value=\"%2$d\" min=\"0\"" +
             "max=\"5000000000\" step=\"1\"></p>"
             + "<p><input type=\"submit\" value = \"Submit\"></p>"
@@ -59,8 +59,6 @@ public class ServerHandler extends AbstractHandler {
         logger.setLevel(Level.INFO);
 
         final String defaultPath = "./";
-        // Directpry with lib.
-//        final String defaultPath = "../libcurl/curl-master/lib/";
         final long defaultTimeout = 10000;
 
         response.setContentType("text/html;charset=utf-8");
@@ -89,6 +87,7 @@ public class ServerHandler extends AbstractHandler {
             response.setContentLengthLong(length);
             response.getWriter().println(result);
         } else if (uri.contains("/settings")) {
+            System.out.println(uri);
             String path = defaultPath;
             long timeout = defaultTimeout;
             if (uri.equals("/settings/update_settings")) {
@@ -100,7 +99,9 @@ public class ServerHandler extends AbstractHandler {
                 path = prefs.get("path", defaultPath);
                 timeout = prefs.getLong("timeout", defaultTimeout);
             }
+            System.out.println(path);
             String result = String.format(settingsResult, path, timeout);
+            System.out.println(result);
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
