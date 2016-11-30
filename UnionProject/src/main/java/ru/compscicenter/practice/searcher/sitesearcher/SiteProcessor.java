@@ -126,13 +126,13 @@ public abstract class SiteProcessor extends Thread {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < answerLines.size(); i++) {
             AnswerLine answerLine = answerLines.get(i);
-            if (answerLine.isCode && !answerLines.get(i-1).isCode) {
-                if (!"".equals(sb.toString())) {
-                    codeFragments.add(sb.toString());
-                    sb.replace(0, sb.length(), "");
+            if (answerLine.isCode) {
+                if (i == 0 || !answerLines.get(i-1).isCode) {
+                    if (!"".equals(sb.toString())) {
+                        codeFragments.add(sb.toString());
+                        sb.replace(0, sb.length(), "");
+                    }
                 }
-                sb.append(answerLine.line);
-            } else if (answerLine.isCode) {
                 sb.append(answerLine.line);
             }
         }
