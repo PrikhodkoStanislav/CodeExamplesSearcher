@@ -1,8 +1,8 @@
 package ru.compscicenter.practice.searcher.server;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.prefs.Preferences;
 
@@ -26,7 +26,7 @@ public class ServerHandler extends AbstractHandler {
     private String settingsResult = ""
             + "<form action=\"http://localhost:8080/settings/update_settings\">"
             + "<h1>Input settings:</h1>"
-            + "<p>Input path to the directory for search:</p>"
+            + "<p>Input path to the directory for search (without quotes):</p>"
             + "<p><input type=\"text\" id=\"path\" name=\"path\" value=\"%1$s\" size=\"100\"></p>"
             + "<p>Input timeout for database updating:</p>"
             + "<p><input type=\"number\" id=\"timeout\" name=\"timeout\" value=\"%2$d\" min=\"0\"" +
@@ -66,9 +66,6 @@ public class ServerHandler extends AbstractHandler {
         baseRequest.setHandled(true);
         String uri = request.getRequestURI();
 
-        // Set default when server start.
-        // Temporarily.
-//        setPreferences(defaultPath, defaultTimeout);
         if (uri.equals("/set_example")) {
             String funcName = request.getParameter("func");
             String pathFromSublime = request.getParameter("path");
@@ -77,17 +74,21 @@ public class ServerHandler extends AbstractHandler {
             int line = Integer.parseInt(lineStr);
             String pathForSearch = prefs.get("path", defaultPath);
             long timeout = prefs.getLong("timeout", defaultTimeout);
-            try {
-                result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line, string);
-            } catch (ParseException e) {
-                logger.error("Sorry, something wrong!", e);
-            }
+            Thread thread1 = new Thread(() -> {
+                try {
+                    result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line, string);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            thread1.start();
         } else if (uri.equals("/get_examples")) {
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
         } else if (uri.contains("/settings")) {
-            System.out.println(uri);
             String path = defaultPath;
             long timeout = defaultTimeout;
             if (uri.equals("/settings/update_settings")) {
@@ -99,9 +100,7 @@ public class ServerHandler extends AbstractHandler {
                 path = prefs.get("path", defaultPath);
                 timeout = prefs.getLong("timeout", defaultTimeout);
             }
-            System.out.println(path);
             String result = String.format(settingsResult, path, timeout);
-            System.out.println(result);
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
