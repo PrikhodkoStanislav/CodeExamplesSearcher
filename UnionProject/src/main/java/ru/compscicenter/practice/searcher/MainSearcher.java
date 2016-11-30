@@ -9,6 +9,7 @@ import ru.compscicenter.practice.searcher.database.CodeExample;
 import ru.compscicenter.practice.searcher.database.CodeExampleDA;
 import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
 import ru.compscicenter.practice.searcher.server.CreateServer;
+import ru.compscicenter.practice.searcher.server.UpdateDBTask;
 import ru.compscicenter.practice.searcher.sitesearcher.SiteSearcher;
 
 import java.io.BufferedWriter;
@@ -269,6 +270,8 @@ public class MainSearcher {
     //if no result at site (stackoverflow, cppreference) -> that search results at site
 
     private static List<CodeExample> tryToCodeExamplesFromDB(Searcher searcher, List<CodeExample> results) {
+        UpdateDBTask task = new UpdateDBTask();
+        task.run();
         List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
         if (dbExamples == null || dbExamples.size() == 0) {
             searcher.getFilter().put("cplusplus", true);
