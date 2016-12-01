@@ -133,7 +133,7 @@ public abstract class SiteProcessor extends Thread {
                         sb.replace(0, sb.length(), "");
                     }
                 }
-                sb.append(answerLine.line);
+                sb.append(answerLine.line).append("\n");
             }
         }
         codeFragments.add(sb.toString());
@@ -141,7 +141,7 @@ public abstract class SiteProcessor extends Thread {
         Iterator<String> iterator = codeFragments.iterator();
         while (iterator.hasNext()) {
             String code = iterator.next();
-            if (code.length() <= 100) {
+            if (code.split("\\n").length <= 2) {
                 iterator.remove();
             }
         }
@@ -159,6 +159,7 @@ public abstract class SiteProcessor extends Thread {
         boolean isCode;
         for (String line : lines) {
             isCode = line.endsWith(";") ||
+                line.endsWith(",") ||
                 line.endsWith("{") ||
                 line.endsWith("}") ||
                 line.endsWith("[") ||
@@ -167,7 +168,8 @@ public abstract class SiteProcessor extends Thread {
                 (line.endsWith(")") && !line.startsWith("(")) ||
                 line.endsWith(">") ||
                 line.endsWith("=") ||
-                line.contains("//");
+                line.startsWith("#") ||
+                (line.contains("//") && line.indexOf("//") > 0);
             answerLines.add(new AnswerLine(line, isCode));
         }
         return answerLines;

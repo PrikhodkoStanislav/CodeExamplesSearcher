@@ -61,6 +61,12 @@
             <version>1.9.13</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika</artifactId>
+            <version>0.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>cdt</groupId>
             <artifactId>cdt</artifactId>
             <version>5.3</version>

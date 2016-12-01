@@ -1,15 +1,18 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.apache.log4j.Logger;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.html.HtmlParser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.xml.sax.InputSource;
+import org.xml.sax.ContentHandler;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -53,16 +56,16 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
             }
 
             for (JsonNode tempNode : tempNodes) {
-                List<CodeExample> exs;
+                List<CodeExample> exs = null;
                 try {
                     exs = processTempNode(tempNode);
                 } catch (Exception e) {
                     logger.error("Sorry, something wrong!", e);
-                    continue;
                 }
 
-                if (exs != null)
+                if (exs != null) {
                     examples.addAll(exs);
+                }
             }
         } catch (IOException e) {
             logger.error("Sorry, something wrong!", e);
@@ -81,11 +84,6 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
     }
 
     private List<CodeExample> processTempNode(JsonNode node) throws Exception {
-        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        saxParserFactory.setValidating(false);
-        StringFromHTMLHandler handler = new StringFromHTMLHandler();
-        SAXParser saxParser = saxParserFactory.newSAXParser();
-
         int questionId = node.get("question_id").asInt();
         String url = STACKOVERFLOW_URL + "questions/" + questionId + "/answers?" +
                 "order=desc" +
@@ -110,10 +108,15 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
 
             String source = node.get("link").asText();
             String body = answer.get("body").asText();
-            body = "<root>" + body + "</root>";
-            saxParser.parse(new InputSource(new StringReader(body)), handler);
-            body = handler.getCleanedFromTagsString();
-            body = body.replaceAll("\n+", "\n");
+
+            InputStream input = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
+            ContentHandler handler = new BodyContentHandler();
+            Metadata metadata = new Metadata();
+            new HtmlParser().parse(input, handler, metadata);
+            body = handler.toString();
+
+            body = body.replaceAll("\n+", "\n\n");
+            body = body.replaceAll("\\s\n", "\n");
 
             codeSourceList.add(new CodeExamplesWithSource(source, body));
         }
