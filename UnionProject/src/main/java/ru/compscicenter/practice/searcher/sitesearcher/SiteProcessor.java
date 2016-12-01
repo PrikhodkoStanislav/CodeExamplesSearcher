@@ -10,10 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -33,12 +30,12 @@ public abstract class SiteProcessor extends Thread {
     public void run() {
         logger.setLevel(Level.INFO);
 
+        answers = new ArrayList<>();
         String request = generateRequestURL(getQuery());
         if (request != null && !"".equals(request)) {
             try {
                 String webContent = sendGet(request.trim());
                 if (webContent.contains("Page Not Found")) {
-                    answers = new ArrayList<>();
                     CodeExample ce = new CodeExample();
                     ce.setLanguage("C");
                     ce.setSource(getSiteName());
@@ -50,19 +47,43 @@ public abstract class SiteProcessor extends Thread {
                             ", result="+ ce.getCodeExample());
                     answers.add(ce);
                 } else {
-                    //todo clean from all tags var No.2
-                    /*if (!request.contains("api"))
-                        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-                        StringFromHTMLHandler handler = new StringFromHTMLHandler();
-                        saxParserFactory.setValidating(false);
-                        SAXParser saxParser = saxParserFactory.newSAXParser();
-                        saxParser.parse(webContent, handler);*/
-                    answers = findAndProcessCodeExamples(webContent/*handler.getCleanedFromTagsString()*/);
+                    List<CodeExamplesWithSource> codeSourceList = findAndProcessCodeExamples(webContent);
+                    if (codeSourceList != null) {
+                        answers.addAll(extractCodeAndFindExamples(codeSourceList));
+                    }
                 }
             } catch (Exception e) {
                 logger.error("Sorry, something wrong!", e);
             }
         }
+    }
+
+    private List<CodeExample> extractCodeAndFindExamples(List<CodeExamplesWithSource> codeSourceList) {
+        for (CodeExamplesWithSource codeWithSource : codeSourceList) {
+            codeWithSource.codeFragments = extractCode(codeWithSource.body);
+        }
+
+        List<CodeExample> temp = new ArrayList<>();
+        for (CodeExamplesWithSource codesWithSource : codeSourceList) {
+            codesWithSource.codeFragments.stream().filter(this::findMethodInCode).forEach(s -> {
+                CodeExample codeExample = new CodeExample();
+                codeExample.setLanguage(getLanguage());
+                codeExample.setFunction(getQuery());
+                codeExample.setSource(codesWithSource.source);
+                codeExample.setCodeExample(s);
+                codeExample.setModificationDate(new Date().getTime());
+
+                temp.add(codeExample);
+                logger.info("Code example parameters: " +
+                        "programming lang=" + codeExample.getLanguage() + " " +
+                        ", function=" + codeExample.getFunction() + " " +
+                        ", source=" + codeExample.getSource() + " " +
+                        ", modificationDate=" + codeExample.getModificationDate());
+            });
+        }
+        if (temp.size() == 0)
+            return null;
+        return temp;
     }
 
     /**
@@ -209,7 +230,7 @@ public abstract class SiteProcessor extends Thread {
      * and then make code examples pretty
      * @param result - finding html page
      * */
-    public abstract List<CodeExample> findAndProcessCodeExamples(final String result);
+    public abstract List<CodeExamplesWithSource> findAndProcessCodeExamples(final String result);
 
     /**
      * Find and process search results (remove extra tags and spans)

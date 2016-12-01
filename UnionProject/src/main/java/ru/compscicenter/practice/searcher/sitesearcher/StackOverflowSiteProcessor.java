@@ -7,13 +7,15 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.xml.sax.ContentHandler;
-import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by user on 22.11.2016!
@@ -41,8 +43,8 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
     }
 
     @Override
-    public List<CodeExample> findAndProcessCodeExamples(String result) {
-        List<CodeExample> examples = new ArrayList<>();
+    public List<CodeExamplesWithSource> findAndProcessCodeExamples(String result) {
+        List<CodeExamplesWithSource> exs = null;
         try {
             JsonNode node = mapper.readValue(result, JsonNode.class);
             JsonNode items = node.get("items");
@@ -55,22 +57,18 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
                 }
             }
 
+            exs = new ArrayList<>();
             for (JsonNode tempNode : tempNodes) {
-                List<CodeExample> exs = null;
                 try {
-                    exs = processTempNode(tempNode);
+                    exs.addAll(processTempNode(tempNode));
                 } catch (Exception e) {
                     logger.error("Sorry, something wrong!", e);
-                }
-
-                if (exs != null) {
-                    examples.addAll(exs);
                 }
             }
         } catch (IOException e) {
             logger.error("Sorry, something wrong!", e);
         }
-        return examples;
+        return exs;
     }
 
     private boolean languageContainsInTags(JsonNode tags) {
@@ -83,7 +81,7 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
         return false;
     }
 
-    private List<CodeExample> processTempNode(JsonNode node) throws Exception {
+    private List<CodeExamplesWithSource> processTempNode(JsonNode node) throws Exception {
         int questionId = node.get("question_id").asInt();
         String url = STACKOVERFLOW_URL + "questions/" + questionId + "/answers?" +
                 "order=desc" +
@@ -120,33 +118,7 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
 
             codeSourceList.add(new CodeExamplesWithSource(source, body));
         }
-
-        for (CodeExamplesWithSource codeWithSource : codeSourceList) {
-            codeWithSource.codeFragments = extractCode(codeWithSource.body);
-        }
-
-        List<CodeExample> temp = new ArrayList<>();
-        for (CodeExamplesWithSource codesWithSource : codeSourceList) {
-            codesWithSource.codeFragments.stream().filter(this::findMethodInCode).forEach(s -> {
-                CodeExample codeExample = new CodeExample();
-                codeExample.setLanguage(getLanguage());
-                codeExample.setFunction(getQuery());
-                codeExample.setSource(codesWithSource.source);
-                codeExample.setCodeExample(s);
-                codeExample.setModificationDate(new Date().getTime());
-
-                temp.add(codeExample);
-                logger.info("Code example parameters: " +
-                        "programming lang=" + codeExample.getLanguage() + " " +
-                        ", function=" + codeExample.getFunction() + " " +
-                        ", source=" + codeExample.getSource() + " " +
-                        ", modificationDate=" + codeExample.getModificationDate());
-            });
-        }
-
-        if (temp.size() == 0)
-            return null;
-        return temp;
+        return codeSourceList;
     }
 
     private List<JsonNode> collectAnswers(JsonNode items) {

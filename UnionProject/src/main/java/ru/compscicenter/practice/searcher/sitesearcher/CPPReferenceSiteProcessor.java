@@ -195,10 +195,9 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
     }
 
     @Override
-    public List<CodeExample> findAndProcessCodeExamples(final String result) {
+    public List<CodeExamplesWithSource> findAndProcessCodeExamples(final String result) {
         logger.setLevel(Level.INFO);
 
-        List<CodeExample> examples = new ArrayList<>();
         List<CodeExamplesWithSource> codeSourceList = new ArrayList<>();
 
         String inp = result;
@@ -264,34 +263,12 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
 
             String url = generateRequestURL(getQuery());
             codeSourceList.add(new CodeExamplesWithSource(url, inp));
-
-            for (CodeExamplesWithSource codeWithSource : codeSourceList) {
-                codeWithSource.codeFragments = extractCode(codeWithSource.body);
-            }
-
-            for (CodeExamplesWithSource codesWithSource : codeSourceList) {
-                codesWithSource.codeFragments.stream().filter(this::findMethodInCode).forEach(s -> {
-                    CodeExample codeExample = new CodeExample();
-                    codeExample.setLanguage(getLanguage());
-                    codeExample.setFunction(getQuery());
-                    codeExample.setSource(codesWithSource.source);
-                    codeExample.setCodeExample(s);
-                    codeExample.setModificationDate(new Date().getTime());
-
-                    examples.add(codeExample);
-                    logger.info("Code example parameters: " +
-                            "programming lang=" + codeExample.getLanguage() + " " +
-                            ", function=" + codeExample.getFunction() + " " +
-                            ", source=" + codeExample.getSource() + " " +
-                            ", modificationDate=" + codeExample.getModificationDate());
-                });
-            }
         } catch (IOException | SAXException | TikaException e) {
             logger.error("Sorry, something wrong", e);
         }
-        if (examples.size() == 0)
+        if (codeSourceList.size() == 0)
             return null;
-        return examples;
+        return codeSourceList;
     }
 
     @Override
