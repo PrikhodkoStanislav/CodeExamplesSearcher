@@ -172,15 +172,4 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
     public String getSiteName() {
         return "http://stackoverflow.com/";
     }
-
-    private class CodeExamplesWithSource {
-        private String source;
-        private String body;
-        private List<String> codeFragments;
-
-        public CodeExamplesWithSource(String source, String body) {
-            this.source = source;
-            this.body = body;
-        }
-    }
 }

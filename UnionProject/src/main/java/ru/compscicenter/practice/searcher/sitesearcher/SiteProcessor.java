@@ -102,7 +102,10 @@ public abstract class SiteProcessor extends Thread {
             StringBuilder response = new StringBuilder();
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);//.append("\n");
+                response.append(inputLine);
+                if (!url.contains("api")) {
+                    response.append("\n");
+                }
             }
             in.close();
             con.disconnect();
@@ -141,7 +144,7 @@ public abstract class SiteProcessor extends Thread {
         Iterator<String> iterator = codeFragments.iterator();
         while (iterator.hasNext()) {
             String code = iterator.next();
-            if (code.split("\\n").length <= 2) {
+            if (code.split("\\n").length <= 3) {
                 iterator.remove();
             }
         }
@@ -164,12 +167,15 @@ public abstract class SiteProcessor extends Thread {
                 line.endsWith("}") ||
                 line.endsWith("[") ||
                 line.endsWith("]") ||
+                    (line.endsWith(")") && !line.startsWith("(")) ||
                 line.endsWith("(") ||
-                (line.endsWith(")") && !line.startsWith("(")) ||
                 line.endsWith(">") ||
                 line.endsWith("=") ||
                 line.startsWith("#") ||
-                (line.contains("//") && line.indexOf("//") > 0);
+                    (line.contains("//") &&
+                            !line.startsWith("///") &&
+                            !line.startsWith("http://") &&
+                            !line.startsWith("https://"));
             answerLines.add(new AnswerLine(line, isCode));
         }
         return answerLines;
@@ -318,6 +324,17 @@ public abstract class SiteProcessor extends Thread {
         public AnswerLine(String line, boolean isCode) {
             this.line = line;
             this.isCode = isCode;
+        }
+    }
+
+    protected class CodeExamplesWithSource {
+        protected String source;
+        protected String body;
+        protected List<String> codeFragments;
+
+        protected CodeExamplesWithSource(String source, String body) {
+            this.source = source;
+            this.body = body;
         }
     }
 }

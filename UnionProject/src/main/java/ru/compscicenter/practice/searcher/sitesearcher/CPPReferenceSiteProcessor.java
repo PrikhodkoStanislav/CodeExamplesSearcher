@@ -2,8 +2,18 @@ package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.html.HtmlParser;
+import org.apache.tika.sax.BodyContentHandler;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -189,8 +199,10 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         logger.setLevel(Level.INFO);
 
         List<CodeExample> examples = new ArrayList<>();
+        List<CodeExamplesWithSource> codeSourceList = new ArrayList<>();
 
-        Pattern patternForCodeBlock = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
+        String inp = result;
+        /*Pattern patternForCodeBlock = Pattern.compile("<div class=\"t-example\">.*<div class=\"c(pp)? source-c(pp)?\"><pre class=\"de1\">(.*)</pre></div></div><p>");
         Pattern patternForCodeCleaning = Pattern.compile("<(/)?(span|a)(\\s((class=\"[a-z]{2}\\d+\")|(href=\"https?://[a-zA-Z\\.]([_a-zA-Z\\./])*\")))?>");
         Matcher matcher = patternForCodeBlock.matcher(result);
         String codeExample;
@@ -209,7 +221,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             codeExample = codeExample.replaceAll("&amp;", "&");
             codeExample = codeExample.replaceAll("\\s+", " ");
 
-            codeExample = codeExample.replaceAll("\\*/", "\\*\\/\n");
+            codeExample = codeExample.replaceAll("\\*//*", "\\*\\/\n");
             codeExample = codeExample.replaceAll("#", "\n#");
 
             int intMain = codeExample.indexOf("int main");
@@ -229,7 +241,56 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     ", source=" + ce.getSource() + " " +
                     ", modificationDate=" + ce.getModificationDate());
             examples.add(ce);
+        }*/
+
+        InputStream input = new ByteArrayInputStream(inp.getBytes(StandardCharsets.UTF_8));
+        ContentHandler handler = new BodyContentHandler();
+        Metadata metadata = new Metadata();
+        try {
+            new HtmlParser().parse(input, handler, metadata);
+            inp = handler.toString();
+
+            inp = inp.replaceAll("\\s?\\(((until|since) C[0-9]{2}|[0-9])\\)\\s?", "");
+
+            inp = inp.replaceAll("&#40;", "(");
+            inp = inp.replaceAll("&#41;", ")");
+            inp = inp.replaceAll("&#91;", "[");
+            inp = inp.replaceAll("&#93;", "]");
+            inp = inp.replaceAll("&#123;", "{");
+            inp = inp.replaceAll("&#125;", "}");
+            inp = inp.replaceAll("&#160;", " ");
+            inp = inp.replaceAll("&quot;", "\"");
+            inp = inp.replaceAll("&amp;", "&");
+
+            String url = generateRequestURL(getQuery());
+            codeSourceList.add(new CodeExamplesWithSource(url, inp));
+
+            for (CodeExamplesWithSource codeWithSource : codeSourceList) {
+                codeWithSource.codeFragments = extractCode(codeWithSource.body);
+            }
+
+            for (CodeExamplesWithSource codesWithSource : codeSourceList) {
+                codesWithSource.codeFragments.stream().filter(this::findMethodInCode).forEach(s -> {
+                    CodeExample codeExample = new CodeExample();
+                    codeExample.setLanguage(getLanguage());
+                    codeExample.setFunction(getQuery());
+                    codeExample.setSource(codesWithSource.source);
+                    codeExample.setCodeExample(s);
+                    codeExample.setModificationDate(new Date().getTime());
+
+                    examples.add(codeExample);
+                    logger.info("Code example parameters: " +
+                            "programming lang=" + codeExample.getLanguage() + " " +
+                            ", function=" + codeExample.getFunction() + " " +
+                            ", source=" + codeExample.getSource() + " " +
+                            ", modificationDate=" + codeExample.getModificationDate());
+                });
+            }
+        } catch (IOException | SAXException | TikaException e) {
+            logger.error("Sorry, something wrong", e);
         }
+        if (examples.size() == 0)
+            return null;
         return examples;
     }
 
