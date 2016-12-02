@@ -41,6 +41,8 @@ public class MainSearcher {
 
     private static Preferences prefs = Preferences.userRoot().node("settings");
 
+    private final static int defaultMaxExamplesNumber = 20;
+
     private final static boolean defaultRestoreDB = false;
 
     /**
@@ -193,6 +195,12 @@ public class MainSearcher {
             AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
             examples = duplicateRemover.removeDuplicates();
+
+            int maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
+            if (examples.size() > maxExamplesNumber) {
+                // TODO: Delete from examples excess values.
+            }
+
             result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime,
                     stringFromRequest);
         }
