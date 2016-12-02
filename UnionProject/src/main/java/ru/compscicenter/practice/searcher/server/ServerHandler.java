@@ -94,7 +94,8 @@ public class ServerHandler extends AbstractHandler {
             boolean restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
             Thread thread1 = new Thread(() -> {
                 try {
-                    result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line, string);
+                    result = MainSearcher.searchExamplesForClient(funcName, pathForSearch,
+                            pathFromSublime, line, string);
                 } catch (ParseException e) {
                     logger.error("Parse exception!", e);
                 } catch (IOException e) {

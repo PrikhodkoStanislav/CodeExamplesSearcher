@@ -17,9 +17,10 @@ public class UpdateDBTask extends TimerTask {
     private final static CodeExampleDA DATABASE = CodeExampleDA.getInstance();
     private Preferences prefs = Preferences.userRoot().node("settings");
 
+    private final long defaultTimeout = 10000;
+
     @Override
     public void run() {
-        long defaultTimeout = 600000;
         long timeout = prefs.getLong("timeout", defaultTimeout);
         List<CodeExample> data = DATABASE.loadAllEntities();
         for (CodeExample example : data) {

@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 /**
  * Main application class of examples adviser
@@ -37,6 +38,10 @@ public class MainSearcher {
 
     private static boolean searchOnSites = true;
     private static boolean searchInProject = true;
+
+    private static Preferences prefs = Preferences.userRoot().node("settings");
+
+    private final static boolean defaultRestoreDB = false;
 
     /**
      * Search code examples for Sublime server
@@ -269,6 +274,10 @@ public class MainSearcher {
     //if no result at site (stackoverflow, cppreference) -> that search results at site
 
     private static List<CodeExample> tryToCodeExamplesFromDB(Searcher searcher, List<CodeExample> results) {
+        boolean restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
+        if (restoreDB) {
+            // TODO: Database clean.
+        }
         UpdateDBTask task = new UpdateDBTask();
         task.run();
         List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
