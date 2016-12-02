@@ -35,11 +35,11 @@ public class ServerHandler extends AbstractHandler {
             + "<p><input type=\"number\" id=\"maxExamplesNumber\" name=\"maxExamplesNumber\" value=\"%3$d\" min=\"0\"" +
             "max=\"1000\" step=\"1\"></p>"
             + "<p>Restore DB before examples search?</p>"
-            + "<p><input type=\"radio\" id = \"restoreDB\" name=\"restoreDB\" value=\"yes\" />"
-            + "yes"
+            + "<p><input type=\"radio\" id = \"restoreDB\" name=\"restoreDB\" value=\"Yes\" %4$s/>"
+            + "Yes"
             + "<br />"
-            + "<input type=\"radio\" id = \"restoreDB\" name=\"restoreDB\" value=\"no\" />"
-            + "no"
+            + "<input type=\"radio\" id = \"restoreDB\" name=\"restoreDB\" value=\"No\" %5$s/>"
+            + "No"
             + "</p>"
             + "<p><input type=\"submit\" value = \"Submit\"></p>"
 //            + "<p><input type=\"button\" id=\"button\" onclick=\"f_click();\"" +
@@ -56,14 +56,16 @@ public class ServerHandler extends AbstractHandler {
 
     private Preferences prefs = Preferences.userRoot().node("settings");
 
-    public void setPreferences(String path, long timeout, int maxExamplesNumber) {
+    public void setPreferences(String path, long timeout, int maxExamplesNumber, boolean restoreDB) {
         String ID1 = "path";
         String ID2 = "timeout";
         String ID3 = "maxExamplesNumber";
+        String ID4 = "restoreDB";
 
         prefs.put(ID1, path);
         prefs.putLong(ID2, timeout);
         prefs.putInt(ID3, maxExamplesNumber);
+        prefs.putBoolean(ID4, restoreDB);
     }
 
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
@@ -73,6 +75,7 @@ public class ServerHandler extends AbstractHandler {
         final String defaultPath = "./";
         final long defaultTimeout = 10000;
         final int defaultMaxExamplesNumber = 20;
+        final boolean defaultRestoreDB = false;
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -88,6 +91,7 @@ public class ServerHandler extends AbstractHandler {
             String pathForSearch = prefs.get("path", defaultPath);
             long timeout = prefs.getLong("timeout", defaultTimeout);
             int maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
+            boolean restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
             Thread thread1 = new Thread(() -> {
                 try {
                     result = MainSearcher.searchExamplesForClient(funcName, pathForSearch, pathFromSublime, line, string);
@@ -106,19 +110,30 @@ public class ServerHandler extends AbstractHandler {
             String path = defaultPath;
             long timeout = defaultTimeout;
             int maxExamplesNumber = defaultMaxExamplesNumber;
+            boolean restoreDB = defaultRestoreDB;
             if (uri.equals("/settings/update_settings")) {
                 path = request.getParameter("path");
                 String timeoutStr = request.getParameter("timeout");
                 timeout = Long.parseLong(timeoutStr);
                 String maxExamplesNumberStr = request.getParameter("maxExamplesNumber");
                 maxExamplesNumber = Integer.parseInt(maxExamplesNumberStr);
-                setPreferences(path, timeout, maxExamplesNumber);
+                String restoreDBStr = request.getParameter("restoreDB");
+                restoreDB = Boolean.parseBoolean(restoreDBStr);
+                setPreferences(path, timeout, maxExamplesNumber, restoreDB);
             } else if (uri.equals("/settings")) {
                 path = prefs.get("path", defaultPath);
                 timeout = prefs.getLong("timeout", defaultTimeout);
                 maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
+                restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
             }
-            String result = String.format(settingsResult, path, timeout, maxExamplesNumber);
+            String checkedYes = "";
+            String checkedNo = "";
+            if (restoreDB) {
+                checkedYes = "checked";
+            } else {
+                checkedNo = "checked";
+            }
+            String result = String.format(settingsResult, path, timeout, maxExamplesNumber, checkedYes, checkedNo);
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
