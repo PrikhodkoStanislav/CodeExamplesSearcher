@@ -34,6 +34,13 @@ public class ServerHandler extends AbstractHandler {
             + "<p>Input maximum number of examples:</p>"
             + "<p><input type=\"number\" id=\"maxExamplesNumber\" name=\"maxExamplesNumber\" value=\"%3$d\" min=\"0\"" +
             "max=\"1000\" step=\"1\"></p>"
+            + "<p>Restore DB before examples search?</p>"
+            + "<p><input type=\"radio\" id = \"restoreDB\" name=\"restoreDB\" value=\"yes\" />"
+            + "yes"
+            + "<br />"
+            + "<input type=\"radio\" id = \"restoreDB\" name=\"restoreDB\" value=\"no\" />"
+            + "no"
+            + "</p>"
             + "<p><input type=\"submit\" value = \"Submit\"></p>"
 //            + "<p><input type=\"button\" id=\"button\" onclick=\"f_click();\"" +
 //            "value=\"Submit\"></p>"
