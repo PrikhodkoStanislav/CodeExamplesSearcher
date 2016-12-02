@@ -7,6 +7,7 @@ import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.io.*;
 import java.util.*;
+import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,8 +25,15 @@ public class SelfProjectSearcher implements Searcher {
 
     private int lengthOfStringNumber = 1;
 
+    private Preferences prefs = Preferences.userRoot().node("settings");
+
+    private final int defaultMaxExamplesNumber = 20;
+
+    private int maxExamplesNumber = defaultMaxExamplesNumber;
+
     public SelfProjectSearcher(String startPath) {
         this.startPath = startPath;
+        this.maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
     }
 
     private int lengthStrNumber(int strNumber) {
@@ -117,6 +125,10 @@ public class SelfProjectSearcher implements Searcher {
                             ", source=" + codeExample.getSource() + " " +
                             ", modificationDate=" + codeExample.getModificationDate());
                     list.add(codeExample);
+
+                    if (list.size() >= maxExamplesNumber) {
+                        break;
+                    }
 
                 } else if (countBrackets == 0) {
                     buffer.clear();
@@ -279,10 +291,15 @@ public class SelfProjectSearcher implements Searcher {
             }
             for (File f : filesInDirectory) {
                 searchInDirectory(functionName, f.getPath());
+                if (list.size() >= maxExamplesNumber) {
+                    break;
+                }
             }
         } else if (isSourceFileForLanguage("C", pathToFile)) {
 //            searchInFile(functionName, pathToFile);
-            searchInFileAllFunction(functionName, pathToFile);
+            if (list.size() < maxExamplesNumber) {
+                searchInFileAllFunction(functionName, pathToFile);
+            }
         }
     }
 
