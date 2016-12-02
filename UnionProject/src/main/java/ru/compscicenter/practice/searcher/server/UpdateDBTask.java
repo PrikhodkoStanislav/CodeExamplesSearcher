@@ -19,7 +19,7 @@ public class UpdateDBTask extends TimerTask {
 
     @Override
     public void run() {
-        long defaultTimeout = 10000;
+        long defaultTimeout = 600000;
         long timeout = prefs.getLong("timeout", defaultTimeout);
         List<CodeExample> data = DATABASE.loadAllEntities();
         for (CodeExample example : data) {

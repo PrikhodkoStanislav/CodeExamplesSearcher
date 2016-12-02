@@ -2,18 +2,11 @@ package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.apache.log4j.Logger;
 import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,14 +50,9 @@ public class SearchCodeProcessor extends SiteProcessor {
                 String url = res.get("url").asText();
                 String exampleFormJSON = sendGet(url);
 
-                InputStream input = new ByteArrayInputStream(exampleFormJSON.getBytes(StandardCharsets.UTF_8));
-                ContentHandler handler = new BodyContentHandler();
-                Metadata metadata = new Metadata();
-                new HtmlParser().parse(input, handler, metadata);
-                exampleFormJSON = handler.toString();
-
+                exampleFormJSON = cleanTextFromHTMlTags(exampleFormJSON);
                 exampleFormJSON = exampleFormJSON.replaceAll("\n+", "\n\n");
-                exampleFormJSON = exampleFormJSON.replaceAll("\\s*\n", "\n");
+                exampleFormJSON = exampleFormJSON.replaceAll("\\s+\n", "\n");
 
                 codeSourceList.add(new CodeExamplesWithSource(url, exampleFormJSON));
 
@@ -109,8 +97,4 @@ public class SearchCodeProcessor extends SiteProcessor {
         return codeSourceList;
     }
 
-    @Override
-    public String getSiteName() {
-        return SEARCHCODE_URL.substring(0, SEARCHCODE_URL.length() - 17);
-    }
 }

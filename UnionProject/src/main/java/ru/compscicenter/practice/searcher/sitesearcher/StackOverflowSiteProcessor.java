@@ -1,17 +1,10 @@
 package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.apache.log4j.Logger;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.xml.sax.ContentHandler;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -107,14 +100,10 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
             String source = node.get("link").asText();
             String body = answer.get("body").asText();
 
-            InputStream input = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
-            ContentHandler handler = new BodyContentHandler();
-            Metadata metadata = new Metadata();
-            new HtmlParser().parse(input, handler, metadata);
-            body = handler.toString();
+            body = cleanTextFromHTMlTags(body);
 
             body = body.replaceAll("\n+", "\n\n");
-            body = body.replaceAll("\\s\n", "\n");
+            body = body.replaceAll("\\s+\n", "\n");
 
             codeSourceList.add(new CodeExamplesWithSource(source, body));
         }
@@ -140,8 +129,4 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
         return result;
     }
 
-    @Override
-    public String getSiteName() {
-        return "http://stackoverflow.com/";
-    }
 }

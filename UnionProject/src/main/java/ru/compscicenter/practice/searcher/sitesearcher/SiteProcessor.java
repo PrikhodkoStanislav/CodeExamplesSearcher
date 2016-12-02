@@ -2,14 +2,18 @@ package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.html.HtmlParser;
+import org.apache.tika.sax.BodyContentHandler;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,18 +39,7 @@ public abstract class SiteProcessor extends Thread {
         if (request != null && !"".equals(request)) {
             try {
                 String webContent = sendGet(request.trim());
-                if (webContent.contains("Page Not Found")) {
-                    CodeExample ce = new CodeExample();
-                    ce.setLanguage("C");
-                    ce.setSource(getSiteName());
-                    ce.setCodeExample("No such method found!");
-                    logger.info("Code example parameters: " +
-                            "programming lang=" + ce.getLanguage() + " " +
-                            ", function=" + ce.getFunction() + " " +
-                            ", source=" + ce.getSource() + " " +
-                            ", result="+ ce.getCodeExample());
-                    answers.add(ce);
-                } else {
+                if (!webContent.contains("Page Not Found")) {
                     List<CodeExamplesWithSource> codeSourceList = findAndProcessCodeExamples(webContent);
                     if (codeSourceList != null) {
                         answers.addAll(extractCodeAndFindExamples(codeSourceList));
@@ -58,6 +51,11 @@ public abstract class SiteProcessor extends Thread {
         }
     }
 
+    /**
+     * Extracts code and find examples by function
+     * @param codeSourceList web-source with text without html-tags
+     * @return list of code examples
+     * */
     private List<CodeExample> extractCodeAndFindExamples(List<CodeExamplesWithSource> codeSourceList) {
         for (CodeExamplesWithSource codeWithSource : codeSourceList) {
             codeWithSource.codeFragments = extractCode(codeWithSource.body);
@@ -189,14 +187,12 @@ public abstract class SiteProcessor extends Thread {
                 line.endsWith("[") ||
                 line.endsWith("]") ||
                     (line.endsWith(")") && !line.startsWith("(")) ||
-                line.endsWith("(") ||
-                line.endsWith(">") ||
+                    (line.endsWith("(") && !line.startsWith("#")) ||
+                    (line.endsWith(">") && !line.startsWith("#")) ||
                 line.endsWith("=") ||
-                line.startsWith("#") ||
                     (line.contains("//") &&
                             !line.startsWith("///") &&
-                            !line.startsWith("http://") &&
-                            !line.startsWith("https://"));
+                            !line.matches("\\s*https?://.*\n"));
             answerLines.add(new AnswerLine(line, isCode));
         }
         return answerLines;
@@ -218,6 +214,15 @@ public abstract class SiteProcessor extends Thread {
         return false;
     }
 
+    protected String cleanTextFromHTMlTags(String html) throws TikaException, SAXException, IOException {
+        InputStream input = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
+        ContentHandler handler = new BodyContentHandler();
+        Metadata metadata = new Metadata();
+        new HtmlParser().parse(input, handler, metadata);
+        html = handler.toString();
+        return html;
+    }
+
     /**
      * Generate Request URL
      * @param query - user's query
@@ -232,20 +237,13 @@ public abstract class SiteProcessor extends Thread {
      * */
     public abstract List<CodeExamplesWithSource> findAndProcessCodeExamples(final String result);
 
-    /**
-     * Find and process search results (remove extra tags and spans)
-     * and then make code examples pretty
-     * @return name of site
-     * */
-    public abstract String getSiteName();
-
     public String getQuery() {
         return query;
     }
 
     public void setQuery(String query) {
         this.query = query;
-        p = Pattern.compile("[\\s\\t\\+\\-\\*\\/\\=\\(]" + query + "\\s?\\(");
+        p = Pattern.compile("[\\s\\t\\+\\-\\*/=\\(]" + query + "\\s?\\(");
     }
 
     public String getLanguage() {

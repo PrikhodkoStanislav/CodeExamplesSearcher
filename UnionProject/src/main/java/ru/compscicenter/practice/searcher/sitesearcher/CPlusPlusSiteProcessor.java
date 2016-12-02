@@ -2,17 +2,7 @@ package ru.compscicenter.practice.searcher.sitesearcher;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -233,19 +223,15 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
             examples.add(ce);
         }*/
 
-        InputStream input = new ByteArrayInputStream(inp.getBytes(StandardCharsets.UTF_8));
-        ContentHandler handler = new BodyContentHandler();
-        Metadata metadata = new Metadata();
         try {
-            new HtmlParser().parse(input, handler, metadata);
-            inp = handler.toString();
+            inp = cleanTextFromHTMlTags(inp);
 
             inp = inp.replaceAll("\n+", "\n\n");
             inp = inp.replaceAll("\\s\n", "\n");
 
             String url = generateRequestURL(getQuery());
             codeSourceList.add(new CodeExamplesWithSource(url, inp));
-        } catch (IOException | SAXException | TikaException e) {
+        } catch (Exception e) {
             logger.error("Sorry, something wrong", e);
         }
         if (codeSourceList.size() == 0)
@@ -253,8 +239,4 @@ public class CPlusPlusSiteProcessor extends SiteProcessor {
         return codeSourceList;
     }
 
-    @Override
-    public String getSiteName() {
-        return CPLUSPLUS_URL.substring(0, CPLUSPLUS_URL.length() - 10);
-    }
 }

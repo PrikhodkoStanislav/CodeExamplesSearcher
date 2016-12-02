@@ -3,22 +3,11 @@ package ru.compscicenter.practice.searcher.sitesearcher;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import ru.compscicenter.practice.searcher.database.CodeExample;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Rodionova Darya on 28.09.2016!
@@ -242,12 +231,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             examples.add(ce);
         }*/
 
-        InputStream input = new ByteArrayInputStream(inp.getBytes(StandardCharsets.UTF_8));
-        ContentHandler handler = new BodyContentHandler();
-        Metadata metadata = new Metadata();
         try {
-            new HtmlParser().parse(input, handler, metadata);
-            inp = handler.toString();
+            inp = cleanTextFromHTMlTags(inp);
 
             inp = inp.replaceAll("\\s?\\(((until|since) C[0-9]{2}|[0-9])\\)\\s?", "");
 
@@ -271,8 +256,4 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         return codeSourceList;
     }
 
-    @Override
-    public String getSiteName() {
-        return CPPREFERENCE_URL.substring(0, CPPREFERENCE_URL.length() - 2);
-    }
 }
