@@ -179,7 +179,14 @@ public abstract class SiteProcessor extends Thread {
     private List<AnswerLine> markAnswersContent(String[] lines) {
         List<AnswerLine> answerLines = new ArrayList<>();
         boolean isCode;
-        for (String line : lines) {
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (line.startsWith("/*")) {
+                while (!lines[i].endsWith("*/")) {
+                    i++;
+                }
+            }
+            line = lines[i];
             isCode = line.endsWith(";") ||
                 line.endsWith(",") ||
                 line.endsWith("{") ||
