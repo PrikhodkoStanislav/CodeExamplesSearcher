@@ -197,8 +197,9 @@ public class MainSearcher {
             examples = duplicateRemover.removeDuplicates();
 
             int maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
-            if (examples.size() > maxExamplesNumber) {
-                // TODO: Delete from examples excess values.
+            int size = examples.size();
+            if (size > maxExamplesNumber) {
+                examples.removeAll(examples.subList(maxExamplesNumber, size));
             }
 
             result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime,
