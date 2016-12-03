@@ -185,6 +185,7 @@ public abstract class SiteProcessor extends Thread {
                 while (!lines[i].endsWith("*/")) {
                     i++;
                 }
+                i++;
             }
             line = lines[i];
             isCode = line.endsWith(";") ||
