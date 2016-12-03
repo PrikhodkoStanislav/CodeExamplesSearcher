@@ -59,9 +59,9 @@ public class DatabaseConfig {
         try {
             store = new EntityStore(envmnt, "codeexamples", storeConfig);
         } catch (IncompatibleClassException e) {
-            System.out.println(e);
+            //System.out.println(e);
             //todo: реализовать преобразования данных.
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             logger.error("Sorry, something wrong!", e);
         }
     }
@@ -75,7 +75,6 @@ public class DatabaseConfig {
     private void close() {
         store.close();
         envmnt.close();
-
     }
 
     public EntityStore getStore() {

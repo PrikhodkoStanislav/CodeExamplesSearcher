@@ -60,29 +60,14 @@ public abstract class SiteProcessor extends Thread {
         for (CodeExamplesWithSource codeWithSource : codeSourceList) {
             codeWithSource.body = removeComments(codeWithSource.body);
             searchInFileAllFunction(getQuery(), codeWithSource);
-            //codeWithSource.codeFragments = extractCode(codeWithSource.body);
         }
 
-        /*List<CodeExample> temp = new ArrayList<>();
-        for (CodeExamplesWithSource codesWithSource : codeSourceList) {
-            codesWithSource.codeFragments.stream().filter(this::findMethodInCode).forEach(s -> {
-                CodeExample codeExample = new CodeExample();
-                codeExample.setLanguage(getLanguage());
-                codeExample.setFunction(getQuery());
-                codeExample.setSource(codesWithSource.source);
-                codeExample.setCodeExample(s);
-                codeExample.setModificationDate(new Date().getTime());
-
-                temp.add(codeExample);
-                logger.info("Code example parameters: " +
-                        "programming lang=" + codeExample.getLanguage() + " " +
-                        ", function=" + codeExample.getFunction() + " " +
-                        ", source=" + codeExample.getSource() + " " +
-                        ", modificationDate=" + codeExample.getModificationDate());
-            });
-        }*/
-        if (answers.size() == 0)
-            return null;
+        Iterator<CodeExample> iterator = answers.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getCodeExample().split("\n").length <= 2) {
+                iterator.remove();
+            }
+        }
         return answers;
     }
 
@@ -97,7 +82,9 @@ public abstract class SiteProcessor extends Thread {
                 }
                 i++;
                 line = lines[i];
-            } else if (line.startsWith("//")) {
+            }
+
+            while (line.startsWith("//") || line.matches("\\s*\\d+")) {
                 i++;
                 line = lines[i];
             }
@@ -124,8 +111,10 @@ public abstract class SiteProcessor extends Thread {
 
                 countBrackets += numberBrackets(str);
 
-                if (str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
-                        str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) {
+                if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
+                        str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
+                        (!str.contains(functionName + "(char") && !str.contains(functionName + "( char") &&
+                        !str.contains(functionName + "(const") && !str.contains(functionName + "( const"))) {
 
                     StringBuilder sb = new StringBuilder();
                     String newLine = "\n";
@@ -274,7 +263,7 @@ public abstract class SiteProcessor extends Thread {
         Iterator<String> iterator = codeFragments.iterator();
         while (iterator.hasNext()) {
             String code = iterator.next();
-            if (code.split("\\n").length <= 3) {
+            if (code.split("\n").length <= 3) {
                 iterator.remove();
             }
         }
