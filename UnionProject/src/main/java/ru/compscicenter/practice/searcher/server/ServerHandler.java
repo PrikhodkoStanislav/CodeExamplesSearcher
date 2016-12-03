@@ -19,7 +19,8 @@ import ru.compscicenter.practice.searcher.MainSearcher;
 public class ServerHandler extends AbstractHandler {
     private final static Logger logger = Logger.getLogger(ServerHandler.class);
 
-    private String result = "<h1>Welcome to the Code Examples Searcher Server!</h1>"
+    private String result = ""
+            + "<h1>Welcome to the Code Examples Searcher Server!</h1>"
             + "<p>Try to search examples from Sublime.</p>"
             + "<a href=\"http://localhost:8080/settings\">Settings for searcher</a>";
 
@@ -31,7 +32,7 @@ public class ServerHandler extends AbstractHandler {
             + "<p>Input timeout for database updating:</p>"
             + "<p><input type=\"number\" id=\"timeout\" name=\"timeout\" value=\"%2$d\" min=\"0\"" +
             "max=\"5000000000\" step=\"1\"></p>"
-            + "<p>Input maximum number of examples:</p>"
+            + "<p>Input maximum number of examples per resource:</p>"
             + "<p><input type=\"number\" id=\"maxExamplesNumber\" name=\"maxExamplesNumber\" value=\"%3$d\" min=\"0\"" +
             "max=\"1000\" step=\"1\"></p>"
             + "<p>Do you want restore DB before searching?</p>"
@@ -104,6 +105,24 @@ public class ServerHandler extends AbstractHandler {
             });
             thread1.start();
         } else if (uri.equals("/get_examples")) {
+            result = ""
+                    + "<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>"
+                    + "<script>"
+                    + "update_content()$(document).ready(function (e){"
+                    + "var refresher = setInterval(\"update_content();\", 250);"
+                    + "})"
+                    + "function update_content()"
+                    + "{ $.ajax("
+                    + "{type: \"GET\", url: \"http://localhost:8080/get_examples\", timeout: 10000, cache: false, })"
+                    + ".done(function (page_html)"
+                    + "{ var newDoc = document.documentElement.innerHTML;"
+                    + " if (page_html != newDoc)"
+                    + "{alert(\"LOADED\");"
+                    + " var newDoc = document.open(\"text/html\", \"replace\");"
+                    + " newDoc.write(page_html);"
+                    + " newDoc.close();}});}"
+                    + "</script>"
+                    + result;
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
