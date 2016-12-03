@@ -197,6 +197,7 @@ public abstract class SiteProcessor extends Thread {
                     (line.endsWith("(") && !line.startsWith("#")) ||
                     (line.endsWith(">") && !line.startsWith("#")) ||
                 line.endsWith("=") ||
+                line.endsWith("else") ||
                     (line.contains("//") &&
                             !line.startsWith("//"));
             answerLines.add(new AnswerLine(line, isCode));
