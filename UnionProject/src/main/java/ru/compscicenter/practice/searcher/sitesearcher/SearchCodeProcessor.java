@@ -54,8 +54,7 @@ public class SearchCodeProcessor extends SiteProcessor {
                 exampleFormJSON = exampleFormJSON.replaceAll("\n+", "\n\n");
                 exampleFormJSON = exampleFormJSON.replaceAll("\\s+\n", "\n");
 
-                if (url.contains("/87593000"))
-                    codeSourceList.add(new CodeExamplesWithSource(url, exampleFormJSON));
+                codeSourceList.add(new CodeExamplesWithSource(url, exampleFormJSON));
 
                 /*Matcher matcher = p.matcher(exampleFormJSON);
                 String codeExample;

@@ -58,10 +58,12 @@ public abstract class SiteProcessor extends Thread {
      * */
     private List<CodeExample> extractCodeAndFindExamples(List<CodeExamplesWithSource> codeSourceList) {
         for (CodeExamplesWithSource codeWithSource : codeSourceList) {
-            codeWithSource.codeFragments = extractCode(codeWithSource.body);
+            codeWithSource.body = removeComments(codeWithSource.body);
+            searchInFileAllFunction(getQuery(), codeWithSource);
+            //codeWithSource.codeFragments = extractCode(codeWithSource.body);
         }
 
-        List<CodeExample> temp = new ArrayList<>();
+        /*List<CodeExample> temp = new ArrayList<>();
         for (CodeExamplesWithSource codesWithSource : codeSourceList) {
             codesWithSource.codeFragments.stream().filter(this::findMethodInCode).forEach(s -> {
                 CodeExample codeExample = new CodeExample();
@@ -78,10 +80,119 @@ public abstract class SiteProcessor extends Thread {
                         ", source=" + codeExample.getSource() + " " +
                         ", modificationDate=" + codeExample.getModificationDate());
             });
-        }
-        if (temp.size() == 0)
+        }*/
+        if (answers.size() == 0)
             return null;
-        return temp;
+        return answers;
+    }
+
+    private String removeComments(String body) {
+    StringBuilder sb = new StringBuilder();
+        String[] lines = body.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (line.startsWith("/*") || line.contains("/*")) {
+                while (!lines[i].endsWith("*/")) {
+                    i++;
+                }
+                i++;
+                line = lines[i];
+            } else if (line.startsWith("//")) {
+                i++;
+                line = lines[i];
+            }
+            sb.append(line).append("\n");
+        }
+        return sb.toString();
+    }
+
+    private void searchInFileAllFunction(String functionName, CodeExamplesWithSource codeWithSource) {
+        InputStream is = new ByteArrayInputStream((codeWithSource.body).getBytes(StandardCharsets.UTF_8));
+
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(is));
+            String str = "";
+            long strNumber = 0;
+            long lineWithFunction = 0;
+
+            List<String> buffer = new ArrayList<>();
+
+            long countBrackets = 0;
+
+            while ((str = in.readLine()) != null) {
+                strNumber++;
+
+                countBrackets += numberBrackets(str);
+
+                if (str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
+                        str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) {
+
+                    StringBuilder sb = new StringBuilder();
+                    String newLine = "\n";
+                    for(String s : buffer) {
+                        sb.append(s);
+                        sb.append(newLine);
+                    }
+
+                    buffer.clear();
+
+                    sb.append(str);
+                    sb.append(newLine);
+                    lineWithFunction = strNumber;
+                    while ((countBrackets != 0) && (str = in.readLine()) != null) {
+                        strNumber++;
+                        countBrackets += numberBrackets(str);
+                        sb.append(str);
+                        sb.append(newLine);
+                    }
+//                    sb.append(newLine);
+
+                    CodeExample codeExample = new CodeExample();
+                    codeExample.setLanguage("C");
+                    codeExample.setSource(codeWithSource.source);
+                    codeExample.setLineWithFunction(lineWithFunction);
+                    codeExample.setFunction(functionName);
+                    codeExample.setCodeExample(sb.toString());
+                    codeExample.setModificationDate(new Date().getTime());
+                    logger.info("Code example parameters: " +
+                            "programming lang=" + codeExample.getLanguage() + " " +
+                            ", function=" + codeExample.getFunction() + " " +
+                            ", source=" + codeExample.getSource() + " " +
+                            ", modificationDate=" + codeExample.getModificationDate());
+                    answers.add(codeExample);
+
+                    int defaultMaxExamplesNumber = 20;
+                    int maxExamplesNumber = defaultMaxExamplesNumber;
+                    if (answers.size() >= maxExamplesNumber) {
+                        break;
+                    }
+
+                } else if (countBrackets == 0) {
+                    buffer.clear();
+                }
+                // Always have string before construction with correct sequence of brackets.
+                buffer.add(str);
+//                } else {
+//                    buffer.add(str);
+//                }
+            }
+        }
+        catch (IOException e) {
+            logger.error("Sorry, something wrong!", e);
+        }
+    }
+
+    private long numberBrackets(String str) {
+        long result = 0;
+        char[] chars = str.toCharArray();
+        for (char c : chars) {
+            if (c == '{') {
+                result++;
+            } else if (c == '}') {
+                result--;
+            }
+        }
+        return result;
     }
 
     /**
