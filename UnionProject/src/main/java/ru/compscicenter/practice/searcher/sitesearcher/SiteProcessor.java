@@ -61,13 +61,6 @@ public abstract class SiteProcessor extends Thread {
             codeWithSource.body = removeComments(codeWithSource.body);
             searchInFileAllFunction(getQuery(), codeWithSource);
         }
-
-        Iterator<CodeExample> iterator = answers.iterator();
-        while (iterator.hasNext()) {
-            if (iterator.next().getCodeExample().split("\n").length <= 2) {
-                iterator.remove();
-            }
-        }
         return answers;
     }
 
@@ -84,7 +77,7 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            while (line.startsWith("//") || line.matches("\\s*\\d+")) {
+            while (line.startsWith("//") || line.endsWith(".") || line.matches("\\s*\\d+")) {
                 i++;
                 line = lines[i];
             }
@@ -113,8 +106,8 @@ public abstract class SiteProcessor extends Thread {
 
                 if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
                         str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
-                        (!str.contains(functionName + "(char") && !str.contains(functionName + "( char") &&
-                        !str.contains(functionName + "(const") && !str.contains(functionName + "( const"))) {
+                        (!str.endsWith(")") && !str.contains(functionName + "(const") &&
+                                !str.contains(functionName + "( const"))) {
 
                     StringBuilder sb = new StringBuilder();
                     String newLine = "\n";
