@@ -285,10 +285,11 @@ public class MainSearcher {
     private static List<CodeExample> tryToCodeExamplesFromDB(Searcher searcher, List<CodeExample> results) {
         boolean restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
         if (restoreDB) {
-            // TODO: Database clean.
+            DATABASE.restore();
+        } else {
+            UpdateDBTask task = new UpdateDBTask();
+            task.run();
         }
-        UpdateDBTask task = new UpdateDBTask();
-        task.run();
         List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
         if (dbExamples == null || dbExamples.size() == 0) {
             searcher.getFilter().put("cplusplus", true);

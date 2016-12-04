@@ -258,4 +258,12 @@ public class CodeExampleDA {
             primaryIndex.delete(id);
         }
     }
+
+    public void restore() {
+        List<CodeExample> data = loadAllEntities();
+        for (CodeExample example : data) {
+            removeCodeExampleEntity(example.getId());
+            logger.info("Database was restored!");
+        }
+    }
 }
