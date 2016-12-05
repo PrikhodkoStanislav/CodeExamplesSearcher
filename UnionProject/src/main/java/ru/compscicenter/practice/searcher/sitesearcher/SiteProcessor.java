@@ -69,7 +69,7 @@ public abstract class SiteProcessor extends Thread {
         String[] lines = body.split("\n");
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
-            if (line.startsWith("/*") || line.contains("/*")) {
+            if (line.startsWith("/*") || line.matches("\\s+/\\*.*")) {
                 while (!lines[i].endsWith("*/")) {
                     i++;
                 }
@@ -77,13 +77,16 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            while (line.startsWith("//") || line.endsWith(".") || line.matches("\\s*\\d+")) {
+            while (line.startsWith("//") || line.endsWith(".") ||
+                    line.matches("\\s*\\d+") || line.matches("[\\s\\t\\r]+") || line.matches("\\s*\\w[\\s\\w]*")) {
                 i++;
                 line = lines[i];
             }
             sb.append(line).append("\n");
         }
-        return sb.toString();
+        String result = sb.toString();
+        result = result.replaceAll("\n\n+", "\n\n");
+        return result;
     }
 
     private void searchInFileAllFunction(String functionName, CodeExamplesWithSource codeWithSource) {
@@ -233,7 +236,7 @@ public abstract class SiteProcessor extends Thread {
      * @param answer html-text
      * return code fragments
      **/
-    protected List<String> extractCode(String answer) {
+    /*protected List<String> extractCode(String answer) {
         String[] lines = answer.split("\n");
         List<AnswerLine> answerLines = markAnswersContent(lines);
 
@@ -264,18 +267,18 @@ public abstract class SiteProcessor extends Thread {
         return codeFragments;
     }
 
-    /**
+    *//**
      * Mark answer bodies into classes: "code", "no-code
      * @param lines answer body converted into array
      * return marked answers
-     **/
+     **//*
     private List<AnswerLine> markAnswersContent(String[] lines) {
         List<AnswerLine> answerLines = new ArrayList<>();
         boolean isCode;
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
-            if (line.startsWith("/*")) {
-                while (!lines[i].endsWith("*/")) {
+            if (line.startsWith("*//*")) {
+                while (!lines[i].endsWith("*//*")) {
                     i++;
                 }
                 i++;
@@ -297,7 +300,7 @@ public abstract class SiteProcessor extends Thread {
             answerLines.add(new AnswerLine(line, isCode));
         }
         return answerLines;
-    }
+    }*/
 
     /**
      * Try to find function name in code fragment
