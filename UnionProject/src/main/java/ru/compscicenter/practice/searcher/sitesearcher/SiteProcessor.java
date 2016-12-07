@@ -215,8 +215,15 @@ public abstract class SiteProcessor extends Thread {
 
     private boolean isNatural(String token) {
         return !(token.matches("[\\+\\-\\=\\(\\)\\<\\>\\{\\}]") ||
-                token.matches("(int|new|char|float|byte|short|double|const|void|for|if|while|switch)") ||
-                token.length() < 5 || token.contains("_") || isCamelCase(token)/* || token.contains("[\+-\=\(\)\<\>\{\}\[\];]")*/);
+            token.matches("(int|new|null|NULL|else|nullptr|str|var|char|float|byte|short|double|const|void|for|if|while|switch)") ||
+            token.length() < 5 || token.contains("_") || isCamelCase(token) ||
+            token.contains("+") || token.contains("-") ||
+            token.contains("*") || token.contains("/") ||
+            token.contains("=") || token.contains(";") ||
+                token.contains("(") || token.contains(")") ||
+                token.contains("<") || token.contains(">") ||
+                token.contains("{") || token.contains("}") ||
+                token.contains("[") || token.contains("]"));
     }
 
     private boolean isCamelCase(String token) {
