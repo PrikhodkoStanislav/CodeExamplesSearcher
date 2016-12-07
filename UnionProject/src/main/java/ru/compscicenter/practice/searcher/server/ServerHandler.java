@@ -28,6 +28,7 @@ public class ServerHandler extends AbstractHandler {
     private String settingsResult = ""
             + "<form action=\"http://localhost:8080/settings/update_settings\">"
             + "<h1>Input settings:</h1>"
+            + "<a href=\"http://localhost:8080/get_examples\">Page with examples</a>"
             + "<p>Input path to the directory for search (without quotes):</p>"
             + "<p><input type=\"text\" id=\"path\" name=\"path\" value=\"%1$s\" size=\"100\"></p>"
             + "<p>Input timeout for database updating:</p>"
@@ -93,8 +94,7 @@ public class ServerHandler extends AbstractHandler {
 ////            + "document.getElementById(\"timeout\").value = 10000;"
 //            + "}"
 //            + "</script>"
-            + "</form>"
-            + "<a href=\"http://localhost:8080/get_examples\">Page with examples</a>";
+            + "</form>";
 
     private Preferences prefs = Preferences.userRoot().node("settings");
 
