@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.prefs.Preferences;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -42,6 +43,19 @@ public class ServerHandler extends AbstractHandler {
             + "<input type=\"radio\" id = \"restoreDB\" name=\"restoreDB\" value=\"false\" %5$s/>"
             + "No"
             + "</p>"
+            + "<p>Which sites do you want include?</p>"
+            + "<p><input type=\"checkbox\" id = \"cpp\" name=\"cpp\" value=\"true\" %6$s/>"
+            + "cplusplus.com"
+            + "<br />"
+            + "<input type=\"checkbox\" id = \"cppref\" name=\"cppref\" value=\"true\" %7$s/>"
+            + "cppreference.com"
+            + "<br />"
+            + "<input type=\"checkbox\" id = \"searchCode\" name=\"searchCode\" value=\"true\" %8$s/>"
+            + "searchcode.com"
+            + "<br />"
+            + "<input type=\"checkbox\" id = \"stackOverflow\" name=\"stackOverflow\" value=\"true\" %9$s/>"
+            + "stackoverflow.com"
+            + "</p>"
             + "<p><input type=\"submit\" value = \"Submit\"></p>"
 //            + "<p><input type=\"button\" id=\"button\" onclick=\"f_click();\"" +
 //            "value=\"Submit\"></p>"
@@ -57,16 +71,26 @@ public class ServerHandler extends AbstractHandler {
 
     private Preferences prefs = Preferences.userRoot().node("settings");
 
-    public void setPreferences(String path, long timeout, int maxExamplesNumber, boolean restoreDB) {
+    public void setPreferences(String path, long timeout, int maxExamplesNumber,
+                               boolean restoreDB, boolean cpp, boolean cppref,
+                               boolean searchCode, boolean stackOverflow) {
         String ID1 = "path";
         String ID2 = "timeout";
         String ID3 = "maxExamplesNumber";
         String ID4 = "restoreDB";
+        String ID5 = "cpp";
+        String ID6 = "cppref";
+        String ID7 = "searchCode";
+        String ID8 = "stackOverflow";
 
         prefs.put(ID1, path);
         prefs.putLong(ID2, timeout);
         prefs.putInt(ID3, maxExamplesNumber);
         prefs.putBoolean(ID4, restoreDB);
+        prefs.putBoolean(ID5, cpp);
+        prefs.putBoolean(ID6, cppref);
+        prefs.putBoolean(ID7, searchCode);
+        prefs.putBoolean(ID8, stackOverflow);
     }
 
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
@@ -77,6 +101,10 @@ public class ServerHandler extends AbstractHandler {
         final long defaultTimeout = 10000;
         final int defaultMaxExamplesNumber = 20;
         final boolean defaultRestoreDB = false;
+        final boolean defaultCpp = true;
+        final boolean defaultCppref = true;
+        final boolean defaultSearchCode = true;
+        final boolean defaultStackOverflow = true;
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -90,9 +118,9 @@ public class ServerHandler extends AbstractHandler {
             String string = request.getParameter("string");
             int line = Integer.parseInt(lineStr);
             String pathForSearch = prefs.get("path", defaultPath);
-            long timeout = prefs.getLong("timeout", defaultTimeout);
-            int maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
-            boolean restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
+//            long timeout = prefs.getLong("timeout", defaultTimeout);
+//            int maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
+//            boolean restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
             Thread thread1 = new Thread(() -> {
                 try {
                     result = MainSearcher.searchExamplesForClient(funcName, pathForSearch,
@@ -131,6 +159,10 @@ public class ServerHandler extends AbstractHandler {
             long timeout = defaultTimeout;
             int maxExamplesNumber = defaultMaxExamplesNumber;
             boolean restoreDB = defaultRestoreDB;
+            boolean cpp = defaultCpp;
+            boolean cppref = defaultCppref;
+            boolean searchCode = defaultSearchCode;
+            boolean stackOverflow = defaultStackOverflow;
             if (uri.equals("/settings/update_settings")) {
                 path = request.getParameter("path");
                 String timeoutStr = request.getParameter("timeout");
@@ -139,21 +171,52 @@ public class ServerHandler extends AbstractHandler {
                 maxExamplesNumber = Integer.parseInt(maxExamplesNumberStr);
                 String restoreDBStr = request.getParameter("restoreDB");
                 restoreDB = Boolean.parseBoolean(restoreDBStr);
-                setPreferences(path, timeout, maxExamplesNumber, restoreDB);
+                String cppStr = request.getParameter("cpp");
+                cpp = Boolean.parseBoolean(cppStr);
+                String cpprefStr = request.getParameter("cppref");
+                cppref = Boolean.parseBoolean(cpprefStr);
+                String searchCodeStr = request.getParameter("searchCode");
+                searchCode = Boolean.parseBoolean(searchCodeStr);
+                String stackOverflowStr = request.getParameter("stackOverflow");
+                stackOverflow = Boolean.parseBoolean(stackOverflowStr);
+                setPreferences(path, timeout, maxExamplesNumber, restoreDB,
+                        cpp, cppref, searchCode, stackOverflow);
             } else if (uri.equals("/settings")) {
                 path = prefs.get("path", defaultPath);
                 timeout = prefs.getLong("timeout", defaultTimeout);
                 maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
                 restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
+                cpp = prefs.getBoolean("cpp", defaultCpp);
+                cppref = prefs.getBoolean("cppref", defaultCppref);
+                searchCode = prefs.getBoolean("searchCode", defaultSearchCode);
+                stackOverflow = prefs.getBoolean("stackOverflow", defaultStackOverflow);
             }
+            String checked = "checked";
             String checkedYes = "";
             String checkedNo = "";
             if (restoreDB) {
-                checkedYes = "checked";
+                checkedYes = checked;
             } else {
-                checkedNo = "checked";
+                checkedNo = checked;
             }
-            String result = String.format(settingsResult, path, timeout, maxExamplesNumber, checkedYes, checkedNo);
+            String checkedcpp = "";
+            String checkedcppref = "";
+            String checkedsearchcode = "";
+            String checkedstackoverflow = "";
+            if (cpp) {
+                checkedcpp = checked;
+            }
+            if (cppref) {
+                checkedcppref = checked;
+            }
+            if (searchCode) {
+                checkedsearchcode = checked;
+            }
+            if (stackOverflow) {
+                checkedstackoverflow = checked;
+            }
+            String result = String.format(settingsResult, path, timeout, maxExamplesNumber,
+                    checkedYes, checkedNo, checkedcpp, checkedcppref, checkedsearchcode, checkedstackoverflow);
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
