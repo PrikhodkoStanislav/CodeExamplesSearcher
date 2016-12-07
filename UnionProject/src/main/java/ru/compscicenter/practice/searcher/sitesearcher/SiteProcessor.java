@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -28,6 +29,11 @@ import java.util.zip.GZIPInputStream;
 public abstract class SiteProcessor extends Thread {
     private final static Logger logger = Logger.getLogger(SiteProcessor.class);
 
+    private Preferences prefs = Preferences.userRoot().node("settings");
+
+    private final static int defaultDuplicator = 1;
+    private final static int defaultFormatter = 1;
+
     private String language;
     private String query;
     private List<CodeExample> answers;
@@ -37,8 +43,8 @@ public abstract class SiteProcessor extends Thread {
     public void run() {
         logger.setLevel(Level.INFO);
 
-        int formatter = 1;
-        int duplicator = 1;
+        int duplicator = prefs.getInt("duplicator", defaultDuplicator);
+        int formatter = prefs.getInt("formatter", defaultFormatter);
 
         answers = new ArrayList<>();
         String request = generateRequestURL(getQuery());
@@ -54,9 +60,16 @@ public abstract class SiteProcessor extends Thread {
                         prepareExamples = new ArrayList<>();
                         prepareExamples.addAll(extractCodeAndFindExamples(codeSourceList));
 
-                        if (formatter == 1) {
-                            projectCodeFormatter.beautifyCode(prepareExamples);
-                        } else if (formatter == 2) {}
+
+                        switch (formatter) {
+                            case 1:
+                                break;
+                            case 2:
+                                projectCodeFormatter.beautifyCode(prepareExamples);
+                                break;
+                            case 3:
+                                break;
+                        }
 
                         AlgorithmsRemoveDuplicates typeOfCompareResult;
                         if (duplicator == 1) {

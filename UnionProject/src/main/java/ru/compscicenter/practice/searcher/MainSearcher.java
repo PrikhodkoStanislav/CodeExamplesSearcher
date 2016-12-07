@@ -45,6 +45,16 @@ public class MainSearcher {
 
     private final static boolean defaultRestoreDB = false;
 
+    private final static boolean defaultCpp = true;
+    private final static boolean defaultCppref = true;
+    private final static boolean defaultSearchCode = true;
+    private final static boolean defaultStackOverflow = true;
+
+    private final static boolean defaultIncludeDB = true;
+
+    private final static int defaultDuplicator = 1;
+    private final static int defaultFormatter = 1;
+
     /**
      * Search code examples for Sublime server
      * @param funcName name of function
@@ -59,24 +69,6 @@ public class MainSearcher {
         format = "html";
         functionName = funcName;
         stringFromRequest = string;
-
-        boolean cPlusPlus = false;
-        boolean cppReference = false;
-        boolean searchCode = false;
-        boolean stackOverflow = false;
-
-        if (cPlusPlus) {
-            cPlusPlus = true;
-        }
-        if (cppReference) {
-            cppReference = true;
-        }
-        if (searchCode) {
-            searchCode = true;
-        }
-        if (stackOverflow) {
-            stackOverflow = true;
-        }
 
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch),
                 new SelfProjectSearcher(pathFromSublime)};
@@ -302,11 +294,11 @@ public class MainSearcher {
     //if no result at site (stackoverflow, cppreference) -> that search results at site
 
     private static List<CodeExample> tryToCodeExamplesFromDB(Searcher searcher, List<CodeExample> results) {
-        boolean cpp = true;
-        boolean cppRef = true;
-        boolean searchCode = true;
-        boolean stackOverFlow = true;
-        boolean includeDB = true;
+        boolean cpp = prefs.getBoolean("cpp", defaultCpp);
+        boolean cppref = prefs.getBoolean("cppref", defaultCppref);
+        boolean searchCode = prefs.getBoolean("searchCode", defaultSearchCode);
+        boolean stackOverflow = prefs.getBoolean("stackOverflow", defaultStackOverflow);
+        boolean includeDB = prefs.getBoolean("includeDB", defaultIncludeDB);
 
         boolean restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
 
@@ -327,13 +319,13 @@ public class MainSearcher {
                 if (cpp && !existsResultsOfSite(dbExamples, "cplusplus")) {
                     searcher.getFilter().put("cplusplus", true);
                 }
-                if (cppRef && !existsResultsOfSite(dbExamples, "cppreference")) {
+                if (cppref && !existsResultsOfSite(dbExamples, "cppreference")) {
                     searcher.getFilter().put("cppreference", true);
                 }
                 if (searchCode && !existsResultsOfSite(dbExamples, "searchcode")) {
                     searcher.getFilter().put("searchcode", true);
                 }
-                if (stackOverFlow && !existsResultsOfSite(dbExamples, "stackoverflow")) {
+                if (stackOverflow && !existsResultsOfSite(dbExamples, "stackoverflow")) {
                     searcher.getFilter().put("stackoverflow", true);
                 }
             }
@@ -352,13 +344,13 @@ public class MainSearcher {
             if (cpp) {
                 searcher.getFilter().put("cplusplus", true);
             }
-            if (cppRef) {
+            if (cppref) {
                 searcher.getFilter().put("cppreference", true);
             }
             if (searchCode) {
                 searcher.getFilter().put("searchcode", true);
             }
-            if (stackOverFlow) {
+            if (stackOverflow) {
                 searcher.getFilter().put("stackoverflow", true);
             }
         }
