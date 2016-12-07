@@ -321,10 +321,18 @@ public class MainSearcher {
             }
             List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
             if (dbExamples == null || dbExamples.size() == 0) {
-                searcher.getFilter().put("cplusplus", true);
-                searcher.getFilter().put("cppreference", true);
-                searcher.getFilter().put("searchcode", true);
-                searcher.getFilter().put("stackoverflow", true);
+                if (cpp) {
+                    searcher.getFilter().put("cplusplus", true);
+                }
+                if (cppref) {
+                    searcher.getFilter().put("cppreference", true);
+                }
+                if (searchCode) {
+                    searcher.getFilter().put("searchcode", true);
+                }
+                if (stackOverflow) {
+                    searcher.getFilter().put("stackoverflow", true);
+                }
             } else {
                 if (cpp && !existsResultsOfSite(dbExamples, "cplusplus")) {
                     searcher.getFilter().put("cplusplus", true);
