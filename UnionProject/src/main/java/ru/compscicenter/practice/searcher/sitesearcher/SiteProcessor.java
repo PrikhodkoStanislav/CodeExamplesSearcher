@@ -217,13 +217,13 @@ public abstract class SiteProcessor extends Thread {
         return !(token.matches("[\\+\\-\\=\\(\\)\\<\\>\\{\\}]") ||
             token.matches("(int|new|null|NULL|else|nullptr|str|var|char|float|byte|short|double|const|void|for|if|while|switch)") ||
             token.length() < 5 || token.contains("_") || isCamelCase(token) ||
-            token.contains("+") || token.contains("-") ||
-            token.contains("*") || token.contains("/") ||
-            token.contains("=") || token.contains(";") ||
+                (token.contains("+") || token.contains("-") ||
+                token.contains("*") || token.contains("/") ||
+                token.contains("=") || token.contains(";") ||
                 token.contains("(") || token.contains(")") ||
                 token.contains("<") || token.contains(">") ||
                 token.contains("{") || token.contains("}") ||
-                token.contains("[") || token.contains("]"));
+                token.contains("[") || token.contains("]")));
     }
 
     private boolean isCamelCase(String token) {
