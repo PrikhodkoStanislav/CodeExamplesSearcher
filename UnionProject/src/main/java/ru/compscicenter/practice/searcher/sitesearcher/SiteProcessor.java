@@ -37,6 +37,9 @@ public abstract class SiteProcessor extends Thread {
     public void run() {
         logger.setLevel(Level.INFO);
 
+        int formatter = 1;
+        int duplicator = 1;
+
         answers = new ArrayList<>();
         String request = generateRequestURL(getQuery());
         if (request != null && !"".equals(request)) {
@@ -50,11 +53,21 @@ public abstract class SiteProcessor extends Thread {
                     if (codeSourceList != null) {
                         prepareExamples = new ArrayList<>();
                         prepareExamples.addAll(extractCodeAndFindExamples(codeSourceList));
-                        projectCodeFormatter.beautifyCode(prepareExamples);
 
-                        AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
-                        CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(prepareExamples, typeOfCompareResult);
-                        prepareExamples = duplicateRemover.removeDuplicates();
+                        if (formatter == 1) {
+                            projectCodeFormatter.beautifyCode(prepareExamples);
+                        } else if (formatter == 2) {}
+
+                        AlgorithmsRemoveDuplicates typeOfCompareResult;
+                        if (duplicator == 1) {
+                            typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
+                            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(prepareExamples, typeOfCompareResult);
+                            prepareExamples = duplicateRemover.removeDuplicates();
+                        } else if (duplicator == 2) {
+                            typeOfCompareResult = AlgorithmsRemoveDuplicates.EqualsTokens;
+                            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(prepareExamples, typeOfCompareResult);
+                            prepareExamples = duplicateRemover.removeDuplicates();
+                        }
                     }
                     answers.addAll(prepareExamples);
                 }
