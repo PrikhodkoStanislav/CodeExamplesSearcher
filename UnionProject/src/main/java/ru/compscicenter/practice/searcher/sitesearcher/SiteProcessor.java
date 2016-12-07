@@ -110,7 +110,7 @@ public abstract class SiteProcessor extends Thread {
                 if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
                         str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
                         (!str.endsWith(")") && !str.contains(functionName + "(const") &&
-                                !str.contains(functionName + "( const"))) {
+                                !str.contains(functionName + "( const"))/* && !isNaturalSentence(str)*/) {
 
                     StringBuilder sb = new StringBuilder();
                     String newLine = "\n";
@@ -165,6 +165,44 @@ public abstract class SiteProcessor extends Thread {
         catch (IOException e) {
             logger.error("Sorry, something wrong!", e);
         }
+    }
+
+    private boolean isNaturalSentence(String line) {
+        if (line.contains("//")) {
+            return false;
+        }
+        String[] tokens = line.split(" ");
+        int len = tokens.length;
+        int a = 0, b = 0;
+        double c = 0, d = 0;
+        for (String token : tokens) {
+            if (isNatural(token)) {
+                a++;
+            } else {
+                b++;
+            }
+        }
+        c = (double) a / len;
+        d = (double) b / len;
+        return c > d;
+    }
+
+    private boolean isNatural(String token) {
+        return !(token.matches("[\\+\\-\\=\\(\\)\\<\\>\\{\\}]") ||
+                token.matches("(int|new|char|float|byte|short|double|const|void|for|if|while|switch)") ||
+                token.length() < 5 || token.contains("_") || isCamelCase(token)/* || token.contains("[\+-\=\(\)\<\>\{\}\[\];]")*/);
+    }
+
+    private boolean isCamelCase(String token) {
+        if (Character.isUpperCase(token.charAt(0))) {
+            return false;
+        }
+        for (int i = 0; i < token.length(); i++) {
+            if (Character.isUpperCase(token.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private long numberBrackets(String str) {
