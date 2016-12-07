@@ -89,11 +89,12 @@ public abstract class SiteProcessor extends Thread {
      * @return list of code examples
      * */
     private List<CodeExample> extractCodeAndFindExamples(List<CodeExamplesWithSource> codeSourceList) {
+        List<CodeExample> results = new ArrayList<>();
         for (CodeExamplesWithSource codeWithSource : codeSourceList) {
             codeWithSource.body = removeComments(codeWithSource.body);
-            searchInFileAllFunction(getQuery(), codeWithSource);
+            searchInFileAllFunction(getQuery(), codeWithSource, results);
         }
-        return answers;
+        return results;
     }
 
     private String removeComments(String body) {
@@ -109,19 +110,22 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            while (line.startsWith("//") || line.endsWith(".") ||
-                    line.matches("\\s*\\d+") || line.matches("[\\s\\t\\r]+") || line.matches("\\s*\\w[\\s\\w]*")) {
+            while (i < lines.length || lines[i].startsWith("//") || lines[i].endsWith(".") ||
+                    lines[i].matches("\\s*\\d+") || lines[i].matches("[\\s\\t\\r]+") ||
+                    lines[i].matches("\\s*\\w[\\s\\w]*")) {
                 i++;
-                line = lines[i];
             }
-            sb.append(line).append("\n");
+
+            if (i < line.length()) {
+                sb.append(line).append("\n");
+            }
         }
         String result = sb.toString();
         result = result.replaceAll("\n\n+", "\n\n");
         return result;
     }
 
-    private void searchInFileAllFunction(String functionName, CodeExamplesWithSource codeWithSource) {
+    private void searchInFileAllFunction(String functionName, CodeExamplesWithSource codeWithSource, List<CodeExample> results) {
         InputStream is = new ByteArrayInputStream((codeWithSource.body).getBytes(StandardCharsets.UTF_8));
 
         try {
@@ -176,7 +180,7 @@ public abstract class SiteProcessor extends Thread {
                             ", function=" + codeExample.getFunction() + " " +
                             ", source=" + codeExample.getSource() + " " +
                             ", modificationDate=" + codeExample.getModificationDate());
-                    answers.add(codeExample);
+                    results.add(codeExample);
 
                     int defaultMaxExamplesNumber = 20;
                     int maxExamplesNumber = defaultMaxExamplesNumber;
