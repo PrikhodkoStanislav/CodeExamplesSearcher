@@ -42,7 +42,7 @@ class SearchCommand(sublime_plugin.TextCommand):
 					funcName = buf
 					break
 				else:
-					if (isFirst):
+					if (isFirst and (buf != "")):
 						firstFuncName = buf
 						isFirst = False
 					endPos += 1
