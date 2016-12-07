@@ -348,10 +348,6 @@ public class MainSearcher {
                 }
             }
 
-            if (searcher.getFilter().size() >= 1) {
-                results.addAll(findResultsOnSites(searcher));
-            }
-
             for (CodeExample result : results) {
                 DATABASE.save(result);
             }
@@ -371,6 +367,9 @@ public class MainSearcher {
             if (stackOverflow) {
                 searcher.getFilter().put("stackoverflow", true);
             }
+        }
+        if (searcher.getFilter().size() >= 1) {
+            results.addAll(findResultsOnSites(searcher));
         }
         return results;
     }
