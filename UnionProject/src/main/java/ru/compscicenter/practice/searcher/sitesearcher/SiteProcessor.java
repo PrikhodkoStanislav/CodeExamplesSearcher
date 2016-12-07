@@ -8,6 +8,9 @@ import org.apache.tika.parser.html.HtmlParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import ru.compscicenter.practice.searcher.CodeDuplicateRemover;
+import ru.compscicenter.practice.searcher.ProjectCodeFormatter;
+import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.io.*;
@@ -41,9 +44,19 @@ public abstract class SiteProcessor extends Thread {
                 String webContent = sendGet(request.trim());
                 if (!webContent.contains("Page Not Found")) {
                     List<CodeExamplesWithSource> codeSourceList = findAndProcessCodeExamples(webContent);
+
+                    ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
+                    List<CodeExample> prepareExamples = null;
                     if (codeSourceList != null) {
-                        answers.addAll(extractCodeAndFindExamples(codeSourceList));
+                        prepareExamples = new ArrayList<>();
+                        prepareExamples.addAll(extractCodeAndFindExamples(codeSourceList));
+                        projectCodeFormatter.beautifyCode(prepareExamples);
+
+                        AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
+                        CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(prepareExamples, typeOfCompareResult);
+                        prepareExamples = duplicateRemover.removeDuplicates();
                     }
+                    answers.addAll(prepareExamples);
                 }
             } catch (Exception e) {
                 logger.error("Sorry, something wrong!", e);
