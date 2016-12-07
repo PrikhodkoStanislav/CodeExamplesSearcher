@@ -72,7 +72,7 @@ public class MainSearcher {
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch),
                 new SelfProjectSearcher(pathFromSublime)};
         List<CodeExample> l1 = new ArrayList<>();
-        List<CodeExample> l2 = new ArrayList<>();
+        List<CodeExample> l2;
 
         l1 = tryToCodeExamplesFromDB(searchers[0], l1);
 
