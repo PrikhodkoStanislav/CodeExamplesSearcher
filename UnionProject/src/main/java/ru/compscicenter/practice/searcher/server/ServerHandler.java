@@ -36,14 +36,14 @@ public class ServerHandler extends AbstractHandler {
             + "<p>Input maximum number of examples per resource:</p>"
             + "<p><input type=\"number\" id=\"maxExamplesNumber\" name=\"maxExamplesNumber\" value=\"%3$d\" min=\"0\"" +
             "max=\"1000\" step=\"1\"></p>"
-            + "<p>Do you want restore DB before searching?</p>"
+            + "<p>Do you want to restore DB before searching?</p>"
             + "<p><input type=\"radio\" id = \"restoreDB\" name=\"restoreDB\" value=\"true\" %4$s/>"
             + "Yes"
             + "<br />"
             + "<input type=\"radio\" id = \"restoreDB\" name=\"restoreDB\" value=\"false\" %5$s/>"
             + "No"
             + "</p>"
-            + "<p>Which sites do you want include?</p>"
+            + "<p>Which sites do you want to include?</p>"
             + "<p><input type=\"checkbox\" id = \"cpp\" name=\"cpp\" value=\"true\" %6$s/>"
             + "cplusplus.com"
             + "<br />"
@@ -56,12 +56,32 @@ public class ServerHandler extends AbstractHandler {
             + "<input type=\"checkbox\" id = \"stackOverflow\" name=\"stackOverflow\" value=\"true\" %9$s/>"
             + "stackoverflow.com"
             + "</p>"
-            + "<p>Do you want include DB?</p>"
+            + "<p>Do you want to include DB?</p>"
             + "<p><input type=\"radio\" id = \"includeDB\" name=\"includeDB\" value=\"true\" %10$s/>"
             + "Yes"
             + "<br />"
             + "<input type=\"radio\" id = \"includeDB\" name=\"includeDB\" value=\"false\" %11$s/>"
             + "No"
+            + "</p>"
+            + "<p>What kind of code duplicator do you want to use?</p>"
+            + "<p><input type=\"radio\" id = \"duplicator\" name=\"duplicator\" value=\"1\" %12$s/>"
+            + "Levenshtein distance"
+            + "<br />"
+            + "<input type=\"radio\" id = \"duplicator\" name=\"duplicator\" value=\"2\" %13$s/>"
+            + "Equals tokens"
+            + "<br />"
+            + "<input type=\"radio\" id = \"duplicator\" name=\"duplicator\" value=\"3\" %14$s/>"
+            + "Exclude"
+            + "</p>"
+            + "<p>What kind of beautifier do you want to use?</p>"
+            + "<p><input type=\"radio\" id = \"formatter\" name=\"formatter\" value=\"1\" %15$s/>"
+            + "AStyle"
+            + "<br />"
+            + "<input type=\"radio\" id = \"formatter\" name=\"formatter\" value=\"2\" %16$s/>"
+            + "Eclipse"
+            + "<br />"
+            + "<input type=\"radio\" id = \"formatter\" name=\"formatter\" value=\"3\" %17$s/>"
+            + "Exclude"
             + "</p>"
             + "<p><input type=\"submit\" value = \"Submit\"></p>"
 //            + "<p><input type=\"button\" id=\"button\" onclick=\"f_click();\"" +
@@ -81,7 +101,8 @@ public class ServerHandler extends AbstractHandler {
     public void setPreferences(String path, long timeout, int maxExamplesNumber,
                                boolean restoreDB, boolean cpp, boolean cppref,
                                boolean searchCode, boolean stackOverflow,
-                               boolean includeDB) {
+                               boolean includeDB,
+                               int duplicator, int formatter) {
         String ID1 = "path";
         String ID2 = "timeout";
         String ID3 = "maxExamplesNumber";
@@ -91,6 +112,8 @@ public class ServerHandler extends AbstractHandler {
         String ID7 = "searchCode";
         String ID8 = "stackOverflow";
         String ID9 = "includeDB";
+        String ID10 = "duplicator";
+        String ID11 = "formatter";
 
         prefs.put(ID1, path);
         prefs.putLong(ID2, timeout);
@@ -101,6 +124,8 @@ public class ServerHandler extends AbstractHandler {
         prefs.putBoolean(ID7, searchCode);
         prefs.putBoolean(ID8, stackOverflow);
         prefs.putBoolean(ID9, includeDB);
+        prefs.putInt(ID10, duplicator);
+        prefs.putInt(ID11, formatter);
     }
 
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
@@ -110,12 +135,18 @@ public class ServerHandler extends AbstractHandler {
         final String defaultPath = "./";
         final long defaultTimeout = 10000;
         final int defaultMaxExamplesNumber = 20;
+
         final boolean defaultRestoreDB = false;
+
         final boolean defaultCpp = true;
         final boolean defaultCppref = true;
         final boolean defaultSearchCode = true;
         final boolean defaultStackOverflow = true;
+
         final boolean defaultIncludeDB = true;
+
+        final int defaultDuplicator = 1;
+        final int defaultFormatter = 1;
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -169,12 +200,18 @@ public class ServerHandler extends AbstractHandler {
             String path = defaultPath;
             long timeout = defaultTimeout;
             int maxExamplesNumber = defaultMaxExamplesNumber;
+
             boolean restoreDB = defaultRestoreDB;
+
             boolean cpp = defaultCpp;
             boolean cppref = defaultCppref;
             boolean searchCode = defaultSearchCode;
             boolean stackOverflow = defaultStackOverflow;
             boolean includeDB = defaultIncludeDB;
+
+            int duplicator = defaultDuplicator;
+            int formatter = defaultFormatter;
+
             if (uri.equals("/settings/update_settings")) {
                 path = request.getParameter("path");
                 String timeoutStr = request.getParameter("timeout");
@@ -197,8 +234,14 @@ public class ServerHandler extends AbstractHandler {
 
                 String includeDBStr = request.getParameter("includeDB");
                 includeDB = Boolean.parseBoolean(includeDBStr);
+
+                String duplicatorStr = request.getParameter("duplicator");
+                duplicator = Integer.parseInt(duplicatorStr);
+                String formatterStr = request.getParameter("formatter");
+                formatter = Integer.parseInt(formatterStr);
+
                 setPreferences(path, timeout, maxExamplesNumber, restoreDB,
-                        cpp, cppref, searchCode, stackOverflow, includeDB);
+                        cpp, cppref, searchCode, stackOverflow, includeDB, duplicator, formatter);
             } else if (uri.equals("/settings")) {
                 path = prefs.get("path", defaultPath);
                 timeout = prefs.getLong("timeout", defaultTimeout);
@@ -209,6 +252,8 @@ public class ServerHandler extends AbstractHandler {
                 searchCode = prefs.getBoolean("searchCode", defaultSearchCode);
                 stackOverflow = prefs.getBoolean("stackOverflow", defaultStackOverflow);
                 includeDB = prefs.getBoolean("includeDB", defaultIncludeDB);
+                duplicator = prefs.getInt("duplicator", defaultDuplicator);
+                formatter = prefs.getInt("formatter", defaultFormatter);
             }
             String checked = "checked";
             String checkedYes = "";
@@ -241,10 +286,41 @@ public class ServerHandler extends AbstractHandler {
             } else {
                 checkedDBNo = checked;
             }
+            String checkedDuplicator1 = "";
+            String checkedDuplicator2 = "";
+            String checkedDuplicator3 = "";
+            String checkedFormatter1 = "";
+            String checkedFormatter2 = "";
+            String checkedFormatter3 = "";
+            switch (duplicator) {
+                case 1:
+                    checkedDuplicator1 = checked;
+                    break;
+                case 2 :
+                    checkedDuplicator2 = checked;
+                    break;
+                case 3 :
+                    checkedDuplicator3 = checked;
+                    break;
+            }
+            switch (formatter) {
+                case 1:
+                    checkedFormatter1 = checked;
+                    break;
+                case 2 :
+                    checkedFormatter2 = checked;
+                    break;
+                case 3 :
+                    checkedFormatter3 = checked;
+                    break;
+            }
+
             String result = String.format(settingsResult, path, timeout, maxExamplesNumber,
                     checkedYes, checkedNo,
                     checkedcpp, checkedcppref, checkedsearchcode, checkedstackoverflow,
-                    checkedDBYes, checkedDBNo);
+                    checkedDBYes, checkedDBNo,
+                    checkedDuplicator1, checkedDuplicator2, checkedDuplicator3,
+                    checkedFormatter1, checkedFormatter2, checkedFormatter3);
             long length = result.length();
             response.setContentLengthLong(length);
             response.getWriter().println(result);
