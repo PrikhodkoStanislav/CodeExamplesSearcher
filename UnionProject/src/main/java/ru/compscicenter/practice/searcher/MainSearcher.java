@@ -53,7 +53,6 @@ public class MainSearcher {
     private final static boolean defaultIncludeDB = true;
 
     private final static int defaultDuplicator = 1;
-    private final static int defaultFormatter = 1;
 
     /**
      * Search code examples for Sublime server
@@ -73,10 +72,12 @@ public class MainSearcher {
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch),
                 new SelfProjectSearcher(pathFromSublime)};
         List<CodeExample> l1 = new ArrayList<>();
+        List<CodeExample> l2 = new ArrayList<>();
 
         l1 = tryToCodeExamplesFromDB(searchers[0], l1);
 
-        l1.addAll(searchers[1].search(funcName));
+        l2 = searchers[1].search(funcName);
+
         codeFromSublime = new ArrayList<>();
         List<CodeExample> cesFromActiveProject = searchers[2].search(funcName);
         for (CodeExample ce : cesFromActiveProject) {
@@ -85,7 +86,13 @@ public class MainSearcher {
                 break;
             }
         }
-        return htmlWithResult(l1);
+        l2 = htmlWithResult(l2);
+        l1.addAll(l2);
+
+        ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
+        String result = projectCodeFormatter.createResultFile(functionName, l1, format, codeFromSublime,
+                stringFromRequest);
+        return result;
     }
 
     /**
@@ -194,8 +201,7 @@ public class MainSearcher {
      * @param examples list with search results
      * @return html-string
      * */
-    private static String htmlWithResult(List<CodeExample> examples) throws ParseException, IOException {
-        String result = "";
+    private static List<CodeExample> htmlWithResult(List<CodeExample> examples) throws ParseException, IOException {
         ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
         if (codeFromSublime != null) {
             projectCodeFormatter.beautifyCode(codeFromSublime);
@@ -203,20 +209,24 @@ public class MainSearcher {
         if (examples != null) {
             projectCodeFormatter.beautifyCode(examples);
 
-            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
-            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
-            examples = duplicateRemover.removeDuplicates();
+            int duplicator = prefs.getInt("duplicator", defaultDuplicator);
+            if (duplicator == 1) {
+                AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
+                CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
+                examples = duplicateRemover.removeDuplicates();
+            } else if (duplicator == 2) {
+                AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.EqualsTokens;
+                CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
+                examples = duplicateRemover.removeDuplicates();
+            }
 
             int maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
             int size = examples.size();
             if (size > maxExamplesNumber) {
                 examples.removeAll(examples.subList(maxExamplesNumber, size));
             }
-
-            result = projectCodeFormatter.createResultFile(functionName, examples, format, codeFromSublime,
-                    stringFromRequest);
         }
-        return result;
+        return examples;
     }
 
     /**

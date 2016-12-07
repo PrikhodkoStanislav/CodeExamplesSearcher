@@ -13,12 +13,16 @@ import ru.compscicenter.practice.searcher.database.CodeExample;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 /**
  * Created by user on 06.10.2016!
  */
 public class ProjectCodeFormatter {
     private final static Logger logger = Logger.getLogger(ProjectCodeFormatter.class);
+
+    private Preferences prefs = Preferences.userRoot().node("settings");
+    private final static int defaultFormatter = 1;
 
     private CodeFormatter codeFormatter;
 
@@ -215,16 +219,21 @@ public class ProjectCodeFormatter {
 //
 //        System.out.println(result);
 
-        IDocument document = new Document(code);
+        int formatter = prefs.getInt("formatter", defaultFormatter);
 
-        try {
-            TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
-            edit.apply(document);
+        if (formatter == 1) {
+
+        } else if (formatter == 2) {
+            IDocument document = new Document(code);
+            try {
+                TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
+                edit.apply(document);
+            } catch (Exception e) {
+                logger.error("Sorry, something wrong!", e);
+            }
+            return document.get();
         }
-        catch (Exception e) {
-            logger.error("Sorry, something wrong!", e);
-        }
-        
-        return document.get();
+
+        return code;
     }
 }

@@ -30,9 +30,8 @@ public abstract class SiteProcessor extends Thread {
     private final static Logger logger = Logger.getLogger(SiteProcessor.class);
 
     private Preferences prefs = Preferences.userRoot().node("settings");
-
+    private final static int defaultMaxExamplesNumber = 20;
     private final static int defaultDuplicator = 1;
-    private final static int defaultFormatter = 1;
 
     private String language;
     private String query;
@@ -42,9 +41,6 @@ public abstract class SiteProcessor extends Thread {
     @Override
     public void run() {
         logger.setLevel(Level.INFO);
-
-        int duplicator = prefs.getInt("duplicator", defaultDuplicator);
-        int formatter = prefs.getInt("formatter", defaultFormatter);
 
         answers = new ArrayList<>();
         String request = generateRequestURL(getQuery());
@@ -61,25 +57,22 @@ public abstract class SiteProcessor extends Thread {
                         prepareExamples.addAll(extractCodeAndFindExamples(codeSourceList));
 
 
-                        switch (formatter) {
-                            case 1:
-                                break;
-                            case 2:
-                                projectCodeFormatter.beautifyCode(prepareExamples);
-                                break;
-                            case 3:
-                                break;
-                        }
+                        projectCodeFormatter.beautifyCode(prepareExamples);
 
-                        AlgorithmsRemoveDuplicates typeOfCompareResult;
+                        int duplicator = prefs.getInt("duplicator", defaultDuplicator);
                         if (duplicator == 1) {
-                            typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
+                            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
                             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(prepareExamples, typeOfCompareResult);
                             prepareExamples = duplicateRemover.removeDuplicates();
                         } else if (duplicator == 2) {
-                            typeOfCompareResult = AlgorithmsRemoveDuplicates.EqualsTokens;
+                            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.EqualsTokens;
                             CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(prepareExamples, typeOfCompareResult);
                             prepareExamples = duplicateRemover.removeDuplicates();
+                        }
+                        int maxExamplesNumber = prefs.getInt("maxExamplesNumber", defaultMaxExamplesNumber);
+                        int size = prepareExamples.size();
+                        if (size > maxExamplesNumber) {
+                            prepareExamples.removeAll(prepareExamples.subList(maxExamplesNumber, size));
                         }
                     }
                     answers.addAll(prepareExamples);
