@@ -59,6 +59,25 @@ public class MainSearcher {
         format = "html";
         functionName = funcName;
         stringFromRequest = string;
+
+        boolean cPlusPlus = false;
+        boolean cppReference = false;
+        boolean searchCode = false;
+        boolean stackOverflow = false;
+
+        if (cPlusPlus) {
+            cPlusPlus = true;
+        }
+        if (cppReference) {
+            cppReference = true;
+        }
+        if (searchCode) {
+            searchCode = true;
+        }
+        if (stackOverflow) {
+            stackOverflow = true;
+        }
+
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch),
                 new SelfProjectSearcher(pathFromSublime)};
         List<CodeExample> l1 = new ArrayList<>();
