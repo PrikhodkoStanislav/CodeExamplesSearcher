@@ -302,43 +302,65 @@ public class MainSearcher {
     //if no result at site (stackoverflow, cppreference) -> that search results at site
 
     private static List<CodeExample> tryToCodeExamplesFromDB(Searcher searcher, List<CodeExample> results) {
+        boolean cpp = true;
+        boolean cppRef = true;
+        boolean searchCode = true;
+        boolean stackOverFlow = true;
+        boolean includeDB = true;
+
         boolean restoreDB = prefs.getBoolean("restoreDB", defaultRestoreDB);
-        if (restoreDB) {
-            DATABASE.restore();
+
+        if (includeDB) {
+            if (restoreDB) {
+                DATABASE.restore();
+            } else {
+                UpdateDBTask task = new UpdateDBTask();
+                task.run();
+            }
+            List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
+            if (dbExamples == null || dbExamples.size() == 0) {
+                searcher.getFilter().put("cplusplus", true);
+                searcher.getFilter().put("cppreference", true);
+                searcher.getFilter().put("searchcode", true);
+                searcher.getFilter().put("stackoverflow", true);
+            } else {
+                if (cpp && !existsResultsOfSite(dbExamples, "cplusplus")) {
+                    searcher.getFilter().put("cplusplus", true);
+                }
+                if (cppRef && !existsResultsOfSite(dbExamples, "cppreference")) {
+                    searcher.getFilter().put("cppreference", true);
+                }
+                if (searchCode && !existsResultsOfSite(dbExamples, "searchcode")) {
+                    searcher.getFilter().put("searchcode", true);
+                }
+                if (stackOverFlow && !existsResultsOfSite(dbExamples, "stackoverflow")) {
+                    searcher.getFilter().put("stackoverflow", true);
+                }
+            }
+
+            if (searcher.getFilter().size() >= 1) {
+                results.addAll(findResultsOnSites(searcher));
+            }
+
+            for (CodeExample result : results) {
+                DATABASE.save(result);
+            }
+            if (dbExamples != null && dbExamples.size() != 0) {
+                results.addAll(dbExamples);
+            }
         } else {
-            UpdateDBTask task = new UpdateDBTask();
-            task.run();
-        }
-        List<CodeExample> dbExamples = DATABASE.loadByLanguageAndFunction("C", functionName);
-        if (dbExamples == null || dbExamples.size() == 0) {
-            searcher.getFilter().put("cplusplus", true);
-            searcher.getFilter().put("cppreference", true);
-            searcher.getFilter().put("searchcode", true);
-            searcher.getFilter().put("stackoverflow", true);
-        } else {
-            if (!existsResultsOfSite(dbExamples, "cplusplus")) {
+            if (cpp) {
                 searcher.getFilter().put("cplusplus", true);
             }
-            if (!existsResultsOfSite(dbExamples, "cppreference")) {
+            if (cppRef) {
                 searcher.getFilter().put("cppreference", true);
             }
-            if (!existsResultsOfSite(dbExamples, "searchcode")) {
+            if (searchCode) {
                 searcher.getFilter().put("searchcode", true);
             }
-            if (!existsResultsOfSite(dbExamples, "stackoverflow")) {
+            if (stackOverFlow) {
                 searcher.getFilter().put("stackoverflow", true);
             }
-        }
-
-        if (searcher.getFilter().size() >= 1) {
-            results.addAll(findResultsOnSites(searcher));
-        }
-
-        for (CodeExample result : results) {
-            DATABASE.save(result);
-        }
-        if (dbExamples != null && dbExamples.size() != 0) {
-            results.addAll(dbExamples);
         }
         return results;
     }
