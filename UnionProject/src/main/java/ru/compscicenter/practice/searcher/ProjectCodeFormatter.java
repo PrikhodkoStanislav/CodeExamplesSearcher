@@ -7,9 +7,11 @@ import org.eclipse.cdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
+import ru.compscicenter.practice.searcher.codeformatter.AStyleFormatter;
 import ru.compscicenter.practice.searcher.codeformatter.HandwrittenCodeFormatter;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -24,13 +26,7 @@ public class ProjectCodeFormatter {
     private Preferences prefs = Preferences.userRoot().node("settings");
     private final static int defaultFormatter = 2;
 
-    private CodeFormatter codeFormatter;
-
     private String reportDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-
-    public ProjectCodeFormatter() {
-        codeFormatter = ToolFactory.createDefaultCodeFormatter(null);
-    }
 
     /**
      * Create result HTML or TXT file
@@ -222,10 +218,28 @@ public class ProjectCodeFormatter {
         int formatter = prefs.getInt("formatter", defaultFormatter);
 
         if (formatter == 1) {
+            String fileName = "example.c";
+            write(fileName, code);
+
+            System.out.println(code);
+            AStyleFormatter.main(null);
+
+
+            String result = code;
+            try {
+                result = read(fileName);
+            } catch (FileNotFoundException e) {
+                logger.error("File is not exist!", e);
+            }
+
+            System.out.println(result);
+
+            return result;
 
         } else if (formatter == 2) {
             IDocument document = new Document(code);
             try {
+                CodeFormatter codeFormatter = ToolFactory.createDefaultCodeFormatter(null);
                 TextEdit edit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, "\n");
                 edit.apply(document);
             } catch (Exception e) {
@@ -237,5 +251,48 @@ public class ProjectCodeFormatter {
         }
 
         return code;
+    }
+
+    public void write(String fileName, String text) {
+        File file = new File(fileName);
+        try {
+            if(!file.exists()){
+                file.createNewFile();
+            }
+
+            PrintWriter out = new PrintWriter(file.getAbsoluteFile());
+
+            try {
+                out.print(text);
+            } finally {
+                out.close();
+            }
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String read(String fileName) throws FileNotFoundException {
+        StringBuilder sb = new StringBuilder();
+
+        File file = new File(fileName);
+        if (!file.exists()){
+            throw new FileNotFoundException(file.getName());
+        }
+        try {
+            BufferedReader in = new BufferedReader(new FileReader( file.getAbsoluteFile()));
+            try {
+                String s;
+                while ((s = in.readLine()) != null) {
+                    sb.append(s);
+                    sb.append("\n");
+                }
+            } finally {
+                in.close();
+            }
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+        return sb.toString();
     }
 }
