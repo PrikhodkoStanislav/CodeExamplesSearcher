@@ -56,32 +56,35 @@ public class ServerHandler extends AbstractHandler {
             + "<br />"
             + "<input type=\"checkbox\" id = \"stackOverflow\" name=\"stackOverflow\" value=\"true\" %9$s/>"
             + "stackoverflow.com"
+            + "<br />"
+            + "<input type=\"checkbox\" id = \"project\" name=\"project\" value=\"true\" %10$s/>"
+            + "project"
             + "</p>"
             + "<p>Do you want to include DB?</p>"
-            + "<p><input type=\"radio\" id = \"includeDB\" name=\"includeDB\" value=\"true\" %10$s/>"
+            + "<p><input type=\"radio\" id = \"includeDB\" name=\"includeDB\" value=\"true\" %11$s/>"
             + "Yes"
             + "<br />"
-            + "<input type=\"radio\" id = \"includeDB\" name=\"includeDB\" value=\"false\" %11$s/>"
+            + "<input type=\"radio\" id = \"includeDB\" name=\"includeDB\" value=\"false\" %12$s/>"
             + "No"
             + "</p>"
             + "<p>What kind of code duplicator do you want to use per resource?</p>"
-            + "<p><input type=\"radio\" id = \"duplicator\" name=\"duplicator\" value=\"1\" %12$s/>"
+            + "<p><input type=\"radio\" id = \"duplicator\" name=\"duplicator\" value=\"1\" %13$s/>"
             + "Levenshtein distance"
             + "<br />"
-            + "<input type=\"radio\" id = \"duplicator\" name=\"duplicator\" value=\"2\" %13$s/>"
+            + "<input type=\"radio\" id = \"duplicator\" name=\"duplicator\" value=\"2\" %14$s/>"
             + "Equals tokens"
             + "<br />"
-            + "<input type=\"radio\" id = \"duplicator\" name=\"duplicator\" value=\"3\" %14$s/>"
+            + "<input type=\"radio\" id = \"duplicator\" name=\"duplicator\" value=\"3\" %15$s/>"
             + "Exclude"
             + "</p>"
             + "<p>What kind of beautifier do you want to use per resource?</p>"
-            + "<p><input type=\"radio\" id = \"formatter\" name=\"formatter\" value=\"1\" %15$s/>"
+            + "<p><input type=\"radio\" id = \"formatter\" name=\"formatter\" value=\"1\" %16$s/>"
             + "AStyle"
             + "<br />"
-            + "<input type=\"radio\" id = \"formatter\" name=\"formatter\" value=\"2\" %16$s/>"
+            + "<input type=\"radio\" id = \"formatter\" name=\"formatter\" value=\"2\" %17$s/>"
             + "Eclipse"
             + "<br />"
-            + "<input type=\"radio\" id = \"formatter\" name=\"formatter\" value=\"3\" %17$s/>"
+            + "<input type=\"radio\" id = \"formatter\" name=\"formatter\" value=\"3\" %18$s/>"
             + "Exclude"
             + "</p>"
             + "<p><input type=\"submit\" value = \"Submit\"></p>"
@@ -100,7 +103,7 @@ public class ServerHandler extends AbstractHandler {
 
     public void setPreferences(String path, long timeout, int maxExamplesNumber,
                                boolean restoreDB, boolean cpp, boolean cppref,
-                               boolean searchCode, boolean stackOverflow,
+                               boolean searchCode, boolean stackOverflow, boolean project,
                                boolean includeDB,
                                int duplicator, int formatter) {
         String ID1 = "path";
@@ -111,9 +114,10 @@ public class ServerHandler extends AbstractHandler {
         String ID6 = "cppref";
         String ID7 = "searchCode";
         String ID8 = "stackOverflow";
-        String ID9 = "includeDB";
-        String ID10 = "duplicator";
-        String ID11 = "formatter";
+        String ID9 = "project";
+        String ID10 = "includeDB";
+        String ID11 = "duplicator";
+        String ID12 = "formatter";
 
         prefs.put(ID1, path);
         prefs.putLong(ID2, timeout);
@@ -123,9 +127,10 @@ public class ServerHandler extends AbstractHandler {
         prefs.putBoolean(ID6, cppref);
         prefs.putBoolean(ID7, searchCode);
         prefs.putBoolean(ID8, stackOverflow);
-        prefs.putBoolean(ID9, includeDB);
-        prefs.putInt(ID10, duplicator);
-        prefs.putInt(ID11, formatter);
+        prefs.putBoolean(ID9, project);
+        prefs.putBoolean(ID10, includeDB);
+        prefs.putInt(ID11, duplicator);
+        prefs.putInt(ID12, formatter);
     }
 
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
@@ -142,6 +147,7 @@ public class ServerHandler extends AbstractHandler {
         final boolean defaultCppref = true;
         final boolean defaultSearchCode = true;
         final boolean defaultStackOverflow = true;
+        final boolean defaultProject = true;
 
         final boolean defaultIncludeDB = true;
 
@@ -207,6 +213,8 @@ public class ServerHandler extends AbstractHandler {
             boolean cppref = defaultCppref;
             boolean searchCode = defaultSearchCode;
             boolean stackOverflow = defaultStackOverflow;
+            boolean project = defaultProject;
+
             boolean includeDB = defaultIncludeDB;
 
             int duplicator = defaultDuplicator;
@@ -231,6 +239,8 @@ public class ServerHandler extends AbstractHandler {
                 searchCode = Boolean.parseBoolean(searchCodeStr);
                 String stackOverflowStr = request.getParameter("stackOverflow");
                 stackOverflow = Boolean.parseBoolean(stackOverflowStr);
+                String projectStr = request.getParameter("project");
+                project = Boolean.parseBoolean(projectStr);
 
                 String includeDBStr = request.getParameter("includeDB");
                 includeDB = Boolean.parseBoolean(includeDBStr);
@@ -241,7 +251,7 @@ public class ServerHandler extends AbstractHandler {
                 formatter = Integer.parseInt(formatterStr);
 
                 setPreferences(path, timeout, maxExamplesNumber, restoreDB,
-                        cpp, cppref, searchCode, stackOverflow, includeDB, duplicator, formatter);
+                        cpp, cppref, searchCode, stackOverflow, project, includeDB, duplicator, formatter);
             } else if (uri.equals("/settings")) {
                 path = prefs.get("path", defaultPath);
                 timeout = prefs.getLong("timeout", defaultTimeout);
@@ -251,6 +261,7 @@ public class ServerHandler extends AbstractHandler {
                 cppref = prefs.getBoolean("cppref", defaultCppref);
                 searchCode = prefs.getBoolean("searchCode", defaultSearchCode);
                 stackOverflow = prefs.getBoolean("stackOverflow", defaultStackOverflow);
+                project = prefs.getBoolean("project", defaultProject);
                 includeDB = prefs.getBoolean("includeDB", defaultIncludeDB);
                 duplicator = prefs.getInt("duplicator", defaultDuplicator);
                 formatter = prefs.getInt("formatter", defaultFormatter);
@@ -267,6 +278,7 @@ public class ServerHandler extends AbstractHandler {
             String checkedcppref = "";
             String checkedsearchcode = "";
             String checkedstackoverflow = "";
+            String checkedproject = "";
             if (cpp) {
                 checkedcpp = checked;
             }
@@ -278,6 +290,9 @@ public class ServerHandler extends AbstractHandler {
             }
             if (stackOverflow) {
                 checkedstackoverflow = checked;
+            }
+            if (project) {
+                checkedproject = checked;
             }
             String checkedDBYes = "";
             String checkedDBNo = "";
@@ -318,6 +333,7 @@ public class ServerHandler extends AbstractHandler {
             String result = String.format(settingsResult, path, timeout, maxExamplesNumber,
                     checkedYes, checkedNo,
                     checkedcpp, checkedcppref, checkedsearchcode, checkedstackoverflow,
+                    checkedproject,
                     checkedDBYes, checkedDBNo,
                     checkedDuplicator1, checkedDuplicator2, checkedDuplicator3,
                     checkedFormatter1, checkedFormatter2, checkedFormatter3);
