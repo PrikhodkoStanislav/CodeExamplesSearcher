@@ -49,6 +49,7 @@ public class MainSearcher {
     private final static boolean defaultCppref = true;
     private final static boolean defaultSearchCode = true;
     private final static boolean defaultStackOverflow = true;
+    private final static boolean defaultProject = true;
 
     private final static boolean defaultIncludeDB = true;
 
@@ -72,11 +73,15 @@ public class MainSearcher {
         Searcher[] searchers = new Searcher[]{new SiteSearcher(), new SelfProjectSearcher(pathForSearch),
                 new SelfProjectSearcher(pathFromSublime)};
         List<CodeExample> l1 = new ArrayList<>();
-        List<CodeExample> l2;
-
         l1 = tryToCodeExamplesFromDB(searchers[0], l1);
 
-        l2 = searchers[1].search(funcName);
+        boolean project = prefs.getBoolean("project", defaultProject);
+
+        if (project) {
+            List<CodeExample> l2 = searchers[1].search(funcName);
+            l2 = formatterAndDuplicator(l2);
+            l1.addAll(l2);
+        }
 
         codeFromSublime = new ArrayList<>();
         List<CodeExample> cesFromActiveProject = searchers[2].search(funcName);
@@ -86,10 +91,13 @@ public class MainSearcher {
                 break;
             }
         }
-        l2 = htmlWithResult(l2);
-        l1.addAll(l2);
 
         ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
+
+        if (codeFromSublime != null) {
+            projectCodeFormatter.beautifyCode(codeFromSublime);
+        }
+
         String result = projectCodeFormatter.createResultFile(functionName, l1, format, codeFromSublime,
                 stringFromRequest);
         return result;
@@ -201,7 +209,7 @@ public class MainSearcher {
      * @param examples list with search results
      * @return html-string
      * */
-    private static List<CodeExample> htmlWithResult(List<CodeExample> examples) throws ParseException, IOException {
+    private static List<CodeExample> formatterAndDuplicator(List<CodeExample> examples) throws ParseException, IOException {
         ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
         if (codeFromSublime != null) {
             projectCodeFormatter.beautifyCode(codeFromSublime);
