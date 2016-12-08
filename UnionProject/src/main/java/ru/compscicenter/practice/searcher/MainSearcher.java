@@ -86,7 +86,7 @@ public class MainSearcher {
         codeFromSublime = new ArrayList<>();
         List<CodeExample> cesFromActiveProject = searchers[2].search(funcName);
         for (CodeExample ce : cesFromActiveProject) {
-            if (ce.getLineWithFunction() == line) {
+            if (ce.getLineWithFunction() <= line) {
                 codeFromSublime.add(ce);
                 break;
             }
