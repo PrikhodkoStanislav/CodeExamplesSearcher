@@ -222,7 +222,7 @@ public class ProjectCodeFormatter {
             write(fileName, code);
 
             System.out.println(code);
-            AStyleFormatter.main(null);
+            AStyleFormatter.format();
 
 
             String result = code;
