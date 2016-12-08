@@ -22,7 +22,7 @@ public class ProjectCodeFormatter {
     private final static Logger logger = Logger.getLogger(ProjectCodeFormatter.class);
 
     private Preferences prefs = Preferences.userRoot().node("settings");
-    private final static int defaultFormatter = 1;
+    private final static int defaultFormatter = 2;
 
     private CodeFormatter codeFormatter;
 
@@ -232,6 +232,8 @@ public class ProjectCodeFormatter {
                 logger.error("Sorry, something wrong!", e);
             }
             return document.get();
+        } else if (formatter == 3) {
+            return code;
         }
 
         return code;

@@ -2,7 +2,6 @@ package ru.compscicenter.practice.searcher;
 
 import antlrclasses.CLexer;
 import org.antlr.v4.runtime.*;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
 import ru.compscicenter.practice.searcher.database.CodeExample;

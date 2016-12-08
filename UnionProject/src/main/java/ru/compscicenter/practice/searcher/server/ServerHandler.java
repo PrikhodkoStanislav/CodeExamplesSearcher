@@ -151,7 +151,7 @@ public class ServerHandler extends AbstractHandler {
         final boolean defaultIncludeDB = true;
 
         final int defaultDuplicator = 1;
-        final int defaultFormatter = 1;
+        final int defaultFormatter = 2;
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
