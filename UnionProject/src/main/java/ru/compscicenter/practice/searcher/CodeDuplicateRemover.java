@@ -2,6 +2,8 @@ package ru.compscicenter.practice.searcher;
 
 import antlrclasses.CLexer;
 import org.antlr.v4.runtime.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
@@ -12,6 +14,8 @@ import java.util.*;
  * Created by Станислав on 15.10.2016!
  */
 public class CodeDuplicateRemover {
+    private final static Logger logger = Logger.getLogger(CodeDuplicateRemover.class);
+
     private List<CodeExample> list;
     private AlgorithmsRemoveDuplicates typeOfRemoveAlgorithm = AlgorithmsRemoveDuplicates.EqualsTokens;
     final double maxLevenshteinRatio = 30.0;
@@ -26,11 +30,12 @@ public class CodeDuplicateRemover {
     }
 
     public List<CodeExample> removeDuplicates() {
+        int numberOfDuplicates = 0;
         List<CodeExample> examples = new ArrayList<>(list);
         List<CodeExample> result = new ArrayList<>();
         while (!examples.isEmpty()) {
             CodeExample minCodeExample = examples.stream().min(
-                    (c1, c2) -> tokenLength(c1).compareTo(tokenLength(c2))).get();
+                    Comparator.comparing(this::tokenLength)).get();
             examples.remove(minCodeExample);
             List<CodeExample> removedElements = new ArrayList<>();
             for (CodeExample ce : examples) {
@@ -38,9 +43,11 @@ public class CodeDuplicateRemover {
                     removedElements.add(ce);
                 }
             }
+            numberOfDuplicates += removedElements.size();
             examples.removeAll(removedElements);
             result.add(minCodeExample);
         }
+        logger.info("Number of duplicates = " + numberOfDuplicates);
 //        Map<CodeExample, Lexer> lexers = new HashMap<>();
 //        Map<CodeExample, List<Integer>> tokenTypes = new HashMap<>();
 //        for (CodeExample ce : list) {
