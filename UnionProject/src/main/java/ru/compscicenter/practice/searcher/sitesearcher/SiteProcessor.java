@@ -96,14 +96,17 @@ public abstract class SiteProcessor extends Thread {
     private List<CodeExample> extractCodeAndFindExamples(List<CodeExamplesWithSource> codeSourceList) {
         List<CodeExample> results = new ArrayList<>();
         for (CodeExamplesWithSource codeWithSource : codeSourceList) {
-            codeWithSource.body = removeComments(codeWithSource.body);
-            searchInFileAllFunction(getQuery(), codeWithSource, results);
+            try {
+                codeWithSource.body = removeComments(codeWithSource.body);
+                searchInFileAllFunction(getQuery(), codeWithSource, results);
+            } catch (Exception ignored) {
+            }
         }
         return results;
     }
 
     private String removeComments(String body) {
-    StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         String[] lines = body.split("\n");
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
@@ -115,12 +118,13 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            while (lines[i].startsWith("//") ||
-                    lines[i].matches("\\s*\\d+") || lines[i].matches("[\\s\\t\\r]+") ||
-                    lines[i].matches("\\s*\\w\\s*")) {
-                if (i < lines.length - 1) {
+            while (lines[i].startsWith("//") || lines[i].matches("\\s*\\d+") ||
+                    lines[i].matches("[\\s\\t\\r]+") || lines[i].matches("\\s*\\w\\s*")) {
+                if (i <= lines.length - 1) {
                     i++;
-                    line = lines[i];
+                    if (i < lines.length - 1) {
+                        line = lines[i];
+                    }
                 }
             }
 
