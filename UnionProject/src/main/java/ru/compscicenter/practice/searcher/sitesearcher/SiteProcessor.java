@@ -146,7 +146,7 @@ public abstract class SiteProcessor extends Thread {
                 if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
                         str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
                         (!str.endsWith(")") && !str.contains(functionName + "(const") &&
-                                !str.contains(functionName + "( const"))/* && !isNaturalSentence(str)*/) {
+                                !str.contains(functionName + "( const")) && !isNaturalSentence(str)) {
 
                     StringBuilder sb = new StringBuilder();
                     String newLine = "\n";
@@ -209,31 +209,30 @@ public abstract class SiteProcessor extends Thread {
         }
         String[] tokens = line.split(" ");
         int len = tokens.length;
-        int a = 0, b = 0;
-        double c = 0, d = 0;
+        int a = 0;
         for (String token : tokens) {
-            if (isNatural(token)) {
+            if (isNotNatural(token)) {
                 a++;
-            } else {
-                b++;
             }
         }
-        c = (double) a / len;
-        d = (double) b / len;
-        return c > d;
+        double c = (double) a / len;
+        return c >= 0.5;
     }
 
-    private boolean isNatural(String token) {
-        return !(token.matches("[\\+\\-\\\\*/=\\(\\)<>\\{\\}]") ||
-            token.matches("(int|new|null|NULL|else|nullptr|str|var|char|float|byte|short|double|const|void|for|if|while|switch)") ||
-            token.length() < 5 || token.contains("_") || isCamelCase(token) ||
+    private boolean isNotNatural(String token) {
+        return token.matches("[\\+\\-\\\\*/=\\(\\)<>\\{\\}\\.;,]") ||
+            token.matches("(str|var|new|null|NULL|nullptr|" +
+                    "char|float|byte|short|double|int|const|void|" +
+                    "if|else|for|while|switch)") ||
+            token.contains("_") || isCamelCase(token) ||
                 (token.contains("+") || token.contains("-") ||
                 token.contains("*") || token.contains("/") ||
                 token.contains("=") || token.contains(";") ||
+                token.contains(".") || token.contains(",") ||
                 token.contains("(") || token.contains(")") ||
                 token.contains("<") || token.contains(">") ||
                 token.contains("{") || token.contains("}") ||
-                token.contains("[") || token.contains("]")));
+                token.contains("[") || token.contains("]"));
     }
 
     private boolean isCamelCase(String token) {
@@ -310,93 +309,6 @@ public abstract class SiteProcessor extends Thread {
         } else {
             return "Page Not Found";
         }
-    }
-
-    /**
-     * Extract code from html-text
-     * @param answer html-text
-     * return code fragments
-     **/
-    /*protected List<String> extractCode(String answer) {
-        String[] lines = answer.split("\n");
-        List<AnswerLine> answerLines = markAnswersContent(lines);
-
-        List<String> codeFragments = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < answerLines.size(); i++) {
-            AnswerLine answerLine = answerLines.get(i);
-            if (answerLine.isCode) {
-                if (i == 0 || !answerLines.get(i-1).isCode) {
-                    if (!"".equals(sb.toString())) {
-                        codeFragments.add(sb.toString());
-                        sb.replace(0, sb.length(), "");
-                    }
-                }
-                sb.append(answerLine.line).append("\n");
-            }
-        }
-        codeFragments.add(sb.toString());
-
-        Iterator<String> iterator = codeFragments.iterator();
-        while (iterator.hasNext()) {
-            String code = iterator.next();
-            if (code.split("\n").length <= 3) {
-                iterator.remove();
-            }
-        }
-
-        return codeFragments;
-    }
-
-    *//**
-     * Mark answer bodies into classes: "code", "no-code
-     * @param lines answer body converted into array
-     * return marked answers
-     **//*
-    private List<AnswerLine> markAnswersContent(String[] lines) {
-        List<AnswerLine> answerLines = new ArrayList<>();
-        boolean isCode;
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-            if (line.startsWith("*//*")) {
-                while (!lines[i].endsWith("*//*")) {
-                    i++;
-                }
-                i++;
-            }
-            line = lines[i];
-            isCode = line.endsWith(";") ||
-                line.endsWith(",") ||
-                line.endsWith("{") ||
-                line.endsWith("}") ||
-                line.endsWith("[") ||
-                line.endsWith("]") ||
-                    (line.endsWith(")") && !line.startsWith("(")) ||
-                    (line.endsWith("(") && !line.startsWith("#")) ||
-                    (line.endsWith(">") && !line.startsWith("#")) ||
-                line.endsWith("=") ||
-                line.endsWith("else") ||
-                    (line.contains("//") &&
-                            !line.startsWith("//"));
-            answerLines.add(new AnswerLine(line, isCode));
-        }
-        return answerLines;
-    }*/
-
-    /**
-     * Try to find function name in code fragment
-     * @param code code fragment
-     * return true if function name is exists in code, otherwise false
-     **/
-    protected boolean findMethodInCode(String code) {
-        String[] lines = code.split("\n");
-        for (String line : lines) {
-            Matcher matcher = p.matcher(line);
-            if (matcher.find()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     protected String cleanTextFromHTMlTags(String html) throws TikaException, SAXException, IOException {
