@@ -80,7 +80,7 @@ public abstract class SiteProcessor extends Thread {
                 }
             } catch (ConnectException e) {
                 //todo call DB from this block
-                System.out.println("You haven't any cinnection to Internet! Please, check your connection settings!");
+                System.out.println("You haven't any connection to Internet! Please, check your connection settings!");
                 System.exit(0);
             } catch (Exception e) {
                 logger.error("Sorry, something wrong!", e);
@@ -118,7 +118,7 @@ public abstract class SiteProcessor extends Thread {
             while (lines[i].startsWith("//") ||
                     lines[i].matches("\\s*\\d+") || lines[i].matches("[\\s\\t\\r]+") ||
                     lines[i].matches("\\s*\\w\\s*")) {
-                if (i < lines.length) {
+                if (i < lines.length - 1) {
                     i++;
                     line = lines[i];
                 }
