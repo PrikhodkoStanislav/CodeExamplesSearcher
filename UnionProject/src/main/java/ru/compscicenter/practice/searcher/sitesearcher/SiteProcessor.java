@@ -14,6 +14,7 @@ import ru.compscicenter.practice.searcher.algorithms.AlgorithmsRemoveDuplicates;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -77,6 +78,10 @@ public abstract class SiteProcessor extends Thread {
                     }
                     answers.addAll(prepareExamples);
                 }
+            } catch (ConnectException e) {
+                //todo call DB from this block
+                System.out.println("You haven't any cinnection to Internet! Please, check your connection settings!");
+                System.exit(0);
             } catch (Exception e) {
                 logger.error("Sorry, something wrong!", e);
             }
@@ -149,7 +154,7 @@ public abstract class SiteProcessor extends Thread {
                 if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
                         str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
                         (!str.endsWith(")") && !str.contains(functionName + "(const") &&
-                                !str.contains(functionName + "( const"))/* && !isNaturalSentence(str)*/) {
+                                !str.contains(functionName + "( const")) && !isNaturalSentence(str)) {
 
                     StringBuilder sb = new StringBuilder();
                     String newLine = "\n";
@@ -210,16 +215,26 @@ public abstract class SiteProcessor extends Thread {
         if (line.contains("//")) {
             return false;
         }
+
+        line = line.trim();
         String[] tokens = line.split(" ");
-        int len = tokens.length;
-        int a = 0;
+        List<String> toks = new ArrayList<>();
+
         for (String token : tokens) {
-            if (!token.equals("") && isNotNatural(token)) {
+            if (!"".equals(token)) {
+                toks.add(token);
+            }
+        }
+
+        int len = toks.size();
+        int a = 0;
+        for (String token : toks) {
+            if (isNotNatural(token)) {
                 a++;
             }
         }
         double c = (double) a / len;
-        return c >= 0.5;
+        return c < 0.5;
     }
 
     private boolean isNotNatural(String token) {
