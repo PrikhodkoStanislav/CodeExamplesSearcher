@@ -110,13 +110,16 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            while (i < lines.length || lines[i].startsWith("//") || lines[i].endsWith(".") ||
+            while (lines[i].startsWith("//") ||
                     lines[i].matches("\\s*\\d+") || lines[i].matches("[\\s\\t\\r]+") ||
-                    lines[i].matches("\\s*\\w[\\s\\w]*")) {
-                i++;
+                    lines[i].matches("\\s*\\w\\s*")) {
+                if (i < lines.length) {
+                    i++;
+                    line = lines[i];
+                }
             }
 
-            if (i < line.length()) {
+            if (i < lines.length) {
                 sb.append(line).append("\n");
             }
         }
@@ -146,7 +149,7 @@ public abstract class SiteProcessor extends Thread {
                 if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
                         str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
                         (!str.endsWith(")") && !str.contains(functionName + "(const") &&
-                                !str.contains(functionName + "( const")) && !isNaturalSentence(str)) {
+                                !str.contains(functionName + "( const"))/* && !isNaturalSentence(str)*/) {
 
                     StringBuilder sb = new StringBuilder();
                     String newLine = "\n";
@@ -211,7 +214,7 @@ public abstract class SiteProcessor extends Thread {
         int len = tokens.length;
         int a = 0;
         for (String token : tokens) {
-            if (isNotNatural(token)) {
+            if (!token.equals("") && isNotNatural(token)) {
                 a++;
             }
         }
@@ -220,7 +223,7 @@ public abstract class SiteProcessor extends Thread {
     }
 
     private boolean isNotNatural(String token) {
-        return token.matches("[\\+\\-\\\\*/=\\(\\)<>\\{\\}\\.;,]") ||
+        return token.matches("[\\+\\-\\\\*/=\\(\\)<>\\{\\}\\.;,\"\\\\&\\|]") ||
             token.matches("(str|var|new|null|NULL|nullptr|" +
                     "char|float|byte|short|double|int|const|void|" +
                     "if|else|for|while|switch)") ||
@@ -229,6 +232,8 @@ public abstract class SiteProcessor extends Thread {
                 token.contains("*") || token.contains("/") ||
                 token.contains("=") || token.contains(";") ||
                 token.contains(".") || token.contains(",") ||
+                token.contains("\"") || token.contains("\\") ||
+                token.contains("&") || token.contains("|") ||
                 token.contains("(") || token.contains(")") ||
                 token.contains("<") || token.contains(">") ||
                 token.contains("{") || token.contains("}") ||
