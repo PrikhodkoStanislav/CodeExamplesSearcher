@@ -124,6 +124,20 @@ public class ProjectCodeFormatter {
             }
         }
         sb.append("</table>");
+        sb.append(fillTableBySource(examples));
+        sb.append("</body>")
+            .append("</html>");
+        return sb.toString();
+    }
+
+    /**
+     * Fill table with examples from selected source
+     * @param examples function name
+     * @return string from stringBuffer
+     * */
+    private String fillTableBySource(List<CodeExample> examples) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<h3>Examples from sites and project</h3>");
         sb.append("<table>");
         sb.append("<tr>")
                 .append("<th>").append("SOURCE").append("</th>")
@@ -145,9 +159,7 @@ public class ProjectCodeFormatter {
                     .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
                     .append("</tr>");
         }
-        sb.append("</table>")
-            .append("</body>")
-            .append("</html>");
+        sb.append("</table>");
         return sb.toString();
     }
 
