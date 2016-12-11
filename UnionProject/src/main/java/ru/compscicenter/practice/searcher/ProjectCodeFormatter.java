@@ -1,5 +1,6 @@
 package ru.compscicenter.practice.searcher;
 
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.cdt.core.ToolFactory;
@@ -13,6 +14,7 @@ import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -59,7 +61,7 @@ public class ProjectCodeFormatter {
                 "    background-color: #E4F4DE;\n" +
                 "}\n" +
                 "\n" +
-                "h3 {\n" +
+                "h3, h4 {\n" +
                 "    color: #26557B;\n" +
                 "    font-family: verdana;\n" +
                 "    font-size: 200%;" +
@@ -124,20 +126,55 @@ public class ProjectCodeFormatter {
             }
         }
         sb.append("</table>");
-        sb.append(fillTableBySource(examples));
+        List<CodeExample> examplesFromCPlusPlus = retrievalExamples(examples, "cplusplus");
+        if (examplesFromCPlusPlus.size() != 0) {
+            sb.append(fillTableBySource(examplesFromCPlusPlus, "cplusplus.com"));
+        }
+
+        List<CodeExample> examplesFromCPPRef = retrievalExamples(examples, "cppref");
+        if (examplesFromCPPRef.size() != 0) {
+            sb.append(fillTableBySource(examplesFromCPPRef, "cppreference.com"));
+        }
+
+        List<CodeExample> examplesFromGitBit = retrievalExamples(examples, "searchcode");
+        if (examplesFromGitBit.size() != 0) {
+            sb.append(fillTableBySource(examplesFromGitBit, "searchcode.com"));
+        }
+
+        List<CodeExample> examplesFromStack = retrievalExamples(examples, "stack");
+        if (examplesFromStack.size() != 0) {
+            sb.append(fillTableBySource(examplesFromStack, "stackoverflow.com"));
+        }
+
+        List<CodeExample> examplesFromProject = retrievalExamples(examples, "project");
+        if (examplesFromProject.size() != 0) {
+            sb.append(fillTableBySource(examplesFromProject, "your project"));
+        }
         sb.append("</body>")
             .append("</html>");
         return sb.toString();
     }
 
+    private List<CodeExample> retrievalExamples(List<CodeExample> examples, String tag) {
+        List<CodeExample> results = new ArrayList<>();
+        for (CodeExample example : examples) {
+            if (("project".equals(tag) && !example.getSource().contains("http")) ||
+                    example.getSource().contains(tag)) {
+                results.add(example);
+            }
+        }
+        return results;
+    }
+
     /**
      * Fill table with examples from selected source
      * @param examples function name
+     * @param tag name of the source
      * @return string from stringBuffer
      * */
-    private String fillTableBySource(List<CodeExample> examples) {
+    private String fillTableBySource(List<CodeExample> examples, String tag) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<h3>Examples from sites and project</h3>");
+        sb.append("<h4>Examples from " + tag + "</h4>");
         sb.append("<table>");
         sb.append("<tr>")
                 .append("<th>").append("SOURCE").append("</th>")
