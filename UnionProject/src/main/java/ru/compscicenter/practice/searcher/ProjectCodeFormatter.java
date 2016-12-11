@@ -61,10 +61,16 @@ public class ProjectCodeFormatter {
                 "    background-color: #E4F4DE;\n" +
                 "}\n" +
                 "\n" +
-                "h3, h4 {\n" +
+                "h3 {\n" +
                 "    color: #26557B;\n" +
                 "    font-family: verdana;\n" +
                 "    font-size: 200%;" +
+                "}\n" +
+                "\n" +
+                "h4 {\n" +
+                "    color: #26557B;\n" +
+                "    font-family: verdana;\n" +
+                "    font-size: 120%;" +
                 "}\n" +
                 "\n" +
                 "span {\n" +
@@ -104,6 +110,7 @@ public class ProjectCodeFormatter {
         sb.append(string);
         sb.append("</p>");
         sb.append("<body>");
+
         sb.append("<table>");
         sb.append("<tr>")
                 .append("<th>").append("YOUR SOURCE").append("</th>")
@@ -115,38 +122,61 @@ public class ProjectCodeFormatter {
                 int end = source.lastIndexOf(".c :");
                 source = source.replaceAll("\\\\", "/");
                 sb.append("<tr>")
-                    .append("<td>")
+                        .append("<td>")
                         .append("<a href=\"" + "file:///")
                         .append(source.substring(0, end + 2)).append("\">")
                         .append(source)
                         .append("</a>")
-                    .append("</td>")
-                    .append("<td><pre>").append(code.getCodeExample()).append("</pre></td>")
-                    .append("</tr>");
+                        .append("</td>")
+                        .append("<td><pre>").append(code.getCodeExample()).append("</pre></td>")
+                        .append("</tr>");
             }
         }
         sb.append("</table>");
+
         List<CodeExample> examplesFromCPlusPlus = retrievalExamples(examples, "cplusplus");
         if (examplesFromCPlusPlus.size() != 0) {
-            sb.append(fillTableBySource(examplesFromCPlusPlus, "cplusplus.com"));
+            sb.append("<a href=\"#cplusplus\"><h4>Examples from cplusplus.com</h4></a>");
         }
 
         List<CodeExample> examplesFromCPPRef = retrievalExamples(examples, "cppref");
         if (examplesFromCPPRef.size() != 0) {
-            sb.append(fillTableBySource(examplesFromCPPRef, "cppreference.com"));
+            sb.append("<a href=\"#cppref\"><h4>Examples from cppreference.com</h4></a>");
         }
 
         List<CodeExample> examplesFromGitBit = retrievalExamples(examples, "searchcode");
         if (examplesFromGitBit.size() != 0) {
-            sb.append(fillTableBySource(examplesFromGitBit, "searchcode.com"));
+            sb.append("<a href=\"#searchcode\"><h4>Examples from searchcode.com</h4></a>");
         }
 
         List<CodeExample> examplesFromStack = retrievalExamples(examples, "stack");
         if (examplesFromStack.size() != 0) {
-            sb.append(fillTableBySource(examplesFromStack, "stackoverflow.com"));
+            sb.append("<a href=\"#stack\"><h4>Examples from stackoverflow.com</h4></a>");
         }
 
         List<CodeExample> examplesFromProject = retrievalExamples(examples, "project");
+        if (examplesFromProject.size() != 0) {
+            sb.append("<a href=\"#project\"><h4>Examples from your project</h4></a>");
+        }
+
+        sb.append("<hr>");
+
+        if (examplesFromCPlusPlus.size() != 0) {
+            sb.append(fillTableBySource(examplesFromCPlusPlus, "cplusplus.com"));
+        }
+
+        if (examplesFromCPPRef.size() != 0) {
+            sb.append(fillTableBySource(examplesFromCPPRef, "cppreference.com"));
+        }
+
+        if (examplesFromGitBit.size() != 0) {
+            sb.append(fillTableBySource(examplesFromGitBit, "searchcode.com"));
+        }
+
+        if (examplesFromStack.size() != 0) {
+            sb.append(fillTableBySource(examplesFromStack, "stackoverflow.com"));
+        }
+
         if (examplesFromProject.size() != 0) {
             sb.append(fillTableBySource(examplesFromProject, "your project"));
         }
@@ -173,8 +203,20 @@ public class ProjectCodeFormatter {
      * @return string from stringBuffer
      * */
     private String fillTableBySource(List<CodeExample> examples, String tag) {
+        String s = "";
+        if (tag.contains("cplusplus")) {
+            s = "cplusplus";
+        } else if (tag.contains("cppref")) {
+            s = "cppref";
+        } else if (tag.contains("searchcode")) {
+            s = "searchcode";
+        } else if (tag.contains("stack")) {
+            s = "stack";
+        } else if (tag.contains("project")) {
+            s = "project";
+        }
         StringBuilder sb = new StringBuilder();
-        sb.append("<h4>Examples from " + tag + "</h4>");
+        sb.append("<a name=\"" + s + "\"><h4>Examples from " + tag + "</h4></a>");
         sb.append("<table>");
         sb.append("<tr>")
                 .append("<th>").append("SOURCE").append("</th>")
