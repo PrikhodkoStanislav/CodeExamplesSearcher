@@ -99,7 +99,8 @@ public abstract class SiteProcessor extends Thread {
             try {
                 codeWithSource.body = removeComments(codeWithSource.body);
                 searchInFileAllFunction(getQuery(), codeWithSource, results);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                logger.error("Sorry, something wrong!", e);
             }
         }
         return results;
@@ -180,6 +181,11 @@ public abstract class SiteProcessor extends Thread {
                         sb.append(newLine);
                     }
 //                    sb.append(newLine);
+                    String[] preparedResults = sb.toString().split("\n");
+                    if (isNaturalSentence(preparedResults[0])) {
+                        int firstNewLine = preparedResults[0].length() + 1;
+                        sb.replace(0, firstNewLine, "");
+                    }
 
                     CodeExample codeExample = new CodeExample();
                     codeExample.setLanguage("C");
