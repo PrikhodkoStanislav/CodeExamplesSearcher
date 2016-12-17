@@ -1,3 +1,5 @@
+import org.apache.commons.lang.SystemUtils;
+
 import java.io.File;
 
 /**
@@ -7,11 +9,9 @@ public class AStyleInterface
 {
     public static String m(String code) {
         AStyleInterface a = new AStyleInterface();
-        String result = a.formatSource(code, options);
-        return result;
+        String options = "-A2tOP";
+        return a.formatSource(code, options);
     }
-
-    static private String options = "-A2tOP";
 
     static private String libraryName = "lib/AStyle-2.05.1jd.dll";
 
@@ -22,10 +22,10 @@ public class AStyleInterface
      * @return  A String containing the formatted source from Artistic Style,
      *         or an empty string on error.
      */
-    public String formatSource(String textIn, String options)
+    private String formatSource(String textIn, String options)
     {   // Return the allocated string
         // Memory space is allocated by OnAStyleMemAlloc, a callback function from AStyle
-        String textOut = new String("");
+        String textOut = "";
         try
         {   textOut = AStyleMain(textIn, options);
         }
@@ -41,7 +41,7 @@ public class AStyleInterface
      * @return  A String containing the version number from Artistic Style.
      */
     public String getVersion()
-    {   String version = new String();
+    {   String version = "";
         try
         {   version = AStyleGetVersion();
         }
@@ -63,11 +63,6 @@ public class AStyleInterface
 
     // methods to load Artistic Style -----------------------------------------
 
-    /**
-     * Static constructor to load the native Artistic Style library.
-     * Does not need to terminate if the shared library fails to load.
-     * But the exception must be handled when a function is called.
-     */
     static
     {   // load shared library from the classpath
         String astyleDirectory = System.getProperty("user.dir");
@@ -98,6 +93,9 @@ public class AStyleInterface
      */
     static private String getLibraryName(String astyleDirectory)
     {   // get the shared library extension for the platform
+        if (SystemUtils.IS_OS_LINUX) {
+            libraryName = "lib/libastyle-2.05.1j.so";
+        }
         String fileExt = System.mapLibraryName("");
         int dot = fileExt.indexOf(".");
         fileExt = fileExt.substring(dot);
@@ -140,22 +138,6 @@ public class AStyleInterface
      * @return    A String containing the version number of Artistic Style.
      */
     public native String AStyleGetVersion();
-
-    /**
-     * Error handler for messages from Artistic Style.
-     * This method is called only if there are errors when AStyleMain is called.
-     * This is for debugging and there should be no errors when the calling
-     * parameters are correct.
-     * Changing the method name requires changing Artistic Style.
-     * Signature: (ILjava/lang/String;)V.
-     *  @param  errorNumber   The error number from Artistic Style.
-     *  @param  errorMessage  The error message from Artistic Style.
-     */
-    private void ErrorHandler(int errorNumber, String errorMessage)
-    {   System.out.println("AStyle error "
-            + String.valueOf(errorNumber)
-            + " - " + errorMessage);
-    }
 
 }
 
