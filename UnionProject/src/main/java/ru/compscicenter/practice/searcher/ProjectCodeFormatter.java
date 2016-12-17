@@ -8,7 +8,6 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
 import ru.compscicenter.practice.searcher.codeformatter.AStyleFormatter;
-import ru.compscicenter.practice.searcher.codeformatter.HandwrittenCodeFormatter;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
 import java.text.SimpleDateFormat;
@@ -36,8 +35,8 @@ public class ProjectCodeFormatter {
      * @param format file extension
      * @return string for the result file
      * */
-    public String createResultFile(String functionName, List<CodeExample> examples,
-                                   String format, List<CodeExample> codeFromSublime, String string) {
+    String createResultFile(String functionName, List<CodeExample> examples,
+                            String format, List<CodeExample> codeFromSublime, String string) {
         if ("html".equals(format))
             return createHtml(functionName, examples, codeFromSublime, string);
         else
@@ -50,8 +49,8 @@ public class ProjectCodeFormatter {
      * @param examples list with search results
      * @return html-string
      * */
-    public String createHtml(String functionName, List<CodeExample> examples,
-                             List<CodeExample> codeFromSublime, String string) {
+    private String createHtml(String functionName, List<CodeExample> examples,
+                              List<CodeExample> codeFromSublime, String string) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
         sb.append("<head>");
@@ -216,7 +215,7 @@ public class ProjectCodeFormatter {
             s = "project";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("<a name=\"" + s + "\"><h4>Examples from " + tag + "</h4></a>");
+        sb.append("<a name=\"").append(s).append("\"><h4>Examples from ").append(tag).append("</h4></a>");
         sb.append("<table>");
         sb.append("<tr>")
                 .append("<th>").append("SOURCE").append("</th>")
@@ -250,7 +249,7 @@ public class ProjectCodeFormatter {
      * @param examples list with search results
      * @return txt-string
      * */
-    public String createTxt(String functionName, List<CodeExample> examples) {
+    private String createTxt(String functionName, List<CodeExample> examples) {
         StringBuilder sb = new StringBuilder();
         sb.append("==============================================================================\n");
         sb.append("||                       Code examples for function \"").append(functionName)
@@ -286,7 +285,7 @@ public class ProjectCodeFormatter {
      * @param code code for modifications
      * @return string with normalized line separator
      * */
-    public String lineSeparatorUnify(String code) {
+    private String lineSeparatorUnify(String code) {
         String result = code;
         result = result.replaceAll("\\\\r\\\\n", "\n");
         result = result.replaceAll("#.*\n", "");
@@ -298,7 +297,7 @@ public class ProjectCodeFormatter {
      * @param code code for formatting
      * @return formatted string
      * */
-    public String toPrettyCode(String code) {
+    private String toPrettyCode(String code) {
         logger.setLevel(Level.ERROR);
 
 //        System.out.println(code);
