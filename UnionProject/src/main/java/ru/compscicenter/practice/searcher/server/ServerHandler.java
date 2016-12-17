@@ -159,6 +159,10 @@ public class ServerHandler extends AbstractHandler {
         String uri = request.getRequestURI();
 
         if (uri.equals("/set_example")) {
+            result = ""
+                    + "<h1>Welcome to the Code Examples Searcher Server!</h1>"
+                    + "<p>Search in progress...</p>"
+                    + "<a href=\"http://localhost:8080/settings\">Settings for searcher</a>";
             String funcName = request.getParameter("func");
             String pathFromSublime = request.getParameter("path");
             String lineStr = request.getParameter("line");
