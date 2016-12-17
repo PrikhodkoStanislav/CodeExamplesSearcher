@@ -63,7 +63,7 @@ public class CodeDuplicateRemover {
         return result;
     }
 
-    public Integer tokenLength(CodeExample codeExample1) {
+    private Integer tokenLength(CodeExample codeExample1) {
         Lexer lexer = new CLexer(new ANTLRInputStream(codeExample1.getCodeExample()));
         List<? extends Token> str = lexer.getAllTokens();
         return str.size();
@@ -76,7 +76,7 @@ public class CodeDuplicateRemover {
         return lexerAnalysis(lexer1, lexer2);
     }
 
-    public boolean compareCodeExamples(CodeExample codeExample1, CodeExample codeExample2) {
+    private boolean compareCodeExamples(CodeExample codeExample1, CodeExample codeExample2) {
         Lexer lexer1 = new CLexer(new ANTLRInputStream(codeExample1.getCodeExample()));
         Lexer lexer2 = new CLexer(new ANTLRInputStream(codeExample2.getCodeExample()));
 
