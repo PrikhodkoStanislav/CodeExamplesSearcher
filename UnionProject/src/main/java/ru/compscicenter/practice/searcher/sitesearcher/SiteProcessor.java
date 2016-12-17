@@ -152,10 +152,13 @@ public abstract class SiteProcessor extends Thread {
                 countBrackets += numberBrackets(str);
 
                 if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
-                        str.contains("(" + functionName + "(") || str.contains(")" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
-                        (!str.endsWith(")") && !str.contains(functionName + "(const") &&
-                                !str.contains(functionName + "( const") && !str.contains(functionName + "(void") &&
-                                !str.contains(functionName + "( void")) &&
+                        str.contains("(" + functionName + "(") || str.contains(")" + functionName + "(") || str.contains("\t" + functionName + "(") ||
+                        str.contains(" " + functionName + " (") || str.contains("=" + functionName + " (") ||
+                                str.contains("(" + functionName + " (") || str.contains(")" + functionName + " (") || str.contains("\t" + functionName + " (")) &&
+                        (!str.endsWith(")") && !str.contains("(const") &&
+                                !str.contains("( const") && !str.contains("(void") &&
+                                !str.contains("( void") && !str.contains("(int") &&
+                                !str.contains("( int")) &&
                         !str.startsWith("#") && !isNaturalSentence(str)) {
 
                     StringBuilder sb = new StringBuilder();

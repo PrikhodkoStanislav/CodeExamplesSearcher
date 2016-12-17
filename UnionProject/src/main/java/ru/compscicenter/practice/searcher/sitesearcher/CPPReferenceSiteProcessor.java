@@ -238,7 +238,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         try {
             inp = cleanTextFromHTMlTags(inp);
 
-            inp = inp.replaceAll("\\s?\\(((until|since) C[0-9]{2}|[0-9])\\)\\s?", "");
+            inp = inp.replaceAll("\\s?\\(((until|since) C[0-9]{2})\\)\\s?", "");
 
             inp = inp.replaceAll("&#40;", "(");
             inp = inp.replaceAll("&#41;", ")");
