@@ -162,6 +162,7 @@ public abstract class SiteProcessor extends Thread {
                 if (matcher.find() &&
                         (!str.contains("void " + functionName + "(") && !str.endsWith(")") &&
                                 !str.contains("(const") && !str.contains("( const") &&
+                                !str.contains("(char") && !str.contains("( char") &&
                                 !str.contains("(void") && !str.contains("( void") &&
                                 !str.contains("(int") && !str.contains("( int")) &&
                         !str.startsWith("#") && !isNaturalSentence(str)) {
