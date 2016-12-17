@@ -127,6 +127,10 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
+            if (line.matches("([\\s\\t\\r]+|(\\s*\\t)(\\w\\s+)+)")) {
+                line = line.replaceAll("([\\s\\t\\r]+|(\\s*\\t)?([a-zA-z@]+\\s+)+)", "");
+            }
+
             if (i < lines.length) {
                 sb.append(line).append("\n");
             }
@@ -156,10 +160,11 @@ public abstract class SiteProcessor extends Thread {
                 Matcher matcher = p.matcher(str);
 
                 if (matcher.find() &&
-                        (!str.endsWith(")") && !str.contains("(const") &&
-                                !str.contains("( const") && !str.contains("(void") &&
-                                !str.contains("( void") && !str.contains("(int") &&
-                                !str.contains("( int")) &&
+                        (!str.contains("void " + functionName + "(") && !str.endsWith(")") &&
+                                !str.contains("(const") && !str.contains("( const") &&
+                                !str.contains("(char") && !str.contains("( char") &&
+                                !str.contains("(void") && !str.contains("( void") &&
+                                !str.contains("(int") && !str.contains("( int")) &&
                         !str.startsWith("#") && !isNaturalSentence(str)) {
 
                     StringBuilder sb = new StringBuilder();
