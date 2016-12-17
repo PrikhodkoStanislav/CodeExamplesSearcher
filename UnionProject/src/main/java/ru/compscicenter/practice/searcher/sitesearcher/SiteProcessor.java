@@ -18,7 +18,10 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -119,14 +122,9 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            while (lines[i].startsWith("//") || lines[i].matches("\\s*\\d+") ||
-                    lines[i].matches("[\\s\\t\\r]+") || lines[i].matches("\\s*\\w\\s*")) {
-                if (i <= lines.length - 1) {
-                    i++;
-                    if (i < lines.length - 1) {
-                        line = lines[i];
-                    }
-                }
+            while (lines[i].startsWith("//") || lines[i].matches("\\s*\\d+")) {
+                i++;
+                line = lines[i];
             }
 
             if (i < lines.length) {
@@ -155,11 +153,13 @@ public abstract class SiteProcessor extends Thread {
                 strNumber++;
 
                 countBrackets += numberBrackets(str);
+                Matcher matcher = p.matcher(str);
 
-                if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
-                        str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
-                        (!str.endsWith(")") && !str.contains(functionName + "(const") &&
-                                !str.contains(functionName + "( const")) &&
+                if (matcher.find() &&
+                        (!str.endsWith(")") && !str.contains("(const") &&
+                                !str.contains("( const") && !str.contains("(void") &&
+                                !str.contains("( void") && !str.contains("(int") &&
+                                !str.contains("( int")) &&
                         !str.startsWith("#") && !isNaturalSentence(str)) {
 
                     StringBuilder sb = new StringBuilder();
@@ -250,12 +250,12 @@ public abstract class SiteProcessor extends Thread {
 
     private boolean isNotNatural(String token) {
         return token.matches("[\\+\\-\\\\*/=\\(\\)<>\\{\\}\\.;,\"\\\\&\\|]") ||
-            token.matches("(str|var|new|null|NULL|nullptr|" +
+            token.matches("(str|var|new|null|NULL|nullptr|print(f|ln|err)?|" +
                     "char|float|byte|short|double|int|const|void|" +
                     "if|else|for|while|switch)") ||
             token.contains("_") || isCamelCase(token) ||
                 (token.contains("+") || token.contains("-") ||
-                token.contains("*") || token.contains("/") ||
+                token.contains("*") || token.contains("/") || token.contains("%") ||
                 token.contains("=") || token.contains(";") ||
                 token.contains(".") || token.contains(",") ||
                 token.contains("\"") || token.contains("\\") ||
@@ -371,7 +371,7 @@ public abstract class SiteProcessor extends Thread {
 
     public void setQuery(String query) {
         this.query = query;
-        p = Pattern.compile("[\\s\\t\\+\\-\\*/=\\(]" + query + "\\s?\\(");
+        p = Pattern.compile("[\\s\\t\\+\\-\\*/=\\(\\)]" + query + "\\s?\\(");
     }
 
     public String getLanguage() {
@@ -454,6 +454,9 @@ public abstract class SiteProcessor extends Thread {
         return s.matches("(fe(clear|hold|raise|test)except)|" +
                 "fe((g|s)et)(env|exceptflag|round)");
     }
+    protected boolean isCTime(String s) {
+        return s.matches("((c|diff|mk|asc|gmt|local|wcsf|strf)?time(_s)?|clock|timespec_get)");
+    }
 
     protected boolean isCEnvironment(String s) {
         return s.matches("(abort|_Exit|(at_)?(quick_)?exit|" +
@@ -462,16 +465,6 @@ public abstract class SiteProcessor extends Thread {
 
     protected boolean isCSignal(String s) {
         return s.matches("(signal|raise)");
-    }
-
-    private class AnswerLine {
-        private String line;
-        private boolean isCode;
-
-        public AnswerLine(String line, boolean isCode) {
-            this.line = line;
-            this.isCode = isCode;
-        }
     }
 
     protected class CodeExamplesWithSource {

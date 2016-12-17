@@ -39,6 +39,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                     return CPPREFERENCE_URL + "c/memory/" + fullMethodName[0];
                 else if (isCEnvironment(fullMethodName[0]) || isCSignal(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/program/" + fullMethodName[0];
+                else if (isCTime(fullMethodName[0]))
+                    return CPPREFERENCE_URL + "c/chrono/" + fullMethodName[0];
                 else if (isCFenv(fullMethodName[0])) {
                     if (fullMethodName[0].matches("fe((g|s)et)(env|exceptflag|round)"))
                         return CPPREFERENCE_URL + "c/numeric/fenv/" +
@@ -80,6 +82,8 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             return CPPREFERENCE_URL + "c/memory/" + methodName;
         } else if (isCEnvironment(methodName) || isCSignal(methodName)) {
             return CPPREFERENCE_URL + "c/program/" + methodName;
+        } else if (isCTime(methodName)) {
+            return CPPREFERENCE_URL + "c/chrono/" + methodName;
         } else if (isCFenv(methodName)) {
             if (methodName.matches("fe((g|s)et)(env|exceptflag|round)"))
                 return CPPREFERENCE_URL + "c/numeric/fenv/" +
@@ -234,7 +238,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         try {
             inp = cleanTextFromHTMlTags(inp);
 
-            inp = inp.replaceAll("\\s?\\(((until|since) C[0-9]{2}|[0-9])\\)\\s?", "");
+            inp = inp.replaceAll("\\s?\\(((until|since) C[0-9]{2})\\)\\s?", "");
 
             inp = inp.replaceAll("&#40;", "(");
             inp = inp.replaceAll("&#41;", ")");

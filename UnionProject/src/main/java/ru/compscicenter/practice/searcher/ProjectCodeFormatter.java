@@ -27,6 +27,7 @@ public class ProjectCodeFormatter {
     private final static int defaultFormatter = 2;
 
     private String reportDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+    private String funcName = "";
 
     /**
      * Create result HTML or TXT file
@@ -98,8 +99,9 @@ public class ProjectCodeFormatter {
                 "</style>");
         sb.append("</head>");
         sb.append("<h3>Code examples for function ")
-                .append("<span>")
-                .append("\"").append(functionName).append("\"")
+                .append("<span>");
+        funcName = functionName;
+        sb.append("\"").append(funcName).append("\"")
                 .append("</span>")
                 .append("</h3>");
         sb.append("<p><b>Last report date:</b> ").append(reportDate).append("</p>");
@@ -232,8 +234,10 @@ public class ProjectCodeFormatter {
                                             source.substring(0, end + 2)).append("\">")
                             .append(source)
                         .append("</a>")
-                    .append("</td>")
-                    .append("<td><pre>").append(example.getCodeExample()).append("</pre></td>")
+                    .append("</td>");
+            String code = example.getCodeExample();
+            code = code.replaceAll(funcName, "<b>" + funcName + "<b>");
+            sb.append("<td><pre>").append(code).append("</pre></td>")
                     .append("</tr>");
         }
         sb.append("</table>");
