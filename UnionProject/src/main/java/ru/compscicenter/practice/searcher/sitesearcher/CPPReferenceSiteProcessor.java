@@ -40,7 +40,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
                 else if (isCEnvironment(fullMethodName[0]) || isCSignal(fullMethodName[0]))
                     return CPPREFERENCE_URL + "c/program/" + fullMethodName[0];
                 else if (isCTime(fullMethodName[0]))
-                    return CPPREFERENCE_URL + "c/chrono/" + fullMethodName[0] + "/";
+                    return CPPREFERENCE_URL + "c/chrono/" + fullMethodName[0];
                 else if (isCFenv(fullMethodName[0])) {
                     if (fullMethodName[0].matches("fe((g|s)et)(env|exceptflag|round)"))
                         return CPPREFERENCE_URL + "c/numeric/fenv/" +
@@ -83,7 +83,7 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
         } else if (isCEnvironment(methodName) || isCSignal(methodName)) {
             return CPPREFERENCE_URL + "c/program/" + methodName;
         } else if (isCTime(methodName)) {
-            return CPPREFERENCE_URL + "c/chrono/" + methodName + "/";
+            return CPPREFERENCE_URL + "c/chrono/" + methodName;
         } else if (isCFenv(methodName)) {
             if (methodName.matches("fe((g|s)et)(env|exceptflag|round)"))
                 return CPPREFERENCE_URL + "c/numeric/fenv/" +
