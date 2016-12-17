@@ -152,7 +152,7 @@ public abstract class SiteProcessor extends Thread {
                 countBrackets += numberBrackets(str);
 
                 if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
-                        str.contains("(" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
+                        str.contains("(" + functionName + "(") || str.contains(")" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
                         (!str.endsWith(")") && !str.contains(functionName + "(const") &&
                                 !str.contains(functionName + "( const")) &&
                         !str.startsWith("#") && !isNaturalSentence(str)) {
@@ -245,12 +245,12 @@ public abstract class SiteProcessor extends Thread {
 
     private boolean isNotNatural(String token) {
         return token.matches("[\\+\\-\\\\*/=\\(\\)<>\\{\\}\\.;,\"\\\\&\\|]") ||
-            token.matches("(str|var|new|null|NULL|nullptr|" +
+            token.matches("(str|var|new|null|NULL|nullptr|print(f|ln|err)?|" +
                     "char|float|byte|short|double|int|const|void|" +
                     "if|else|for|while|switch)") ||
             token.contains("_") || isCamelCase(token) ||
                 (token.contains("+") || token.contains("-") ||
-                token.contains("*") || token.contains("/") ||
+                token.contains("*") || token.contains("/") || token.contains("%") ||
                 token.contains("=") || token.contains(";") ||
                 token.contains(".") || token.contains(",") ||
                 token.contains("\"") || token.contains("\\") ||
