@@ -140,6 +140,21 @@ public class AStyleInterface
      * @return    A String containing the version number of Artistic Style.
      */
     public native String AStyleGetVersion();
-    
+
+    /**
+     * Error handler for messages from Artistic Style.
+     * This method is called only if there are errors when AStyleMain is called.
+     * This is for debugging and there should be no errors when the calling
+     * parameters are correct.
+     * Changing the method name requires changing Artistic Style.
+     * Signature: (ILjava/lang/String;)V.
+     *  @param  errorNumber   The error number from Artistic Style.
+     *  @param  errorMessage  The error message from Artistic Style.
+     */
+    private void ErrorHandler(int errorNumber, String errorMessage)
+    {   System.out.println("AStyle error "
+            + String.valueOf(errorNumber)
+            + " - " + errorMessage);
+    }
 }
 
