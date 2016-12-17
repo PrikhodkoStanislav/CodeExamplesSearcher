@@ -95,9 +95,8 @@ public class MainSearcher {
             projectCodeFormatter.beautifyCode(codeFromSublime);
         }
 
-        String result = projectCodeFormatter.createResultFile(functionName, l1, format, codeFromSublime,
+        return projectCodeFormatter.createResultFile(functionName, l1, format, codeFromSublime,
                 stringFromRequest);
-        return result;
     }
 
     /**

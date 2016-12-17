@@ -3,7 +3,6 @@ package ru.compscicenter.practice.searcher.server;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Server;
-import ru.compscicenter.practice.searcher.selfprojectsearcher.SelfProjectSearcher;
 
 /**
  * Created by Станислав on 09.11.2016.
@@ -21,7 +20,6 @@ public class CreateServer {
             server.join();
         } catch (Exception e) {
             logger.error("Sorry, something wrong!", e);
-//            e.printStackTrace();
         }
     }
 }

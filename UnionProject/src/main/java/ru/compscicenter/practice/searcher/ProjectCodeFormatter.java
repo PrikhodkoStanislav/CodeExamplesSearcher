@@ -300,27 +300,15 @@ public class ProjectCodeFormatter {
     private String toPrettyCode(String code) {
         logger.setLevel(Level.ERROR);
 
-//        System.out.println(code);
-
-        // For speed!
-//        String result = HandwrittenCodeFormatter.format(code);
-//
-//        System.out.println(result);
-
         int formatter = prefs.getInt("formatter", defaultFormatter);
 
         if (formatter == 1) {
-
-            System.out.println(code);
             String result = code;
             try {
                 result = AStyleFormatter.format(code);
             } catch (Exception e) {
                 logger.error("Sorry, something wrong!", e);
             }
-
-            System.out.println(result);
-
             return result;
 
         } else if (formatter == 2) {
