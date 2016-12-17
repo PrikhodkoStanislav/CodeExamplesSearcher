@@ -240,11 +240,24 @@ public class MainSearcher {
     private static void processResults(List<CodeExample> examples) throws ParseException, IOException {
         if (examples != null) {
             ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
-            projectCodeFormatter.beautifyCode(examples);
+            List<CodeExample> project = null;
+            if (searchInProject) {
+                project = new ArrayList<>();
+                for (CodeExample example : examples) {
+                    if (!example.getSource().contains("http")) {
+                        examples.remove(example);
+                        project.add(example);
+                    }
+                }
+                projectCodeFormatter.beautifyCode(project);
 
-            AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
-            CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(examples, typeOfCompareResult);
-            examples = duplicateRemover.removeDuplicates();
+                AlgorithmsRemoveDuplicates typeOfCompareResult = AlgorithmsRemoveDuplicates.LevenshteinDistance;
+                CodeDuplicateRemover duplicateRemover = new CodeDuplicateRemover(project, typeOfCompareResult);
+                project = duplicateRemover.removeDuplicates();
+            }
+            if (project != null) {
+                examples.addAll(project);
+            }
 
             String fileText = projectCodeFormatter.createResultFile(functionName, examples, format, null, "");
 
@@ -356,9 +369,9 @@ public class MainSearcher {
                 results.addAll(findResultsOnSites(searcher));
             }
 
-            for (CodeExample result : results) {
+            /*for (CodeExample result : results) {
                 DATABASE.save(result);
-            }
+            }*/
             if (dbExamples != null && dbExamples.size() != 0) {
                 results.addAll(dbExamples);
             }
