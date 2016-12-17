@@ -9,11 +9,13 @@ public class AStyleInterface
 {
     public static String m(String code) {
         AStyleInterface a = new AStyleInterface();
-        String options = "-A2tOP";
         return a.formatSource(code, options);
     }
+    
+    static private String options = "-A2tOP";
 
     static private String libraryName = "lib/AStyle-2.05.1jd.dll";
+    static private String libraryNameForLinux = "lib/libastyle-2.05.1j.so";
 
     /**
      * Call the AStyleMain function in Artistic Style.
@@ -94,7 +96,7 @@ public class AStyleInterface
     static private String getLibraryName(String astyleDirectory)
     {   // get the shared library extension for the platform
         if (SystemUtils.IS_OS_LINUX) {
-            libraryName = "lib/libastyle-2.05.1j.so";
+            libraryName = libraryNameForLinux;
         }
         String fileExt = System.mapLibraryName("");
         int dot = fileExt.indexOf(".");
@@ -139,5 +141,20 @@ public class AStyleInterface
      */
     public native String AStyleGetVersion();
 
+    /**
+     * Error handler for messages from Artistic Style.
+     * This method is called only if there are errors when AStyleMain is called.
+     * This is for debugging and there should be no errors when the calling
+     * parameters are correct.
+     * Changing the method name requires changing Artistic Style.
+     * Signature: (ILjava/lang/String;)V.
+     *  @param  errorNumber   The error number from Artistic Style.
+     *  @param  errorMessage  The error message from Artistic Style.
+     */
+    private void ErrorHandler(int errorNumber, String errorMessage)
+    {   System.out.println("AStyle error "
+            + String.valueOf(errorNumber)
+            + " - " + errorMessage);
+    }
 }
 
