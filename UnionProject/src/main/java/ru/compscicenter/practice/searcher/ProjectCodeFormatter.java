@@ -1,6 +1,5 @@
 package ru.compscicenter.practice.searcher;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.cdt.core.ToolFactory;
@@ -12,7 +11,6 @@ import ru.compscicenter.practice.searcher.codeformatter.AStyleFormatter;
 import ru.compscicenter.practice.searcher.codeformatter.HandwrittenCodeFormatter;
 import ru.compscicenter.practice.searcher.database.CodeExample;
 
-import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -309,18 +307,13 @@ public class ProjectCodeFormatter {
         int formatter = prefs.getInt("formatter", defaultFormatter);
 
         if (formatter == 1) {
-            String fileName = "example.c";
-            write(fileName, code);
 
             System.out.println(code);
-            AStyleFormatter.format();
-
-
             String result = code;
             try {
-                result = read(fileName);
-            } catch (FileNotFoundException e) {
-                logger.error("File is not exist!", e);
+                result = AStyleFormatter.format(code);
+            } catch (Exception e) {
+                logger.error("Sorry, something wrong!", e);
             }
 
             System.out.println(result);
@@ -342,48 +335,5 @@ public class ProjectCodeFormatter {
         }
 
         return code;
-    }
-
-    public void write(String fileName, String text) {
-        File file = new File(fileName);
-        try {
-            if(!file.exists()){
-                file.createNewFile();
-            }
-
-            PrintWriter out = new PrintWriter(file.getAbsoluteFile());
-
-            try {
-                out.print(text);
-            } finally {
-                out.close();
-            }
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public String read(String fileName) throws FileNotFoundException {
-        StringBuilder sb = new StringBuilder();
-
-        File file = new File(fileName);
-        if (!file.exists()){
-            throw new FileNotFoundException(file.getName());
-        }
-        try {
-            BufferedReader in = new BufferedReader(new FileReader( file.getAbsoluteFile()));
-            try {
-                String s;
-                while ((s = in.readLine()) != null) {
-                    sb.append(s);
-                    sb.append("\n");
-                }
-            } finally {
-                in.close();
-            }
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
-        return sb.toString();
     }
 }
