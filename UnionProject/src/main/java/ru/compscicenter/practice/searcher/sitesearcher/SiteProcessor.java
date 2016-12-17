@@ -18,7 +18,10 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -150,11 +153,9 @@ public abstract class SiteProcessor extends Thread {
                 strNumber++;
 
                 countBrackets += numberBrackets(str);
+                Matcher matcher = p.matcher(str);
 
-                if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
-                        str.contains("(" + functionName + "(") || str.contains(")" + functionName + "(") || str.contains("\t" + functionName + "(") ||
-                        str.contains(" " + functionName + " (") || str.contains("=" + functionName + " (") ||
-                                str.contains("(" + functionName + " (") || str.contains(")" + functionName + " (") || str.contains("\t" + functionName + " (")) &&
+                if (matcher.find() &&
                         (!str.endsWith(")") && !str.contains("(const") &&
                                 !str.contains("( const") && !str.contains("(void") &&
                                 !str.contains("( void") && !str.contains("(int") &&
@@ -370,7 +371,7 @@ public abstract class SiteProcessor extends Thread {
 
     public void setQuery(String query) {
         this.query = query;
-        p = Pattern.compile("[\\s\\t\\+\\-\\*/=\\(]" + query + "\\s?\\(");
+        p = Pattern.compile("[\\s\\t\\+\\-\\*/=\\(\\)]" + query + "\\s?\\(");
     }
 
     public String getLanguage() {
@@ -464,16 +465,6 @@ public abstract class SiteProcessor extends Thread {
 
     protected boolean isCSignal(String s) {
         return s.matches("(signal|raise)");
-    }
-
-    private class AnswerLine {
-        private String line;
-        private boolean isCode;
-
-        public AnswerLine(String line, boolean isCode) {
-            this.line = line;
-            this.isCode = isCode;
-        }
     }
 
     protected class CodeExamplesWithSource {
