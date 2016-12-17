@@ -154,7 +154,8 @@ public abstract class SiteProcessor extends Thread {
                 if ((str.contains(" " + functionName + "(") || str.contains("=" + functionName + "(") ||
                         str.contains("(" + functionName + "(") || str.contains(")" + functionName + "(") || str.contains("\t" + functionName + "(")) &&
                         (!str.endsWith(")") && !str.contains(functionName + "(const") &&
-                                !str.contains(functionName + "( const")) &&
+                                !str.contains(functionName + "( const") && !str.contains(functionName + "(void") &&
+                                !str.contains(functionName + "( void")) &&
                         !str.startsWith("#") && !isNaturalSentence(str)) {
 
                     StringBuilder sb = new StringBuilder();
