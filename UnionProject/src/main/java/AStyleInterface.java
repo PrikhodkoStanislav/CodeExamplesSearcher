@@ -9,11 +9,13 @@ public class AStyleInterface
 {
     public static String m(String code) {
         AStyleInterface a = new AStyleInterface();
-        String options = "-A2tOP";
         return a.formatSource(code, options);
     }
+    
+    static private String options = "-A2tOP";
 
     static private String libraryName = "lib/AStyle-2.05.1jd.dll";
+    static private String libraryNameForLinux = "lib/libastyle-2.05.1j.so";
 
     /**
      * Call the AStyleMain function in Artistic Style.
@@ -94,7 +96,7 @@ public class AStyleInterface
     static private String getLibraryName(String astyleDirectory)
     {   // get the shared library extension for the platform
         if (SystemUtils.IS_OS_LINUX) {
-            libraryName = "lib/libastyle-2.05.1j.so";
+            libraryName = libraryNameForLinux;
         }
         String fileExt = System.mapLibraryName("");
         int dot = fileExt.indexOf(".");
@@ -138,6 +140,6 @@ public class AStyleInterface
      * @return    A String containing the version number of Artistic Style.
      */
     public native String AStyleGetVersion();
-
+    
 }
 
