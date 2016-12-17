@@ -21,9 +21,9 @@ public class AStyleFormatter {
 
         // get Artistic Style version
         // does not need to terminate on an error
-        String version = astyle.getVersion();
-        if (version.length() != 0)
-            System.out.println("Example Java - AStyle " + version);
+//        String version = astyle.getVersion();
+//        if (version.length() != 0)
+//            System.out.println("Example Java - AStyle " + version);
 
         String filePath = getProjectDirectory(fileName);
         String textIn = getText(filePath);
@@ -57,7 +57,7 @@ public class AStyleFormatter {
     private static String getProjectDirectory(String subPath)
     {   //String homeDirectory = System.getProperty("user.home");
         //String projectPath = homeDirectory + "/Projects/" + subPath;
-        String projectPath = "./examples/" + subPath;
+        String projectPath = subPath;
         return projectPath;
     }
 

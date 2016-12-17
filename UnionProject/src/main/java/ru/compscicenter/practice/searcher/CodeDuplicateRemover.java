@@ -17,7 +17,7 @@ public class CodeDuplicateRemover {
 
     private List<CodeExample> list;
     private AlgorithmsRemoveDuplicates typeOfRemoveAlgorithm = AlgorithmsRemoveDuplicates.EqualsTokens;
-    final double maxLevenshteinRatio = 30.0;
+    private final double maxLevenshteinRatio = 30.0;
 
     public CodeDuplicateRemover(AlgorithmsRemoveDuplicates typeOfRemoveAlgorithm) {
         this.typeOfRemoveAlgorithm = typeOfRemoveAlgorithm;

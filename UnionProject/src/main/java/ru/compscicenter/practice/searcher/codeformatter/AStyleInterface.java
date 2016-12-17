@@ -5,8 +5,8 @@ import java.io.File;
 /**
  * Created by Станислав on 09.12.2016.
  */
-class AStyleInterface
-{   static private String libraryName = "/lib/AStyle-2.05.1jd.dll";
+public class AStyleInterface
+{   static private String libraryName = "lib/AStyle-2.05.1jd.dll";
 
     /**
      * Call the AStyleMain function in Artistic Style.
@@ -68,6 +68,8 @@ class AStyleInterface
         String astylePath = astyleDirectory
                 + System.getProperty("file.separator")
                 + astyleName;
+
+        System.out.println(astylePath);
 
         try
         {   System.load(astylePath);
