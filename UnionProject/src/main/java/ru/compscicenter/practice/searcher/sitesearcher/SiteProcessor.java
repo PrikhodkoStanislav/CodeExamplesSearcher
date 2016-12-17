@@ -449,6 +449,9 @@ public abstract class SiteProcessor extends Thread {
         return s.matches("(fe(clear|hold|raise|test)except)|" +
                 "fe((g|s)et)(env|exceptflag|round)");
     }
+    protected boolean isCTime(String s) {
+        return s.matches("((c|diff|mk|asc|gmt|local|wcsf|strf)?time(_s)?|clock|timespec_get)");
+    }
 
     protected boolean isCEnvironment(String s) {
         return s.matches("(abort|_Exit|(at_)?(quick_)?exit|" +
