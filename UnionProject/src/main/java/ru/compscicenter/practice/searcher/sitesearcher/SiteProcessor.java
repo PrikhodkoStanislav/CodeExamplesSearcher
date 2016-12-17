@@ -127,7 +127,7 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            if (line.matches("([\\s\\t\\r]+|(\\s*\\t)(\\w\\s+)+)")) {
+            if (line.matches("([\\s\\t\\r]+|(\\s*\\t)?([a-zA-z@]+\\s+)+)")) {
                 line = line.replaceAll("([\\s\\t\\r]+|(\\s*\\t)?([a-zA-z@]+\\s+)+)", "");
             }
 
