@@ -1,9 +1,13 @@
 
-int a;
-for (int i = 0; i < n; i++)
+int main()
 {
-    strlen(input[i]);
+    if (cond) {
+        for (int i = 0; i < n; i++) {
+            strlen(input[i]);
+        }
+    }
 }
+
 
 
 

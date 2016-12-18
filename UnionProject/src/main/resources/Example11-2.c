@@ -1,8 +1,11 @@
 
-int b;
-for (int c = 0; c != length; ++c)
+int function()
 {
-    strlen(vector[c]);
+    for (int j = 0; j != n; ++j) {
+        if (c) {
+            strlen(vector[j]);
+        }
+    }
 }
 
 
