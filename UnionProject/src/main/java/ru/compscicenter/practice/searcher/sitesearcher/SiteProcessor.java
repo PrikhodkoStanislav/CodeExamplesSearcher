@@ -169,9 +169,12 @@ public abstract class SiteProcessor extends Thread {
 
                 if (matcher.find() &&
                         (!str.contains("void " + functionName + "(") && !str.endsWith(")") &&
+                                !str.contains("int " + functionName + "(") &&
+                                !str.contains("_t " + functionName + "(") &&
                                 !str.contains("(const") && !str.contains("( const") &&
                                 !str.contains("(char") && !str.contains("( char") &&
                                 !str.contains("(void") && !str.contains("( void") &&
+                                !str.contains("(unsigned") && !str.contains("( unsigned") &&
                                 !str.contains("(int") && !str.contains("( int")) &&
                         !str.startsWith("#") && !isNaturalSentence(str)) {
 
@@ -195,7 +198,7 @@ public abstract class SiteProcessor extends Thread {
                     }
 //                    sb.append(newLine);
                     String[] preparedResults = sb.toString().split("\n");
-                    if (isNaturalSentence(preparedResults[0])) {
+                    if (isNaturalSentence(preparedResults[0]) || preparedResults[0].startsWith("}")) {
                         int firstNewLine = preparedResults[0].length() + 1;
                         sb.replace(0, firstNewLine, "");
                     }
