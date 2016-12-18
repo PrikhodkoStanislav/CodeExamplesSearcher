@@ -54,53 +54,7 @@ public class ProjectCodeFormatter {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
         sb.append("<head>");
-        sb.append("<style>\n" +
-                "body {\n" +
-                "    background-color: #E4F4DE;\n" +
-                "}\n" +
-                "\n" +
-                ".func {\n" +
-                "    color: #9966cc;\n" +
-                "    font-weight: bold;\n" +
-                "}\n" +
-                "\n" +
-                "h3 {\n" +
-                "    color: #26557B;\n" +
-                "    font-family: verdana;\n" +
-                "    font-size: 200%;" +
-                "}\n" +
-                "\n" +
-                "h4 {\n" +
-                "    color: #26557B;\n" +
-                "    font-family: verdana;\n" +
-                "    font-size: 120%;" +
-                "}\n" +
-                "\n" +
-                ".func_name {\n" +
-                "    font-family: courier;\n" +
-                "    color: #424582;\n" +
-                "}\n" +
-                "\n" +
-                "table, td, th {\n" +
-                "    border: 1px solid black;\n" +
-                "}\n" +
-                "\n" +
-                "table {\n" +
-                "    background-color: #FFFFFF;\n" +
-                "    border-collapse: collapse;\n" +
-                "    width: 100%;\n" +
-                "}\n" +
-                "\n" +
-                "td {\n" +
-                "    text-indent: 0px;\n" +
-                "}\n" +
-                "\n" +
-                "th {\n" +
-                "    text-align: left;\n" +
-                "    background-color: #6AB75D;\n" +
-                "    height: 30px;\n" +
-                "}\n" +
-                "</style>");
+        sb.append(addCSSBlock());
         sb.append("</head>");
         sb.append("<h3>Code examples for function ")
                 .append("<span class=\"func_name\">");
@@ -189,6 +143,58 @@ public class ProjectCodeFormatter {
         return sb.toString();
     }
 
+    private String addCSSBlock() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<style>\n" +
+                "body {\n" +
+                "    background-color: #E4F4DE;\n" +
+                "}\n" +
+                "\n" +
+                ".func {\n" +
+                "    color: #c10020;\n" +
+                "    font-weight: bold;\n" +
+                "}\n" +
+                "\n" +
+                "h3 {\n" +
+                "    color: #26557B;\n" +
+                "    font-family: verdana;\n" +
+                "    font-size: 200%;" +
+                "}\n" +
+                "\n" +
+                "h4 {\n" +
+                "    color: #26557B;\n" +
+                "    font-family: verdana;\n" +
+                "    font-size: 120%;" +
+                "}\n" +
+                "\n" +
+                ".func_name {\n" +
+                "    font-family: courier;\n" +
+                "    color: #424582;\n" +
+                "}\n" +
+                "\n" +
+                "table, td, th {\n" +
+                "    border: 1px solid black;\n" +
+                "}\n" +
+                "\n" +
+                "table {\n" +
+                "    background-color: #FFFFFF;\n" +
+                "    border-collapse: collapse;\n" +
+                "    width: 100%;\n" +
+                "}\n" +
+                "\n" +
+                "td {\n" +
+                "    text-indent: 0px;\n" +
+                "}\n" +
+                "\n" +
+                "th {\n" +
+                "    text-align: left;\n" +
+                "    background-color: #6AB75D;\n" +
+                "    height: 30px;\n" +
+                "}\n" +
+                "</style>");
+        return sb.toString();
+    }
+
     private List<CodeExample> retrievalExamples(List<CodeExample> examples, String tag) {
         List<CodeExample> results = new ArrayList<>();
         for (CodeExample example : examples) {
@@ -240,7 +246,7 @@ public class ProjectCodeFormatter {
                         .append("</a>")
                     .append("</td>");
             String code = example.getCodeExample();
-            code = code.replaceAll(funcName, "<span class=\"func\">" + funcName + "</span>");
+            code = code.replaceAll(funcName + "\\(", "<span class=\"func\">" + funcName + "</span>(");
             sb.append("<td><pre>").append(code).append("</pre></td>")
                     .append("</tr>");
         }
