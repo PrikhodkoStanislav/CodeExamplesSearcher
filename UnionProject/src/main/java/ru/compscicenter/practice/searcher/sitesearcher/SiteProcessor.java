@@ -171,6 +171,7 @@ public abstract class SiteProcessor extends Thread {
                         (!str.contains("void " + functionName + "(") && !str.endsWith(")") &&
                                 !str.contains("int " + functionName + "(") &&
                                 !str.contains("_t " + functionName + "(") &&
+                                    !str.contains("_t " + functionName + " (") &&
                                 !str.contains("(const") && !str.contains("( const") &&
                                 !str.contains("(char") && !str.contains("( char") &&
                                 !str.contains("(void") && !str.contains("( void") &&
