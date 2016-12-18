@@ -1,9 +1,13 @@
 
-int k = 0;
-while(k < m)
+int func()
 {
-    strlen(array[k]);
-    k += 1;
+    int k = 0;
+    while(k < m) {
+        if (condition) {
+            strlen(array[k]);
+        }
+        k++;
+    }
 }
 
 
