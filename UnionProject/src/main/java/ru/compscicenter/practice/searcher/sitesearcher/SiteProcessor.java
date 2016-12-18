@@ -54,6 +54,14 @@ public abstract class SiteProcessor extends Thread {
                 if (!webContent.contains("Page Not Found")) {
                     List<CodeExamplesWithSource> codeSourceList = findAndProcessCodeExamples(webContent);
 
+                    if (request.contains("stack")) {
+                        String request2 = generateRequestURL(getQuery() + " " + getLanguage());
+                        String webContent2 = sendGet(request2);
+                        if (!webContent2.contains("Page Not Found")) {
+                            codeSourceList.addAll(findAndProcessCodeExamples(webContent));
+                        }
+                    }
+
                     ProjectCodeFormatter projectCodeFormatter = new ProjectCodeFormatter();
                     List<CodeExample> prepareExamples = null;
                     if (codeSourceList != null) {
@@ -122,7 +130,7 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            while (lines[i].startsWith("//") || lines[i].matches("\\s*\\d+")) {
+            while (i < lines.length && (lines[i].startsWith("//") || lines[i].matches("\\s*\\d+"))) {
                 i++;
                 line = lines[i];
             }

@@ -25,14 +25,22 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
 
     @Override
     public String generateRequestURL(String query) {
-        return STACKOVERFLOW_URL + "search/advanced?" +
-                "q=" + query +
-                "&title=" + getLanguage() +
-                "&order=desc" +
-                "&sort=activity" +
-                "&accepted=True" +
-                "&answers=2" +
-                "&site=stackoverflow";
+        if (query.contains(" C") || query.contains(" c") || query.contains(" c++")) {
+            return STACKOVERFLOW_URL + "search?" +
+                    "order=desc" +
+                    "&sort=activity" +
+                    "&intitle=" + query.split(" ")[0] +
+                    "&site=stackoverflow";
+        } else {
+            return STACKOVERFLOW_URL + "search/advanced?" +
+                    "q=" + query +
+                    "&title=" + getLanguage() +
+                    "&order=desc" +
+                    "&sort=activity" +
+                    "&accepted=True" +
+                    "&answers=2" +
+                    "&site=stackoverflow";
+        }
     }
 
     @Override
