@@ -127,7 +127,7 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            if (line.matches("([\\s\\t\\r]+|(\\s*\\t)(\\w\\s+)+)")) {
+            if (line.matches("([\\s\\t\\r]+|(\\s*\\t)?([a-zA-z@]+\\s+)+)")) {
                 line = line.replaceAll("([\\s\\t\\r]+|(\\s*\\t)?([a-zA-z@]+\\s+)+)", "");
             }
 
@@ -255,10 +255,10 @@ public abstract class SiteProcessor extends Thread {
 
     private boolean isNotNatural(String token) {
         return token.matches("[\\+\\-\\\\*/=\\(\\)<>\\{\\}\\.;,\"\\\\&\\|]") ||
-            token.matches("(str|var|new|null|NULL|nullptr|print(f|ln|err)?|" +
+            token.matches("(str|var|new|null|NULL|nullptr|print.*|" +
                     "char|float|byte|short|double|int|const|void|" +
                     "if|else|for|while|switch)") ||
-            token.contains("_") || isCamelCase(token) ||
+            token.contains("_") || isCamelCase(token) || token.contains("\"") ||
                 (token.contains("+") || token.contains("-") ||
                 token.contains("*") || token.contains("/") || token.contains("%") ||
                 token.contains("=") || token.contains(";") ||

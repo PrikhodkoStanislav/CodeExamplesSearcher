@@ -60,7 +60,7 @@ public class ProjectCodeFormatter {
                 "}\n" +
                 "\n" +
                 ".func {\n" +
-                "    color: #26557B;\n" +
+                "    color: #9966cc;\n" +
                 "    font-weight: bold;\n" +
                 "}\n" +
                 "\n" +
@@ -76,7 +76,7 @@ public class ProjectCodeFormatter {
                 "    font-size: 120%;" +
                 "}\n" +
                 "\n" +
-                "span {\n" +
+                ".func_name {\n" +
                 "    font-family: courier;\n" +
                 "    color: #424582;\n" +
                 "}\n" +
@@ -103,7 +103,7 @@ public class ProjectCodeFormatter {
                 "</style>");
         sb.append("</head>");
         sb.append("<h3>Code examples for function ")
-                .append("<span>");
+                .append("<span class=\"func_name\">");
         funcName = functionName;
         sb.append("\"").append(funcName).append("\"")
                 .append("</span>")
@@ -240,7 +240,7 @@ public class ProjectCodeFormatter {
                         .append("</a>")
                     .append("</td>");
             String code = example.getCodeExample();
-            code = code.replaceAll(funcName, "<b><span class=\"func\">" + funcName + "</span></b>");
+            code = code.replaceAll(funcName, "<span class=\"func\">" + funcName + "</span>");
             sb.append("<td><pre>").append(code).append("</pre></td>")
                     .append("</tr>");
         }
