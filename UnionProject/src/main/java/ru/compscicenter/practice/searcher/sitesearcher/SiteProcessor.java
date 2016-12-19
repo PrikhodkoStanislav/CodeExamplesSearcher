@@ -130,14 +130,19 @@ public abstract class SiteProcessor extends Thread {
                 line = lines[i];
             }
 
-            while (i < lines.length && (lines[i].startsWith("//") || lines[i].matches("\\s*\\d+"))) {
+            while (i < lines.length && (lines[i].startsWith("//"))) {
                 i++;
                 line = lines[i];
             }
 
-            if (line.matches("([\\s\\t\\r]+|(\\s*\\t)?([a-zA-z@]+\\s+)+)")) {
-                line = line.replaceAll("([\\s\\t\\r]+|(\\s*\\t)?([a-zA-z@]+\\s+)+)", "");
+            if (line.matches("\\s*\\d+")) {
+                line = line.replaceAll("\\s*\\d+", "");
             }
+
+            if (line.matches("[\\s\\t\\r]+")) {
+                line = line.replaceAll("[\\s\\t\\r]+", "");
+            }
+            //line = line.replaceAll("([\\s\\t\\r]+|(\\s*\\t)?([a-zA-z@]+\\s+)+)", "");
 
             if (i < lines.length) {
                 sb.append(line).append("\n");
