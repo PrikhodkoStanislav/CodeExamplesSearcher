@@ -177,11 +177,11 @@ public abstract class SiteProcessor extends Thread {
                                 !str.contains("int " + functionName + "(") &&
                                 !str.contains("_t " + functionName + "(") &&
                                     !str.contains("_t " + functionName + " (") &&
-                                !str.contains("(const") && !str.contains("( const") &&
-                                !str.contains("(char") && !str.contains("( char") &&
-                                !str.contains("(void") && !str.contains("( void") &&
-                                !str.contains("(unsigned") && !str.contains("( unsigned") &&
-                                !str.contains("(int") && !str.contains("( int")) &&
+                                !str.contains("(const") && !str.contains("( const") && !str.contains("(\tconst") &&
+                                !str.contains("(char") && !str.contains("( char") && !str.contains("(\tchar") &&
+                                !str.contains("(void") && !str.contains("( void") && !str.contains("(\tvoid") &&
+                                !str.contains("(unsigned") && !str.contains("( unsigned") && !str.contains("(\tunsigned") &&
+                                !str.contains("(int") && !str.contains("( int") && !str.contains("(\tint")) &&
                         !str.startsWith("#") && !isNaturalSentence(str)) {
 
                     StringBuilder sb = new StringBuilder();
