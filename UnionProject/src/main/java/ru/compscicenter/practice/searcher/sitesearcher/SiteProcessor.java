@@ -143,8 +143,8 @@ public abstract class SiteProcessor extends Thread {
                 line = line.replaceAll("[\\s\\t\\r]+", "");
             }
 
-            if (line.matches("[\\s\\t\\r]*[a-zA-z@]+([\\s\\t\\r]*[a-zA-z@©\\|\\d]+)*")) {
-                line = line.replaceAll("[\\s\\t\\r]*[a-zA-z@]+([\\s\\t\\r]*[a-zA-z@©\\|\\d]+)*", "");
+            if (line.matches("[\\s\\t\\r]*[a-zA-z@©]+([\\s\\t\\r]+[a-zA-z@©\\|\\d]+)*")) {
+                line = line.replaceAll("[\\s\\t\\r]*[a-zA-z@©]+([\\s\\t\\r]+[a-zA-z@©\\|\\d]+)*", "");
             }
 
             if (i < lines.length) {
