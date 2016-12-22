@@ -54,6 +54,7 @@ public class ProjectCodeFormatter {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
         sb.append("<head>");
+        sb.append("<meta charset=\"utf-8\">");
         sb.append(addCSSBlock());
         sb.append("</head>");
         sb.append("<h3>Code examples for function ")
