@@ -209,19 +209,21 @@ public abstract class SiteProcessor extends Thread {
                         sb.replace(0, firstNewLine, "");
                     }
 
-                    CodeExample codeExample = new CodeExample();
-                    codeExample.setLanguage("C");
-                    codeExample.setSource(codeWithSource.source);
-                    codeExample.setLineWithFunction(lineWithFunction);
-                    codeExample.setFunction(functionName);
-                    codeExample.setCodeExample(sb.toString());
-                    codeExample.setModificationDate(new Date().getTime());
-                    logger.info("Code example parameters: " +
-                            "programming lang=" + codeExample.getLanguage() + " " +
-                            ", function=" + codeExample.getFunction() + " " +
-                            ", source=" + codeExample.getSource() + " " +
-                            ", modificationDate=" + codeExample.getModificationDate());
-                    results.add(codeExample);
+                    if (sb.toString().split("\n").length <= 50) {
+                        CodeExample codeExample = new CodeExample();
+                        codeExample.setLanguage("C");
+                        codeExample.setSource(codeWithSource.source);
+                        codeExample.setLineWithFunction(lineWithFunction);
+                        codeExample.setFunction(functionName);
+                        codeExample.setCodeExample(sb.toString());
+                        codeExample.setModificationDate(new Date().getTime());
+                        logger.info("Code example parameters: " +
+                                "programming lang=" + codeExample.getLanguage() + " " +
+                                ", function=" + codeExample.getFunction() + " " +
+                                ", source=" + codeExample.getSource() + " " +
+                                ", modificationDate=" + codeExample.getModificationDate());
+                        results.add(codeExample);
+                    }
 
                     int defaultMaxExamplesNumber = 20;
                     int maxExamplesNumber = defaultMaxExamplesNumber;
@@ -245,7 +247,8 @@ public abstract class SiteProcessor extends Thread {
     }
 
     private boolean isNaturalSentence(String line) {
-        if (line.contains("//")) {
+        if (line.contains("//") && !line.startsWith("//") &&
+                !line.startsWith("\t//") && !line.startsWith(" //") && !line.startsWith("  //")) {
             return false;
         }
 
