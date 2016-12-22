@@ -40,7 +40,8 @@ public abstract class SiteProcessor extends Thread {
     private String language;
     private String query;
     private List<CodeExample> answers;
-    private Pattern p;
+    private Pattern goodPattern;
+    private Pattern badPattern;
 
     @Override
     public void run() {
@@ -173,18 +174,14 @@ public abstract class SiteProcessor extends Thread {
                 strNumber++;
 
                 countBrackets += numberBrackets(str);
-                Matcher matcher = p.matcher(str);
+                Matcher goodMatcher = goodPattern.matcher(str);
+                Matcher badMatcher = badPattern.matcher(str);
 
-                if (matcher.find() &&
+                if (goodMatcher.find() &&
                         (!str.contains("void " + functionName + "(") && !str.endsWith(")") &&
                                 !str.contains("int " + functionName + "(") &&
                                 !str.contains("_t " + functionName + "(") &&
-                                    !str.contains("_t " + functionName + " (") &&
-                                !str.contains("(const") && !str.contains("( const") && !str.contains("(\tconst") &&
-                                !str.contains("(char") && !str.contains("( char") && !str.contains("(\tchar") &&
-                                !str.contains("(void") && !str.contains("( void") && !str.contains("(\tvoid") &&
-                                !str.contains("(unsigned") && !str.contains("( unsigned") && !str.contains("(\tunsigned") &&
-                                !str.contains("(int") && !str.contains("( int") && !str.contains("(\tint")) &&
+                                    !str.contains("_t " + functionName + " (") && !badMatcher.find()) &&
                         !str.startsWith("#") && !isNaturalSentence(str)) {
 
                     StringBuilder sb = new StringBuilder();
@@ -399,7 +396,8 @@ public abstract class SiteProcessor extends Thread {
 
     public void setQuery(String query) {
         this.query = query;
-        p = Pattern.compile("[\\s\\t\\+\\-\\*/=\\(\\)]" + query + "\\s?\\(");
+        goodPattern = Pattern.compile("[\\s\\t\\+\\-\\*/=\\(\\)]" + query + "\\s?\\(");
+        badPattern = Pattern.compile("[\\s\\t\\+\\-\\*/=\\(\\)]" + query + "\\s?\\((\\s|\t)?(void|unsigned|int|char|const)");
     }
 
     public String getLanguage() {

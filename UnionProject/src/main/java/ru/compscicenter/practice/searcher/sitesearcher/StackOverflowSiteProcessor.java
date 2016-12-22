@@ -105,15 +105,17 @@ public class StackOverflowSiteProcessor extends SiteProcessor {
         for (int i = 0; i < length; i++) {
             JsonNode answer = answers.get(i);
 
-            String source = node.get("link").asText();
-            String body = answer.get("body").asText();
+            if (answer.get("score").asInt() > 0) {
+                String source = node.get("link").asText();
+                String body = answer.get("body").asText();
 
-            body = cleanTextFromHTMlTags(body);
+                body = cleanTextFromHTMlTags(body);
 
-            body = body.replaceAll("\n+", "\n\n");
-            body = body.replaceAll("\\s+\n", "\n");
+                body = body.replaceAll("\n+", "\n\n");
+                body = body.replaceAll("\\s+\n", "\n");
 
-            codeSourceList.add(new CodeExamplesWithSource(source, body));
+                codeSourceList.add(new CodeExamplesWithSource(source, body));
+            }
         }
         return codeSourceList;
     }
