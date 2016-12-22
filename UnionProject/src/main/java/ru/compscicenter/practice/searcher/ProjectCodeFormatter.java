@@ -274,6 +274,7 @@ public class ProjectCodeFormatter {
             String code = example.getCodeExample();
             code = code.replaceAll("&lt;", "<");
             code = code.replaceAll("&gt;", ">");
+            code = code.replaceAll("&#160;", " ");
             example.setCodeExample(code);
             sb.append(example.getSource()).append("\n").append(example.getCodeExample());
             sb.append("==============================================================================\n");

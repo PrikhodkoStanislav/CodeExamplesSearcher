@@ -246,7 +246,6 @@ public class CPPReferenceSiteProcessor extends SiteProcessor {
             inp = inp.replaceAll("&#93;", "]");
             inp = inp.replaceAll("&#123;", "{");
             inp = inp.replaceAll("&#125;", "}");
-            inp = inp.replaceAll("&#160;", " ");
             inp = inp.replaceAll("&quot;", "\"");
             inp = inp.replaceAll("&amp;", "&");
 
