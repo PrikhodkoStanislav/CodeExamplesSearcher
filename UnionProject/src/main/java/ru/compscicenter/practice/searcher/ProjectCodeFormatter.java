@@ -247,6 +247,8 @@ public class ProjectCodeFormatter {
                         .append("</a>")
                     .append("</td>");
             String code = example.getCodeExample();
+            code = code.replaceAll("<", "&lt;");
+            code = code.replaceAll(">", "&gt;");
             code = code.replaceAll(funcName + "\\(", "<span class=\"func\">" + funcName + "</span>(");
             sb.append("<td><pre>").append(code).append("</pre></td>")
                     .append("</tr>");
