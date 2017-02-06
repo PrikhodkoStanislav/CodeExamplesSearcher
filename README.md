@@ -1,4 +1,6 @@
 # CodeExamplesSearcher
+## Search code examples of user input functions in real time for IDE Sublime.
+
 usage: search -options <function> [<path>] [<result_format>]
 Code example searcher
  -a,--all           Search code examples both on web sites and in a project
